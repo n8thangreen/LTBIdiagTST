@@ -56,31 +56,29 @@ create_param_values <- function() {
       "Total (complete)" = 169.68	,
       "Total (incomplete)" = 84.84,
 
-      "Hep" = 732.13
-    )
+      "Hep" = 732.13)
 
   label_costs_distns <-
     tribble(
-      ~name, ~prob,
-      "TST", list(distn = "pert", params = c(mode = 18.62, min = 9.31, max = 37.24)),
-      "QFT", list(distn = "pert", params = c(mode = 23.65, min = 12.33, max = 45.29)),
+      ~name,   ~prob,
+      "TST",   list(distn = "pert", params = c(mode = 18.62, min = 9.31, max = 37.24)),
+      "QFT",   list(distn = "pert", params = c(mode = 23.65, min = 12.33, max = 45.29)),
       "TSPOT", list(distn = "pert", params = c(mode = 35.12, min = 18.06, max = 68.23)),
-      "CXR", list(distn = "pert", params = c(mode = 30.21, min = 23.16, max = 35.25)),
-      "LFT", list(distn = "pert", params = c(mode = 3.02, min = 2.01, max = 4.03)),
-      "Ns", list(distn = "pert", params = c(mode = 44.31, min = 22.15, max = 66.46)),
-      "Hep", list(distn = "pert", params = c(mode = 732.13, min = 366.06, max = 1464.25)),
-      "TB", list(distn = "pert", params = c(mode = 4925.76, min = 2462.88, max = 9851.52)),
+      "CXR",   list(distn = "pert", params = c(mode = 30.21, min = 23.16, max = 35.25)),
+      "LFT",   list(distn = "pert", params = c(mode = 3.02, min = 2.01, max = 4.03)),
+      "Ns",    list(distn = "pert", params = c(mode = 44.31, min = 22.15, max = 66.46)),
+      "Hep",   list(distn = "pert", params = c(mode = 732.13, min = 366.06, max = 1464.25)),
+      "TB",    list(distn = "pert", params = c(mode = 4925.76, min = 2462.88, max = 9851.52)),
       #
       "Total (complete)", list(distn = "pert", params = c(mode = 169.68, min = 169.68, max = 169.68)),
       "Total (incomplete)", list(distn = "pert", params = c(mode = 84.84, min = 84.84, max = 84.84)),
       "Hep", list(distn = "pert", params = c(mode = 732.13, min = 732.13, max = 732.13)),
       "Total Cost of positive screening", list(distn = "pert", params = c(mode = 241.23, min = 241.23, max = 241.23)),
-      "TB special nurse visit", list(distn = "pert", params = c(mode = 44.31, min = 44.31, max = 44.31))
-    )
+      "TB special nurse visit", list(distn = "pert", params = c(mode = 44.31, min = 44.31, max = 44.31)))
 
   label_probs_distns <-
     tribble(
-      ~name, ~prob,
+      ~name,      ~prob,
       "TST_sens", list(distn = "pert", params = c(mode = 0.79, min = 0.69, max = 0.89)),
       "TST_spec", list(distn = "pert", params = c(mode = 0.59, min = 0.46, max = 0.73)),
       "QFT_sens", list(distn = "pert", params = c(mode = 0.77, min = 0.8, max = 0.84)),
@@ -89,20 +87,20 @@ create_param_values <- function() {
       "TSPOT_spec", list(distn = "pert", params = c(mode = 0.95, min = 0.92, max = 0.98)),
       "pAccept_chemo", list(distn = "pert", params = c(mode = 0.95, min = 0.5, max = 1)),
       "pComp_chemo", list(distn = "pert", params = c(mode = 0.8, min = 0.5, max =  0.9)),
-      "pHep", list(distn = "pert", params = c(mode = 0.002, min = 0.001, max = 0.003)),
+      "pHep",     list(distn = "pert", params = c(mode = 0.002, min = 0.001, max = 0.003)),
       "Eff_comp", list(distn = "pert", params = c(mode = 0.65, min = 0.5, max = 0.8)),
       "Eff_incomp", list(distn = "pert", params = c(mode = 0.21, min = 0.1, max = 0.3)),
-      "pTB", list(distn = "pert", params = c(mode = 0.12, min = 0.08,	max = 0.19)),
+      "pTB",      list(distn = "pert", params = c(mode = 0.12, min = 0.08,	max = 0.19)),
       #
       "pAccept_TST", list(distn = "pert", params = c(mode = 0.982, min = 0.982, max = 0.982)),
-      "pTSTread", list(distn = "pert", params = c(mode = 0.979, min = 0.979, max = 0.979)),
-      "pIGRAread", list(distn = "pert", params = c(mode = 1, min = 1, max = 1)),
+      "pTSTread",    list(distn = "pert", params = c(mode = 0.979, min = 0.979, max = 0.979)),
+      "pIGRAread",   list(distn = "pert", params = c(mode = 1, min = 1, max = 1)),
       "pAccept_IGRA", list(distn = "pert", params = c(mode = 0.992, min = 0.992, max = 0.992)),
       "pAccept_IGRA_TST+", list(distn = "pert", params = c(mode = 0.995, min = 0.995, max = 0.995)),
       "TSTIGRA_pos", list(distn = "pert", params = c(mode = 0.214, min = 0.214, max = 0.214)),
-      "Dual_sens", list(distn = "pert", params = c(mode = 0.632, min = 0.632, max = 0.632)),
-      "Dual_spec", list(distn = "pert", params = c(mode = 0.988, min = 0.988, max = 0.988)),
-      "pLTBI", list(distn = "pert", params = c(mode = 0.326, min = 0.326, max = 0.326)),
+      "Dual_sens",   list(distn = "pert", params = c(mode = 0.632, min = 0.632, max = 0.632)),
+      "Dual_spec",   list(distn = "pert", params = c(mode = 0.988, min = 0.988, max = 0.988)),
+      "pLTBI",   list(distn = "pert", params = c(mode = 0.326, min = 0.326, max = 0.326)),
       "TST_pos", list(distn = "pert", params = c(mode = 0.534, min = 0.534, max = 0.534)),
       "PPV_TST", list(distn = "pert", params = c(mode = 0.482, min = 0.482, max = 0.482)),
       "NPV_TST", list(distn = "pert", params = c(mode = 0.853, min = 0.853, max = 0.853)),
@@ -118,10 +116,9 @@ create_param_values <- function() {
       "TSPOT_pos_TST+", list(distn = "pert", params = c(mode = 0.460, min = 0.460, max = 0.460)),
       "PPV_TSPOT_TST+", list(distn = "pert", params = c(mode = 0.944, min = 0.944, max = 0.944)),
       "NPV_TSPOT_TST+", list(distn = "pert", params = c(mode = 0.911, min = 0.911, max = 0.911)),
-      "pReact", list(distn = "pert", params = c(mode = 0.001936869, min = 0.001936869, max = 0.001936869)),
+      "pReact",      list(distn = "pert", params = c(mode = 0.001936869, min = 0.001936869, max = 0.001936869)),
       "pReact_comp", list(distn = "pert", params = c(mode = 0.000677904, min = 0.000677904, max = 0.000677904)),
-      "pReact_incomp", list(distn = "pert", params = c(mode = 0.001530127, min = 0.001530127, max = 0.001530127))
-    )
+      "pReact_incomp", list(distn = "pert", params = c(mode = 0.001530127, min = 0.001530127, max = 0.001530127)))
 
   label_probs <-
     list(
@@ -154,15 +151,13 @@ create_param_values <- function() {
       "pHep" = 0.002,
       "pReact" = 0.001936869,
       "pReact_comp" = 0.000677904,
-      "pReact_incomp" = 0.001530127
-    )
+      "pReact_incomp" = 0.001530127)
 
   hsuv <-
     list(
       "loss_chemo" = 0.01,
       "loss_hep" = 0.22,
-      "loss_tb" = 0.15
-    )
+      "loss_tb" = 0.15)
 
   TST_pname_from_to <-
     rbind.data.frame(
@@ -178,8 +173,7 @@ create_param_values <- function() {
       c("pComp_chemo", 18, 19),
       c("NPV_TST", 23, 26),
       c("pLTBI", 28, 29),
-      c("pLTBI", 31, 32)
-    ) %>%
+      c("pLTBI", 31, 32)) %>%
     setNames(c("name", "from", "to"))
 
   TST_cname_from_to <-
@@ -194,8 +188,7 @@ create_param_values <- function() {
       c("Hep", 15, 16),
       c("Total (incomplete)", 16, 17),
       c("Total (complete)", 18, 19),
-      c("Total (incomplete)", 18, 20)
-    ) %>%
+      c("Total (incomplete)", 18, 20)) %>%
     setNames(c("name", "from", "to"))
 
   QFT_pname_from_to <-
@@ -210,8 +203,7 @@ create_param_values <- function() {
       c("pHep", 14, 15),
       c("pComp_chemo", 17, 18),
       c("NPV_QFT", 22, 25),
-      c("pLTBI", 27, 28)
-    ) %>%
+      c("pLTBI", 27, 28)) %>%
     setNames(c("name", "from", "to"))
 
   QFT_cname_from_to <-
@@ -225,8 +217,7 @@ create_param_values <- function() {
       c("Hep", 14, 15),
       c("Total (incomplete)", 15, 16),
       c("Total (complete)", 17, 18),
-      c("Total (incomplete)", 17, 19)
-    ) %>%
+      c("Total (incomplete)", 17, 19)) %>%
     setNames(c("name", "from", "to"))
 
   TSPOT_pname_from_to <-
@@ -241,8 +232,7 @@ create_param_values <- function() {
       c("pHep", 14, 15),
       c("pComp_chemo", 17, 18),
       c("NPV_TSPOT", 22, 25),
-      c("pLTBI", 27, 28)
-    ) %>%
+      c("pLTBI", 27, 28)) %>%
     setNames(c("name", "from", "to"))
 
   TSPOT_cname_from_to <-
@@ -256,8 +246,7 @@ create_param_values <- function() {
       c("Hep", 14, 15),
       c("Total (incomplete)", 15, 16),
       c("Total (complete)", 17, 18),
-      c("Total (incomplete)", 17, 19)
-    ) %>%
+      c("Total (incomplete)", 17, 19)) %>%
     setNames(c("name", "from", "to"))
 
   TST_QFT_pname_from_to <-
@@ -278,8 +267,7 @@ create_param_values <- function() {
       c("PPV_TST", 30, 31),
       c("NPV_TST", 33, 36),
       c("pLTBI", 38, 39),
-      c("pLTBI", 41, 42)
-    ) %>%
+      c("pLTBI", 41, 42)) %>%
     setNames(c("name", "from", "to"))
 
   TST_QFT_cname_from_to <-
@@ -294,8 +282,7 @@ create_param_values <- function() {
       c("Total (incomplete)", 11, 13),
       c("Total (incomplete)", 18, 19),
       c("Total (complete)", 20, 21),
-      c("Total (incomplete)", 20, 22)
-    ) %>%
+      c("Total (incomplete)", 20, 22)) %>%
     setNames(c("name", "from", "to"))
 
   TST_TSPOT_pname_from_to <-
@@ -316,8 +303,7 @@ create_param_values <- function() {
       c("PPV_TST", 30, 31),
       c("NPV_TST", 33, 36),
       c("pLTBI", 38, 39),
-      c("pLTBI", 41, 42)
-    ) %>%
+      c("pLTBI", 41, 42)) %>%
     setNames(c("name", "from", "to"))
 
   TST_TSPOT_cname_from_to <-
@@ -332,11 +318,25 @@ create_param_values <- function() {
       c("Total (incomplete)", 11, 13),
       c("Total (incomplete)", 18, 19),
       c("Total (complete)", 20, 21),
-      c("Total (incomplete)", 20, 22)
-    ) %>%
+      c("Total (incomplete)", 20, 22)) %>%
     setNames(c("name", "from", "to"))
 
-  save.image(here::here("data/params.RData"))
+  save(label_costs,
+       label_probs_distns,
+       TST_cname_from_to,
+       TST_QFT_cname_from_to,
+       TST_TSPOT_pname_from_to,
+       TSPOT_cname_from_to,
+       TST_TSPOT_cname_from_to,
+       TST_QFT_pname_from_to,
+       TSPOT_pname_from_to,
+       QFT_cname_from_to,
+       QFT_pname_from_to,
+       TST_pname_from_to,
+       hsuv,
+       label_probs,
+       label_costs_distns,
+       file = here::here("data/params.RData"))
 }
 
 
