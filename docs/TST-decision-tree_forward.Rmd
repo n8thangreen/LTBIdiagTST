@@ -1,0 +1,383 @@
+---
+title: "Dual test (TST T-SPOT.TB) decision tree: forward model"
+author: "Nathan Green, Imperial College London"
+date: "11/12/2019"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+We will replicate the Excel TB TST-T-SPOT.TB cost-effectiveness model.
+(File name `lasttree.xls`.)
+
+
+### Set-up
+
+```{r warning=FALSE, message=FALSE}
+library(readr)
+library(dplyr)
+library(tibble)
+library(reshape2)
+library(treeSimR)
+library(assertthat)
+library(CEdecisiontree)
+library(purrr)
+library(treeSimR)
+```
+
+Load in the data.
+
+```{r}
+load(here::here("data", "params.RData"))
+load(here::here("data", "trees.RData"))
+```
+
+This included the tree structure variables, the cost and probability arrays, the mapping arrays that inform which nodes have which label with have what cost.
+
+To demonstrate, let us look at the TST and T-SPOT scenario.
+The decision tree is defined in terms of parents and children in a list.
+
+```{r}
+head(TST_IGRA_fwd_tree, 5)
+```
+
+It looks like this for the single test decision tree
+
+![](plots/numbered_nodes_tree_SINGLE_TEST.jpg)
+
+In order to assign values to the tree we first transform this to a (sparse) matrix format.
+
+```{r}
+probs <- child_list_to_transmat(TST_IGRA_fwd_tree)
+print(as_tibble(probs), n = 100)
+
+empty_transmat <- as_tibble(matrix(NA_real_,
+                                   nrow = nrow(probs), ncol = ncol(probs)),
+                            .name_repair = "minimal")
+```
+
+Next, we specify the labels for each of the edge (or correspondingly to node).
+We need to do this separately for the probabilities and costs.
+
+```{r}
+pname_from_to <- TST_QFT_fwd_pname_from_to
+pname_from_to
+
+cname_from_to <- TST_QFT_fwd_cname_from_to
+cname_from_to
+```
+
+
+### Insert probabilities into decision tree
+
+Now that we've set-up the framework for the decision tree, we can assign the input data to it.
+The probability data is in the form of a list (this is useful for when we want to sample from a distributuion later).
+Lets transform to an array.
+
+```{r warning=FALSE, message=FALSE}
+label_probs_long <-
+  as_tibble(label_probs) %>%
+  melt(value.name = "prob",
+       variable.name = "name")
+```
+
+Insert the appropriate probabilities by converting the transition matrix to long format, matching branches to labels,
+matching labels to probabilities and then filling in missing probabilities so that pairs of branches sum to one.
+
+```{r warning=FALSE, message=FALSE}
+
+probs_new <-
+  probs %>%
+  transmat_to_long() %>%
+  match_branch_to_label(pname_from_to) %>%
+  match_branchlabel_to_prob(label_probs_long) %>%
+  fill_complementary_probs()
+
+probs_new
+```
+
+Finally, we insert these new probabilities in to the decision tree.
+
+```{r}
+probs <- CEdecisiontree:::insert_to_probmat(dat = probs_new,
+                                            mat = empty_transmat)
+head(probs)
+```
+
+
+### Insert costs into decision tree
+
+We essentially do the same thing now for costs.
+
+```{r warning=FALSE, message=FALSE}
+label_cost_long <-
+  as_tibble(label_costs) %>%
+  melt(value.name = "cost",
+       variable.name = "name")
+
+head(label_cost_long)
+```
+
+Join the cost names and their associated branches in to a single array.
+
+```{r warning=FALSE, message=FALSE}
+costs_names <-
+  merge(cname_from_to, label_cost_long,
+        by = "name", all.x = TRUE) %>%
+  mutate(from = as.numeric(as.character(from)),
+         to = as.numeric(as.character(to)))
+costs_names
+```
+
+Finally, we insert these costs in to the decision tree.
+
+```{r}
+costs <- CEdecisiontree:::insert_to_costmat(dat = costs_names,
+                                            mat = empty_transmat)
+head(costs)
+```
+
+
+### Run model
+
+See the `CEdecisiontree` package for how to use the `dectree_expected_value()` function.
+Here we provide the matrix format arguments.
+
+```{r}
+res <-
+  dectree_expected_values(vals = costs,
+                          p = probs)
+
+
+res[1] + label_costs$`TB special nurse visit` #196.9457
+```
+
+Create a single cost-effectiveness decision tree data frame.
+
+```{r}
+all_long <-
+  merge(costs_names, probs_new,
+        all = TRUE, by = c("from", "to"),
+        suffixes = c(".cost", ".prob")) %>%
+  rename(vals = cost)
+
+head(all_long)
+```
+
+
+#### Probabilistic sensitivity analysis
+
+We first define the decision tree.
+The difference to previous trees is that we now use the _list-column_ feature to define distributions rather than point values.
+
+
+For the _forwards_ model i.e. with sensitivity and specificity:
+```{r}
+costs_SA <-
+  tibble::tribble(~name.cost,               ~vals,
+                  "TST",                    list(distn = "unif", params = c(min=9.31, max=37.24)),    
+                  "TB special nurse visit", list(distn = "unif", params = c(min=22.15, max=66.23)),  
+                  # "TSPOT",                  list(distn = "unif", params = c(min=18.06, max=68.23)),   
+                  "QFT",                    list(distn = "unif", params = c(min=35, max=80)),   
+                  "Total Cost of positive screening",  list(distn = "unif", params = c(min=233.17, max=247.28)), 
+                  "Hep",                    list(distn = "unif", params = c(min=366.06, max=1464.25)), 
+                  #
+                  "Total (complete)",       list(distn = "unif", params = c(min=169.68, max=169.68)), ##TODO: what are these and where are they from?
+                  "Total (incomplete)",     list(distn = "unif", params = c(min=84.84, max=84.84)))
+
+probs_SA <-
+  tibble::tribble(~name.prob,     ~prob,
+                  "pComp_chemo",  list(distn = "unif", params = c(min=0.28, max=0.97)), #Alsdurf (2016) table 1
+                  "pHep",         list(distn = "unif", params = c(min=0.001, max=0.003)),
+                  "pAccept_chemo",list(distn = "unif", params = c(min=0.53, max=0.98)), #Alsdurf (2016) table 2
+                  "pAccept_TST",  list(distn = "unif", params = c(min=0.5, max=1)), #Campbell (2017)
+                  "pTSTread",     list(distn = "unif", params = c(min=0.90, max=0.99)), #Alsdurf (2016) table S3
+                  "pAccept_IGRA", list(distn = "unif", params = c(min=0.5, max=1)),
+                  "pLTBI",        list(distn = "unif", params = c(min=0.10, max=0.40)), #Pooran (2010)
+                  # "TSPOT_sens",   list(distn = "unif", params = c(min=0.85, max=0.93)), #NICE appendix (2010)
+                  # "TSPOT_spec",   list(distn = "unif", params = c(min=0.86, max=1.0)),
+                  "QFT_sens",     list(distn = "unif", params = c(min=0.81, max=0.87)), #Diel (2010)
+                  "QFT_spec",     list(distn = "unif", params = c(min=0.98, max=1.0)),
+                  "TST_sens",     list(distn = "unif", params = c(min=0.73, max=1.0)), #Warwick evidence
+                  "TST_spec",     list(distn = "unif", params = c(min=0.12, max=0.53))) #Kik (2010) lower, Harstad (2010) upper from Warwick evidence
+probs_SA
+```
+
+Combine the distributions with the original tree specification data frame.
+
+```{r}
+input_SA <- 
+  all_long %>% 
+  select(-prob, -vals) %>% 
+  dplyr::full_join(probs_SA, by = "name.prob") %>%
+  dplyr::full_join(costs_SA, by = "name.cost") %>%
+  as_tibble()
+
+input_SA
+```
+
+
+We can now loop over this tree and generate samples of values for the given distributions.
+Lets use the `sample_distributions()` function from my `treeSimR` package.
+
+```{r warning=FALSE}
+tree_dat_sa <- list()
+
+for (i in 1:500) {
+  
+  tree_dat_sa[[i]] <-
+    define_model(dat_long = 
+                   data.frame(
+                     from = input_SA$from,
+                     to   = input_SA$to,
+                     prob = lapply(input_SA$prob, sample_distributions) %>% unlist(),
+                     vals = lapply(input_SA$vals, sample_distributions) %>% unlist())) %>% 
+    select(-missing)
+}
+```
+
+
+This results in a list of trees.
+Now it is straightforward to map over each of these trees to obtain the total expected values
+
+```{r}
+res <- suppressMessages(
+  map(tree_dat_sa, .f = dectree_expected_values))
+head(res)
+
+hist(map_dbl(res, 1), breaks = 20)
+```
+
+
+#### Pathway joint probabilities
+
+We calculate the terminal state total probabiliites for each LTBI status to use as inputs for the Markov model.
+
+```{r}
+pathway_joint_prob <- function(df,
+                               terminal_node){
+  
+  out <- list()
+  
+  for (i in seq_along(terminal_node)) {
+    
+    to_node <- terminal_node[i]
+    p_total <- 1
+    
+    while (to_node %in% df$to) {
+      
+      p_total <- c(p_total, df$prob[df$to == to_node])
+      to_node <- df$from[df$to == to_node]
+    }
+    
+    out[[i]] <- p_total 
+  }  
+  
+  return(out) 
+}
+```
+
+```{r}
+LTBI_complete_Tx <- 
+  pathway_joint_prob(df = all_long,
+                     terminal_node = 12) %>% 
+  map_dbl(prod) %>% 
+  sum()
+
+LTBI_incomplete_Tx <- 
+  pathway_joint_prob(df = all_long,
+                     terminal_node = c(10,48)) %>% 
+  map_dbl(prod) %>% 
+  sum()
+
+LTBI_no_Tx <- 
+  pathway_joint_prob(df = all_long,
+                     terminal_node = c(14,16,18,20,22,24)) %>% 
+  map_dbl(prod) %>% 
+  sum()
+
+no_LTBI <- 
+  pathway_joint_prob(df = all_long,
+                     terminal_node = c(33,35,37,39,41,43,45,47,49)) %>% 
+  map_dbl(prod) %>% 
+  sum()
+```
+
+Check that they sum to one.
+
+```{r}
+all.equal(1 -(LTBI_complete_Tx + LTBI_incomplete_Tx + LTBI_no_Tx), no_LTBI)
+```
+
+Now we can do the same for the SA data to give a distribution of terminal state subpopulations.
+
+```{r}
+
+terminal_pop <- function(df) {
+  
+  res <- list()
+  
+  res$completeTx <- 
+    pathway_joint_prob(df,
+                       terminal_node = 12) %>% 
+    map_dbl(prod) %>% 
+    sum()
+  
+  res$incompleteTx <- 
+    pathway_joint_prob(df,
+                       terminal_node = c(10,48)) %>% 
+    map_dbl(prod) %>% 
+    sum()
+  
+  res$noTx <- 
+    pathway_joint_prob(df,
+                       terminal_node = c(14,16,18,20,22,24)) %>% 
+    map_dbl(prod) %>% 
+    sum()
+  
+  res$noLTBI <- 
+    pathway_joint_prob(df,
+                       terminal_node = c(33,35,37,39,41,43,45,47,49)) %>% 
+    map_dbl(prod) %>% 
+    sum()
+  
+  return(res)
+}
+
+```
+
+Check
+
+```{r}
+terminal_pop(all_long)
+```
+
+Now we can map over all of the sample trees. Note we restrict to the non-NA branches. This is something to fix properly in the future.
+
+```{r}
+init_states <- map_df(tree_dat_sa,
+                      .f = function(x) terminal_pop(x[1:48, ]))
+
+save(init_states, file = "data/init_states.RData")
+```
+
+Plot the results with the original scenario indicated by the vertical red line.
+
+```{r}
+par(mfrow = c(2,2))
+
+hist(init_states$LTBI_complete_Tx, breaks = 25)
+abline(v = LTBI_complete_Tx, col = "red")
+
+hist(init_states$LTBI_incomplete_Tx, breaks = 25)
+abline(v = LTBI_incomplete_Tx, col = "red")
+
+hist(init_states$LTBI_no_Tx, breaks = 25)
+abline(v = LTBI_no_Tx, col = "red")
+
+hist(init_states$no_LTBI, breaks = 25)
+abline(v = no_LTBI, col = "red")
+```

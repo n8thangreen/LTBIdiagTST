@@ -1,0 +1,193 @@
+
+# heemod TB population Markov model
+# N Green
+# Imperial College London
+#
+# see: https://cran.r-project.org/web/packages/heemod/vignettes/d_non_homogeneous.html
+
+# NOTE:
+# transitions happen at the beginning of each year (equivalent to transition happening at
+# the end + ignoring the first year) with method = "beginning".
+# Since with this method the first year is actually the second,
+# costs should be discounted from the start with the argument first = TRUE in discount().
+
+
+library(heemod)
+library(purrr)
+library(dplyr)
+
+# age-dependent probability of death, TB and QoL weighting
+pdeath_QoL <-
+  read.csv("C:/Users/ngreen1/Google Drive/MSc-MPH/projects/2017/LTBI-TST_Manabu/R/raw data/pdeath_QoL.csv")
+head(pdeath_QoL)
+
+# probabilistic realisations of starting state probabilities
+load(file = "data/init_states.RData")
+head(init_states)
+
+# define the model heemod parameters
+param <- define_parameters(
+  age_init = 34,                   # starting age
+  age = age_init + markov_cycle,   # increment age annually
+  
+  # transition probabilities
+  pReact_comp = 0.0006779,         # TB after completed LTBI treatment       
+  pReact_incomp = 0.0015301,       # TB after LTBI treatment dropout
+  pReact = 0.0019369,              # TB after no treatment
+  
+  TB_cost = 4925.76,               # cost of TB treatment (£)
+  d = 0.035,                       # annual discount factor
+  
+  # match prob death to age
+  pdeath = look_up(data = pdeath_QoL,
+                   value = "pDeath",
+                   age = age),
+  pdeathTB = look_up(data = pdeath_QoL,
+                     value = "pDeath_TB",
+                     age = age),
+  
+  # match QoL weight to age
+  QoL = look_up(data = pdeath_QoL,
+                value = "QOL_weight",
+                age = age)
+)
+
+# create transition matrix
+mat_trans <- define_transition(
+  state_names = c(
+    "noLTBI",
+    "completeTx",
+    "incompleteTx",
+    "noTx",
+    "activeTB",
+    "dead"
+  ),
+  
+  # from-to probability matrix
+  # C represent complements
+  C, 0, 0, 0, 0,             pdeath,
+  0, C, 0, 0, pReact_comp,   pdeath,
+  0, 0, C, 0, pReact_incomp, pdeath,
+  0, 0, 0, C, pReact,        pdeath,
+  C, 0, 0, 0, 0,             pdeathTB,
+  0, 0, 0, 0, 0,             1
+)
+
+# define starting state populations
+init_states <- select(.data = init_states,
+                      noLTBI,
+                      completeTx,
+                      incompleteTx,
+                      noTx)
+
+init_states <- data.frame(init_states, activeTB = 0, dead = 0)
+
+
+# define cost and utility values associated with each state
+
+noLTBI <- define_state(
+  cost = 0,
+  utility = discount(QoL, d, first = TRUE)
+)
+
+completeTx <- define_state(
+  cost = 0,
+  utility = discount(QoL, d, first = TRUE)
+)
+
+incompleteTx <- define_state(
+  cost = 0,
+  utility = discount(QoL, d, first = TRUE)
+)
+
+noTx <- define_state(
+  cost = 0,
+  utility = discount(QoL, d, first = TRUE)
+)
+
+activeTB <- define_state(
+  cost = discount(TB_cost, d, first = TRUE),
+  utility = discount(QoL - 0.15, d, first = TRUE)
+)
+
+dead <- define_state(
+  cost = 0,
+  utility = 0
+)
+
+# combine all of the model elements to form
+# a 'stratgey' consisting of a transition
+# matrix and states states with properties attached
+strat <- define_strategy(
+  transition = mat_trans,
+  noLTBI = noLTBI,
+  completeTx = completeTx,
+  incompleteTx = incompleteTx,
+  noTx = noTx,
+  activeTB = activeTB,
+  dead = dead
+)
+
+# run a single simulation
+res_mod <-
+  run_model(
+    init = 1000 * init_states[1, ], # initial population sizes
+    method = "end",
+    strat,
+    parameters = param,
+    cycles = 66,                    # number of time steps
+    cost = cost,
+    effect = utility
+  )
+
+
+# run multiple simulations
+# using the sample of starting state probabilities
+
+res_mod <- list()
+
+for (i in 1:nrow(init_states)) {
+  
+  res_mod[[i]] <-
+    run_model(
+      # init = c(674.0588764, # hard-code values
+      #          168.0253748,
+      #          42.42724895,
+      #          115.4884998,
+      #          0,0),
+      init = 1000 * init_states[i, ],
+      method = "end",
+      strat,
+      parameters = param,
+      cycles = 66,
+      cost = cost,
+      effect = utility
+    )
+}
+
+
+###########
+# results #
+###########
+
+res_mod[[1]]
+
+# extract the cost and utility values
+c1 <- map_df(res_mod, "run_model")$cost
+h1 <- map_df(res_mod, "run_model")$utility
+
+get_counts(res_mod[[1]])
+get_values(res_mod[[1]])
+
+summary(res_mod[[4]])
+
+# plots
+hist(c1, breaks = 30)
+hist(h1, breaks = 30)
+
+plot(res_mod[[4]])
+
+# state-edge graph
+plot(mat_trans, arr.type = "simple")
+
+
