@@ -1,6 +1,61 @@
 
-#
+#' all trees structures for analysis
+#'
 create_trees <- function() {
+
+  TST_IGRA_fwd_tree <-
+    list(
+      '1' = c(2,25),
+      '2' = c(3,23),
+      '3' = c(4,21),
+      '4' = c(5,19),
+      '5' = c(6,17),
+      '6' = c(7,15),
+      '7' = c(8,13),
+      '8' = c(9,11),
+      '9' = 10,
+      '10' = NULL,
+      '11' = c(12,48),
+      '12' = NULL,
+      '13' = 14,
+      '14' = NULL,
+      '15' = 16,
+      '16' = NULL,
+      '17' = 18,
+      '18' = NULL,
+      '19' = 20,
+      '20' = NULL,
+      '21' = 22,
+      '22' = NULL,
+      '23' = 24,
+      '24' = NULL,
+      '25' = c(26,46),
+      '26' = c(27,44),
+      '27' = c(28,42),
+      '28' = c(29,40),
+      '29' = c(30,38),
+      '30' = c(31,36),
+      '31' = c(32,34),
+      '32' = 33,
+      '33' = NULL,
+      '34' = c(35,49),
+      '35' = NULL,
+      '36' = 37,
+      '37' = NULL,
+      '38' = 39,
+      '39' = NULL,
+      '40' = 41,
+      '41' = NULL,
+      '42' = 43,
+      '43' = NULL,
+      '44' = 45,
+      '45' = NULL,
+      '46' = 47,
+      '47' = NULL,
+      '48' = NULL,
+      '49' = NULL
+    )
+
 
   IGRA_tree <-
     list(
@@ -32,7 +87,8 @@ create_trees <- function() {
       '26' = NULL,
       '27' = c(28,29),
       '28' = NULL,
-      '29' = NULL)
+      '29' = NULL
+    )
 
   QFT_tree <- IGRA_tree
   TSPOT_tree <- IGRA_tree
@@ -71,7 +127,8 @@ create_trees <- function() {
       '30' = NULL,
       '31' = c(32,33),
       '32' = NULL,
-      '33' = NULL)
+      '33' = NULL
+    )
 
   TST_IGRA_tree <-
     list(
@@ -117,12 +174,18 @@ create_trees <- function() {
       '40' = NULL,
       '41' = c(42,43),
       '42' = NULL,
-      '43' = NULL)
+      '43' = NULL
+    )
 
   TST_QFT_tree <- TST_IGRA_tree
   TST_TSPOT_tree <- TST_IGRA_tree
 
-  save(QFT_tree, TSPOT_tree, TST_tree, TST_QFT_tree, TST_TSPOT_tree,
-       file = here::here("data/trees.RData"))
+  save(QFT_tree,
+       TSPOT_tree,
+       TST_tree,
+       TST_QFT_tree,
+       TST_TSPOT_tree,
+       TST_IGRA_fwd_tree,
+       file = here::here("data", "trees.RData"))
 }
 

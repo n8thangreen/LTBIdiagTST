@@ -1,5 +1,5 @@
 ---
-title: "heemod"
+title: "heemod TB population Markov model"
 author: "N Green"
 date: "17/01/2020"
 output: pdf_document
@@ -9,13 +9,8 @@ output: pdf_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-## R Markdown
 
 ```{r message=FALSE}
-# heemod TB population Markov model
-# N Green
-# Imperial College London
-#
 # see: https://cran.r-project.org/web/packages/heemod/vignettes/d_non_homogeneous.html
 
 # NOTE:
@@ -24,18 +19,19 @@ knitr::opts_chunk$set(echo = TRUE)
 # Since with this method the first year is actually the second,
 # costs should be discounted from the start with the argument first = TRUE in discount().
 
-
 library(heemod)
 library(purrr)
 library(dplyr)
+```
 
+```{r}
 # age-dependent probability of death, TB and QoL weighting
 pdeath_QoL <-
-  read.csv("C:/Users/ngreen1/Google Drive/MSc-MPH/projects/2017/LTBI-TST_Manabu/R/raw data/pdeath_QoL.csv")
-head(pdeath_QoL)
+  read.csv(here::here("raw data", "pdeath_QoL.csv"))
 
 # probabilistic realisations of starting state probabilities
-load(file = "data/init_states.RData")
+# generated from decision tree
+load(file = here::here("data", "init_states.RData"))
 head(init_states)
 
 # define the model heemod parameters
@@ -93,8 +89,9 @@ init_states <- select(.data = init_states,
                       incompleteTx,
                       noTx)
 
-init_states <- data.frame(init_states, activeTB = 0, dead = 0)
-
+init_states <- data.frame(init_states,
+                          activeTB = 0,
+                          dead = 0)
 
 # define cost and utility values associated with each state
 
@@ -152,37 +149,42 @@ res_mod <-
     cost = cost,
     effect = utility
   )
+```
 
 
-# run multiple simulations
-# using the sample of starting state probabilities
+## Run multiple simulations
 
+Using the sample of starting state probabilities
+
+```{r}
 res_mod <- list()
 
 for (i in 1:nrow(init_states)) {
   
   res_mod[[i]] <-
-    run_model(
-      # init = c(674.0588764, # hard-code values
-      #          168.0253748,
-      #          42.42724895,
-      #          115.4884998,
-      #          0,0),
-      init = 1000 * init_states[i, ],
-      method = "end",
-      strat,
-      parameters = param,
-      cycles = 66,
-      cost = cost,
-      effect = utility
-    )
+    suppressMessages(
+      run_model(
+        # init = c(674.0588764, # hard-code values
+        #          168.0253748,
+        #          42.42724895,
+        #          115.4884998,
+        #          0,
+        #          0),
+        init = 1000 * init_states[i, ],  # population sizes
+        method = "end",
+        strat,
+        parameters = param,
+        cycles = 66,
+        cost = cost,
+        effect = utility
+      ))
 }
+```
 
 
-###########
-# results #
-###########
+## Results
 
+```{r}
 res_mod[[1]]
 
 # extract the cost and utility values
@@ -195,8 +197,8 @@ get_values(res_mod[[1]])
 summary(res_mod[[4]])
 
 # plots
-hist(c1, breaks = 30)
-hist(h1, breaks = 30)
+hist(c1, breaks = 30, xlab = "cost")
+hist(h1, breaks = 30, xlab = "health")
 
 plot(res_mod[[4]])
 
