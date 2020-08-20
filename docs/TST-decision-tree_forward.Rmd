@@ -71,7 +71,7 @@ cname_from_to
 ### Insert probabilities into decision tree
 
 Now that we've set-up the framework for the decision tree, we can assign the input data to it.
-The probability data is in the form of a list (this is useful for when we want to sample from a distributuion later).
+The probability data is in the form of a list (this is useful for when we want to sample from a distribution later).
 Lets transform to an array.
 
 ```{r warning=FALSE, message=FALSE}
@@ -136,7 +136,6 @@ costs <- insert_to_costmat(dat = costs_names,
 head(costs)
 ```
 
-
 ### Run model
 
 See the `CEdecisiontree` package for how to use the `dectree_expected_value()` function.
@@ -167,13 +166,12 @@ all_long <-
 head(all_long)
 ```
 
-
 #### Probabilistic sensitivity analysis
 
 We first define the decision tree.
 The difference to previous trees is that we now use the _list-column_ feature to define distributions rather than point values.
 
-Combine the distributions with the original tree specification data frame.
+Combine the distributions with the original tree specification data frame and remove the point values.
 
 ```{r}
 input_SA <- 
@@ -193,15 +191,16 @@ Lets use the `sample_distributions()` function from my `treeSimR` package.
 ```{r warning=FALSE}
 tree_dat_sa <- list()
 
-for (i in 1:500) {
+for (i in 1:50) {
   
   tree_dat_sa[[i]] <-
-    define_model(dat_long = 
-                   data.frame(
-                     from = input_SA$from,
-                     to   = input_SA$to,
-                     prob = lapply(input_SA$prob, sample_distributions) %>% unlist(),
-                     vals = lapply(input_SA$vals, sample_distributions) %>% unlist()))
+    define_model(
+      dat_long = 
+        data.frame(
+          from = input_SA$from,
+          to   = input_SA$to,
+          prob = lapply(input_SA$prob, sample_distributions) %>% unlist(),
+          vals = lapply(input_SA$vals, sample_distributions) %>% unlist()), fill_probs = TRUE)
 }
 ```
 
@@ -225,52 +224,39 @@ hist(map_dbl(res, 1), breaks = 20)
 
 We calculate the terminal state total probabilities for each LTBI status to use as inputs for the Markov model.
 
+Define the model.
 ```{r}
-pathway_joint_prob <- function(df,
-                               nodes){
-  
-  out <- list()
-  
-  for (i in seq_along(nodes)) {
-    
-    to_node <- nodes[i]
-    p_total <- 1
-    
-    while (to_node %in% df$to) {
-      
-      p_total <- c(p_total, df$prob[df$to == to_node])
-      to_node <- df$from[df$to == to_node]
-    }
-    
-    out[[i]] <- p_total 
-  }  
-  
-  return(out) 
-}
+TST_model_long <- 
+  define_model(dat_long = all_long)
 ```
 
+For each MM starting state.
 ```{r}
 LTBI_complete_Tx <- 
-  pathway_joint_prob(df = all_long,
-                     nodes = 12) %>% 
+  branch_joint_probs(
+    TST_model_long,
+    nodes = 12) %>% 
   map_dbl(prod) %>% 
   sum()
 
 LTBI_incomplete_Tx <- 
-  pathway_joint_prob(df = all_long,
-                     nodes = c(10,48)) %>% 
+  branch_joint_probs(
+    TST_model_long,
+    nodes = c(10,48)) %>% 
   map_dbl(prod) %>% 
   sum()
 
 LTBI_no_Tx <- 
-  pathway_joint_prob(df = all_long,
-                     nodes = c(14,16,18,20,22,24)) %>% 
+  branch_joint_probs(
+    TST_model_long,
+    nodes = c(14,16,18,20,22,24)) %>% 
   map_dbl(prod) %>% 
   sum()
 
 no_LTBI <- 
-  pathway_joint_prob(df = all_long,
-                     nodes = c(33,35,37,39,41,43,45,47,49)) %>% 
+  branch_joint_probs(
+    TST_model_long,
+    nodes = c(33,35,37,39,41,43,45,47,49)) %>% 
   map_dbl(prod) %>% 
   sum()
 ```
@@ -278,38 +264,41 @@ no_LTBI <-
 Check that they sum to one.
 
 ```{r}
-all.equal(1 -(LTBI_complete_Tx + LTBI_incomplete_Tx + LTBI_no_Tx), no_LTBI)
+all.equal(1 - (LTBI_complete_Tx + LTBI_incomplete_Tx + LTBI_no_Tx), no_LTBI)
 ```
 
 Now we can do the same for the SA data to give a distribution of terminal state subpopulations.
 
 ```{r}
-
 terminal_pop <- function(df) {
   
   res <- list()
   
   res$completeTx <- 
-    pathway_joint_prob(df,
-                       nodes = 12) %>% 
+    branch_joint_probs(
+      df,
+      nodes = 12) %>% 
     map_dbl(prod) %>% 
     sum()
   
   res$incompleteTx <- 
-    pathway_joint_prob(df,
-                       nodes = c(10,48)) %>% 
+    branch_joint_probs(
+      df,
+      nodes = c(10,48)) %>% 
     map_dbl(prod) %>% 
     sum()
   
   res$noTx <- 
-    pathway_joint_prob(df,
-                       nodes = c(14,16,18,20,22,24)) %>% 
+    branch_joint_probs(
+      df,
+      nodes = c(14,16,18,20,22,24)) %>% 
     map_dbl(prod) %>% 
     sum()
   
   res$noLTBI <- 
-    pathway_joint_prob(df,
-                       nodes = c(33,35,37,39,41,43,45,47,49)) %>% 
+    branch_joint_probs(
+      df,
+      nodes = c(33,35,37,39,41,43,45,47,49)) %>% 
     map_dbl(prod) %>% 
     sum()
   
@@ -327,8 +316,9 @@ terminal_pop(all_long)
 Now we can map over all of the sample trees. Note we restrict to the non-NA branches. This is something to fix properly in the future.
 
 ```{r}
-init_states <- map_df(tree_dat_sa,
-                      .f = function(x) terminal_pop(x[1:48, ]))
+init_states <-
+  map_df(tree_dat_sa,
+         .f = function(x) terminal_pop(x[1:48, ]))
 
 save(init_states, file = "data/init_states.RData")
 ```

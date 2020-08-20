@@ -2,6 +2,8 @@
 #' all parameter values required
 #' for the model
 #'
+#' create_param_values()
+#'
 create_param_values <- function() {
 
   # assign values to labels ------------------------------------------
@@ -80,7 +82,6 @@ create_param_values <- function() {
       #
       "Total (complete)", list(distn = "unif", params = c(min=169.68, max=169.68)),
       "Total (incomplete)", list(distn = "unif", params = c(min=84.84,  max=84.84)),
-      "Hep",   list(distn = "pert", params = c(mode = 732.13, min = 732.13, max = 732.13)),
       "Total Cost of positive screening",  list(distn = "unif", params = c(min=233.17, max=247.28)),
       # "TB special nurse visit", list(distn = "pert", params = c(mode = 44.31, min = 44.31, max = 44.31))
       "TB special nurse visit", list(distn = "unif", params = c(min=22.15, max=66.23))
@@ -431,6 +432,8 @@ create_param_values <- function() {
        label_probs_distns,
        TST_cname_from_to,
        TST_QFT_cname_from_to,
+       TST_QFT_fwd_cname_from_to,
+       TST_QFT_fwd_pname_from_to,
        TST_TSPOT_pname_from_to,
        TSPOT_cname_from_to,
        TST_TSPOT_cname_from_to,

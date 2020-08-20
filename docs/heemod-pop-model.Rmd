@@ -137,7 +137,14 @@ strat <- define_strategy(
   activeTB = activeTB,
   dead = dead
 )
+```
 
+```{r}
+save(strat, params, cost, utility,
+     file = "data/ltbi_heemod.RData")
+```
+
+```{r}
 # run a single simulation
 res_mod <-
   run_model(
