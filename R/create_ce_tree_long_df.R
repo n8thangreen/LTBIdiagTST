@@ -10,8 +10,10 @@
 #' @param label_costs
 #' @param pname_from_to
 #' @param cname_from_to
+#' @param label_probs
 #'
 #' @return
+#' @import dplyr reshape2 CEdecisiontree
 #' @export
 #'
 #' @examples

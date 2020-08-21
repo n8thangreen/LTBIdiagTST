@@ -49,37 +49,16 @@ h_dt <-
           state_list,
           n = 100)
 
-
 # Markov model ----
 
-## set-up heemod model
-# create_ltbi_heemod()
-load(here::here("data", "ltbi_heemod.RData"))
-
-res_mod <- list()
-
-##TODO:
-init_states <- c_dt$term_pop_sa
-N <- 1
-
-for (i in 1:nrow(init_states)) {
-
-  res_mod[[i]] <-
-    suppressMessages(
-      run_model(
-        init = N * init_states[i, ],  # population sizes
-        method = "end",
-        strat,
-        parameters = param,
-        cycles = 66,
-        cost = cost,
-        effect = utility
-      ))
-}
+res_mm <-
+  init_pop_heemod_PSA(create_ltbi_heemod,
+                      init_states = c_dt$term_pop_sa,
+                      N = 1)
 
 # extract the cost and utility values
-c_mm <- map_df(res_mod, "run_model")$cost
-h_mm <- map_df(res_mod, "run_model")$utility
+c_mm <- map_df(res_mm, "run_model")$cost
+h_mm <- map_df(res_mm, "run_model")$utility
 
 
 ## combine decision tree and Markov model
