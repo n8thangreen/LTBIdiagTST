@@ -30,33 +30,44 @@ tree_dat <-
 
 state_list <-
   list(
+    LTBI_complete_Tx  = 12,
     LTBI_incomplete_Txs = c(10,48),
+    LTBI_no_Tx = c(14,16,18,20,22,24),
     no_LTBI  = c(33,35,37,39,41,43,45,47,49))
 
-dectree_res <-
+c_dt <-
   dectree(tree_dat,
           label_probs_distns,
           label_costs_distns,
           state_list,
           n = 100)
 
+h_dt <-
+  dectree(tree_dat,
+          label_probs_distns,
+          label_health_distns,
+          state_list,
+          n = 100)
+
 
 # Markov model ----
 
-# set-up heemod model
-load("data/ltbi_heemod.RData")
+## set-up heemod model
+# create_ltbi_heemod()
+load(here::here("data", "ltbi_heemod.RData"))
 
 res_mod <- list()
 
 ##TODO:
-init_states <- dectree_res$term_pop_sa
+init_states <- c_dt$term_pop_sa
+N <- 1
 
 for (i in 1:nrow(init_states)) {
 
   res_mod[[i]] <-
     suppressMessages(
       run_model(
-        init = 1000 * init_states[i, ],  # population sizes
+        init = N * init_states[i, ],  # population sizes
         method = "end",
         strat,
         parameters = param,
@@ -67,8 +78,17 @@ for (i in 1:nrow(init_states)) {
 }
 
 # extract the cost and utility values
-c1 <- map_df(res_mod, "run_model")$cost
-h1 <- map_df(res_mod, "run_model")$utility
+c_mm <- map_df(res_mod, "run_model")$cost
+h_mm <- map_df(res_mod, "run_model")$utility
 
-# save()
+
+## combine decision tree and Markov model
+
+res <-
+  list(cost =
+         c_mm + c_dt$ev_sa,
+       health =
+         h_mm + h_dt$ev_sa)
+
+# save(res, file = "res_TST+QFT.RData")
 
