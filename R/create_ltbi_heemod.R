@@ -1,18 +1,19 @@
 
 #' create_ltbi_heemod
 #'
-#' transitions happen at the beginning of each year (equivalent to transition happening at
+#' Transitions happen at the beginning of each year (equivalent to transition happening at
 #' the end + ignoring the first year) with method = "beginning".
 #' Since with this method the first year is actually the second,
 #' costs should be discounted from the start with the argument first = TRUE in discount().
-#' see: https://cran.r-project.org/web/packages/heemod/vignettes/d_non_homogeneous.html
+#' See: https://cran.r-project.org/web/packages/heemod/vignettes/d_non_homogeneous.html
 #'
-#' @param age_init starting age
+#' @param age_init Starting age
 #' @param pReact_comp TB after completed LTBI treatment
 #' @param pReact_incomp TB after LTBI treatment drop-out
 #' @param pReactB TB after no treatment
-#' @param TB_cost cost of TB treatment (£)
-#' @param d discount
+#' @param TB_cost Cost of TB treatment (£)
+#' @param d Discount factor
+#' @param N Number of runs
 #'
 #' @return
 #' @import heemod purrr dplyr
@@ -28,7 +29,8 @@ create_ltbi_heemod <- function(age_init = 34,
                                pReact_incomp = 0.0015301,
                                pReact = 0.0019369,
                                TB_cost = 4925.76,
-                               d = 0.035) {
+                               d = 0.035,
+                               N = 1) {
 
   # age-dependent probability of death, TB and QoL weighting
   pdeath_QoL <-
@@ -127,9 +129,18 @@ create_ltbi_heemod <- function(age_init = 34,
   save(strat, params, cost, utility,
        file = here::here("data", "ltbi_heemod.RData"))
 
-  list(strat = strat,
-       params = params,
-       cost = cost,
-       utility = utility)
+  function(init_states) {
+
+    suppressMessages(
+      run_model(
+        init = N * init_states,  # population sizes
+        method = "end",
+        strat,
+        parameters = param,
+        cycles = 66,
+        cost = cost,
+        effect = utility
+      ))
+  }
 }
 

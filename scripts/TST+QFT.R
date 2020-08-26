@@ -2,9 +2,7 @@
 # Dual test (TST + QFT) forward model
 
 
-library(readr)
 library(dplyr)
-library(tibble)
 library(reshape2)
 library(treeSimR)
 library(assertthat)
@@ -51,10 +49,12 @@ h_dt <-
 
 # Markov model ----
 
+heemod_model <- create_ltbi_heemod()
+
 res_mm <-
-  init_pop_heemod_PSA(create_ltbi_heemod,
-                      init_states = c_dt$term_pop_sa,
-                      N = 1)
+  heemod_init_pop_PSA(
+    heemod_model,
+    init_states = c_dt$term_pop_sa)
 
 # extract the cost and utility values
 c_mm <- map_df(res_mm, "run_model")$cost

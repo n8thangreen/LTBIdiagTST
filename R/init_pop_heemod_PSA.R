@@ -1,24 +1,13 @@
 
 #'
-init_pop_heemod_PSA <- function(heemod_model,
-                                init_states,
-                                N = 1) {
+heemod_init_pop_PSA <- function(heemod_model,
+                                init_states) {
   res_mod <- list()
-  model <- heemod_model()
 
-  for (i in 1:nrow(init_states)) {
+  for (i in seq_len(nrow(init_states))) {
 
     res_mod[[i]] <-
-      suppressMessages(
-        run_model(
-          init = N * init_states[i, ],  # population sizes
-          method = "end",
-          model$strat,
-          parameters = model$param,
-          cycles = 66,
-          cost = model$cost,
-          effect = model$utility
-        ))
+      heemod_model(init_states[i, ])
   }
 
   res_mod
