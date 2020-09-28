@@ -46,24 +46,13 @@ state_list <-
     activeTB = c(),
     dead = c())
 
-## run model
-c_dt <-
-  tree_dat %>%
-  rename(val = cost) %>%
-  select(-name.health, -health) %>%
-  dectree(label_probs_distns,
-          label_costs_distns,
-          state_list,
-          n = 100)
+dt <-
+  run_cedectree(tree_dat,
+                label_probs_distns,
+                label_costs_distns,
+                label_health_distns,
+                state_list)
 
-h_dt <-
-  tree_dat %>%
-  rename(val = health) %>%
-  select(-name.cost, -cost) %>%
-  dectree(label_probs_distns,
-          label_health_distns,
-          state_list,
-          n = 100)
 
 # Markov model ----
 
@@ -72,7 +61,7 @@ heemod_model <- create_ltbi_heemod()
 res_mm <-
   heemod_init_pop_PSA(
     heemod_model,
-    init_states = c_dt$term_pop_sa)
+    init_states = dt$cost$term_pop_sa)
 
 # extract the cost and utility values
 c_mm <- map_df(res_mm, "run_model")$cost
@@ -83,9 +72,9 @@ h_mm <- map_df(res_mm, "run_model")$utility
 
 res <-
   list(cost =
-         c_mm + c_dt$ev_sa[['1']],
+         c_mm + dt$cost$ev_sa[['1']],
        health =
-         h_mm - h_dt$ev_sa[['1']])
+         h_mm - dt$health$ev_sa[['1']])
 
 # save(res, file = "res_TST+QFT.RData")
 
