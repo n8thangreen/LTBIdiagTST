@@ -1,29 +1,29 @@
 
 #' create_ce_tree_long_df
 #'
-#' Long input data for define_model().
 #' Matches labels on branches to the corresponding
 #' probabilities and cost/utility values.
 #'
-#' @param tree_list
-#' @param tree_mat
-#' @param label_costs
-#' @param pname_from_to
-#' @param cname_from_to
-#' @param label_probs
+#' @param tree_list Parent-child ids
+#' @param tree_mat Matrix
+#' @param label_probs List
+#' @param label_costs List
+#' @param pname_from_to Dataframe name, from, to
+#' @param cname_from_to Dataframe name, from, to
 #'
-#' @return
+#' @return Long format dataframe for input to define_model().
 #' @import dplyr reshape2 CEdecisiontree
 #' @export
-#'
-#' @examples
+#' @seealso [define_model][LTBIdiagTST::define_model]
 #'
 create_ce_tree_long_df <- function(tree_list = NA,
                                    tree_mat = NA,
                                    label_probs,
                                    label_costs,
+                                   label_health,
                                    pname_from_to,
-                                   cname_from_to) {
+                                   cname_from_to,
+                                   hname_from_to) {
 
   if (!all(is.na(tree_list))) {
     probs <- child_list_to_transmat(tree_list)
@@ -50,6 +50,14 @@ create_ce_tree_long_df <- function(tree_list = NA,
            variable.name = "name")
   }
 
+  if (inherits(label_health, "list")) {
+
+    label_health <-
+      as_tibble(label_health) %>%
+      melt(value.name = "health",
+           variable.name = "name")
+  }
+
   probs_names <-
     probs %>%
     transmat_to_long() %>%
@@ -59,15 +67,28 @@ create_ce_tree_long_df <- function(tree_list = NA,
 
   costs_names <-
     merge(cname_from_to, label_costs,
-          by = "name", all.x = TRUE) %>%
+          by = "name",
+          all.x = TRUE) %>%
+    mutate(from = as.numeric(as.character(from)),
+           to = as.numeric(as.character(to)))
+
+  health_names <-
+    merge(hname_from_to, label_health,
+          by = "name",
+          all.x = TRUE) %>%
     mutate(from = as.numeric(as.character(from)),
            to = as.numeric(as.character(to)))
 
   all_long <-
     merge(costs_names, probs_names,
-          all.y = TRUE, by = c("from", "to"),
+          all.y = TRUE,
+          by = c("from", "to"),
           suffixes = c(".cost", ".prob")) %>%
-    rename(vals = cost)
+    merge(health_names,
+          all = TRUE,
+          by = c("from", "to")) %>%
+    rename(name.health = name)
 
   return(all_long)
 }
+

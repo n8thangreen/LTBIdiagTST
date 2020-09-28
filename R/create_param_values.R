@@ -428,12 +428,54 @@ create_param_values <- function() {
     ) %>%
     setNames(c("name", "from", "to"))
 
+
+
+  #############
+  # QALY loss #
+  #############
+
+  t_chemo <- 3/12 #years
+  t_hep <- 1.5/12
+
+  label_health <-
+    list(
+      "Hep" = 0.22*t_hep,
+      "Total (complete)" = 0.01*t_chemo,
+      "Total (incomplete)" = 0.01*t_chemo/2)
+
+  label_health_distns <-
+    tribble(
+      ~name.health,   ~vals,
+      "Hep",
+        list(distn = "unif", params = c(min=0.22*t_hep, max=0.22*t_hep)),
+      "Total (complete)",
+        list(distn = "unif", params = c(min= 0.01*t_chemo, max= 0.01*t_chemo)),
+      "Total (incomplete)",
+        list(distn = "unif", params = c(min= 0.01*t_chemo/2, max= 0.01*t_chemo/2)))
+
+  TST_QFT_fwd_hname_from_to <-
+    rbind.data.frame(
+      c("Hep", 8, 9),
+      c("Hep", 31, 32),
+      c("Total (incomplete)", 9, 10),
+      c("Total (incomplete)", 32, 33),
+      c("Total (complete)", 11, 12),
+      c("Total (complete)", 34, 35)
+    ) %>%
+    setNames(c("name", "from", "to"))
+
+
   save(label_costs,
+       label_health,
+       label_probs,
+       label_costs_distns,
+       label_health_distns,
        label_probs_distns,
        TST_cname_from_to,
        TST_QFT_cname_from_to,
        TST_QFT_fwd_cname_from_to,
        TST_QFT_fwd_pname_from_to,
+       TST_QFT_fwd_hname_from_to,
        TST_TSPOT_pname_from_to,
        TSPOT_cname_from_to,
        TST_TSPOT_cname_from_to,
@@ -443,9 +485,5 @@ create_param_values <- function() {
        QFT_pname_from_to,
        TST_pname_from_to,
        hsuv,
-       label_probs,
-       label_costs_distns,
        file = here::here("data/params.RData"))
 }
-
-

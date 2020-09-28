@@ -1,6 +1,7 @@
 
 #' create_ltbi_heemod
 #'
+#' Create a heemod Markov model for the LTBI test population.
 #' Transitions happen at the beginning of each year (equivalent to transition happening at
 #' the end + ignoring the first year) with method = "beginning".
 #' Since with this method the first year is actually the second,
@@ -15,7 +16,7 @@
 #' @param d Discount factor
 #' @param N Number of runs
 #'
-#' @return
+#' @return Returns a function with initial population as input argument.
 #' @import heemod purrr dplyr
 #'
 #' @export
@@ -126,7 +127,8 @@ create_ltbi_heemod <- function(age_init = 34,
     dead = dead
   )
 
-  save(strat, params, cost, utility,
+  save(strat, param, mat_trans, noLTBI, completeTx,
+       incompleteTx, noTx, activeTB, dead,
        file = here::here("data", "ltbi_heemod.RData"))
 
   function(init_states) {
