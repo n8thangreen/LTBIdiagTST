@@ -1,7 +1,11 @@
 
 #' all parameter values required
-#' for the model
+#' for the decision tree model
 #'
+#' Excel model with structure and labelling:
+#' G:/DIDE-PC_2019/MSc-MPH/projects/2017/LTBI-TST_Manabu/decision tree Excel/all_decision_trees.xls
+#'
+#' @examples
 #' create_param_values()
 #'
 create_param_values <- function() {
@@ -154,7 +158,6 @@ create_param_values <- function() {
       "pReact_comp",  list(distn = "pert", params = c(mode = 0.000677904, min = 0.000677904, max = 0.000677904)),
       "pReact_incomp", list(distn = "pert", params = c(mode = 0.001530127, min = 0.001530127, max = 0.001530127))
     )
-
 
   label_probs <-
     list(
@@ -429,12 +432,11 @@ create_param_values <- function() {
     setNames(c("name", "from", "to"))
 
 
-
   #############
   # QALY loss #
   #############
 
-  t_chemo <- 3/12 #years
+  t_chemo <- 3/12  #years
   t_hep <- 1.5/12
 
   label_health <-
@@ -453,15 +455,76 @@ create_param_values <- function() {
       "Total (incomplete)",
         list(distn = "unif", params = c(min= 0.01*t_chemo/2, max= 0.01*t_chemo/2)))
 
+  TST_hname_from_to <-
+    rbind.data.frame(
+      c("Hep", 6, 7),
+      c("Hep", 15, 16),
+      c("Total (incomplete)", 7, 8),
+      c("Total (incomplete)", 16, 17),
+      c("Total (incomplete)", 9, 11),
+      c("Total (incomplete)", 18, 20),
+      c("Total (complete)", 9, 10),
+      c("Total (complete)", 18, 19)) %>%
+    setNames(c("name", "from", "to"))
+
+  QFT_hname_from_to <-
+    rbind.data.frame(
+      c("Hep", 5, 6),
+      c("Hep", 14, 15),
+      c("Total (incomplete)", 6, 7),
+      c("Total (incomplete)", 8, 10),
+      c("Total (incomplete)", 15, 16),
+      c("Total (incomplete)", 17, 19),
+      c("Total (complete)", 8, 9),
+      c("Total (complete)", 17, 18)) %>%
+    setNames(c("name", "from", "to"))
+
+  TSPOT_hname_from_to <-
+    rbind.data.frame(
+      c("Hep", 5, 6),
+      c("Hep", 14, 15),
+      c("Total (incomplete)", 6, 7),
+      c("Total (incomplete)", 8, 10),
+      c("Total (incomplete)", 15, 16),
+      c("Total (incomplete)", 17, 19),
+      c("Total (complete)", 8, 9),
+      c("Total (complete)", 17, 18)) %>%
+    setNames(c("name", "from", "to"))
+
+  TST_QFT_hname_from_to <-
+    rbind.data.frame(
+      c("Hep", 8, 9),
+      c("Hep", 17, 18),
+      c("Total (incomplete)", 9, 10),
+      c("Total (incomplete)", 11, 13),
+      c("Total (incomplete)", 18, 19),
+      c("Total (incomplete)", 20, 22),
+      c("Total (complete)", 11, 12),
+      c("Total (complete)", 20, 21)) %>%
+    setNames(c("name", "from", "to"))
+
+  TST_TSPOT_hname_from_to <-
+    rbind.data.frame(
+      c("Hep", 8, 9),
+      c("Hep", 17, 18),
+      c("Total (incomplete)", 9, 10),
+      c("Total (incomplete)", 11, 13),
+      c("Total (incomplete)", 18, 19),
+      c("Total (incomplete)", 20, 22),
+      c("Total (complete)", 11, 12),
+      c("Total (complete)", 20, 21)) %>%
+    setNames(c("name", "from", "to"))
+
   TST_QFT_fwd_hname_from_to <-
     rbind.data.frame(
       c("Hep", 8, 9),
       c("Hep", 31, 32),
       c("Total (incomplete)", 9, 10),
+      c("Total (incomplete)", 11, 48),
       c("Total (incomplete)", 32, 33),
+      c("Total (incomplete)", 34, 49),
       c("Total (complete)", 11, 12),
-      c("Total (complete)", 34, 35)
-    ) %>%
+      c("Total (complete)", 34, 35)) %>%
     setNames(c("name", "from", "to"))
 
 
@@ -472,18 +535,24 @@ create_param_values <- function() {
        label_health_distns,
        label_probs_distns,
        TST_cname_from_to,
+       TST_hname_from_to,
+       TST_pname_from_to,
        TST_QFT_cname_from_to,
+       TST_QFT_hname_from_to,
+       TST_QFT_pname_from_to,
        TST_QFT_fwd_cname_from_to,
        TST_QFT_fwd_pname_from_to,
        TST_QFT_fwd_hname_from_to,
-       TST_TSPOT_pname_from_to,
        TSPOT_cname_from_to,
-       TST_TSPOT_cname_from_to,
-       TST_QFT_pname_from_to,
+       TSPOT_hname_from_to,
        TSPOT_pname_from_to,
+       TST_TSPOT_cname_from_to,
+       TST_TSPOT_hname_from_to,
+       TST_TSPOT_pname_from_to,
        QFT_cname_from_to,
+       QFT_hname_from_to,
        QFT_pname_from_to,
-       TST_pname_from_to,
        hsuv,
        file = here::here("data/params.RData"))
 }
+
