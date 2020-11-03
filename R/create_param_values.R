@@ -4,6 +4,7 @@
 #'
 #' Excel model with structure and labelling:
 #' G:/DIDE-PC_2019/MSc-MPH/projects/2017/LTBI-TST_Manabu/decision tree Excel/all_decision_trees.xls
+#' @export
 #'
 #' @examples
 #' create_param_values()
@@ -79,7 +80,6 @@ create_param_values <- function() {
       "TSPOT", list(distn = "unif", params = c(min=18.06, max=68.23)),                     # Imperial
       "CXR",   list(distn = "pert", params = c(mode = 30.21, min = 23.16, max = 35.25)),
       "LFT",   list(distn = "pert", params = c(mode = 3.02, min = 2.01, max = 4.03)),
-      "Ns",    list(distn = "pert", params = c(mode = 44.31, min = 22.15, max = 66.46)),
       # "Hep",   list(distn = "pert", params = c(mode = 732.13, min = 366.06, max = 1464.25)),
       "Hep",   list(distn = "unif", params = c(min=366.06, max=1464.25)),                   # Pooran 2010
       "TB",    list(distn = "pert", params = c(mode = 4925.76, min = 2462.88, max = 9851.52)),
@@ -87,7 +87,7 @@ create_param_values <- function() {
       "Total (complete)", list(distn = "unif", params = c(min=169.68, max=169.68)),
       "Total (incomplete)", list(distn = "unif", params = c(min=84.84,  max=84.84)),
       "Total Cost of positive screening",  list(distn = "unif", params = c(min=233.17, max=247.28)),
-      # "TB special nurse visit", list(distn = "pert", params = c(mode = 44.31, min = 44.31, max = 44.31))
+      # "TB special nurse visit",    list(distn = "pert", params = c(mode = 44.31, min = 22.15, max = 66.46)),
       "TB special nurse visit", list(distn = "unif", params = c(min=22.15, max=66.23))
     )
 
@@ -215,17 +215,18 @@ create_param_values <- function() {
 
   TST_cname_from_to <-
     rbind.data.frame(
-      c("TST", 1, 2),
-      c("TB special nurse visit", 2, 3),
-      c("Total Cost of positive screening", 3, 4),
-      c("Hep", 6, 7),
-      c("Total (incomplete)", 7, 8),
-      c("Total (complete)", 9, 10),
-      c("Total (incomplete)", 9, 11),
-      c("Hep", 15, 16),
-      c("Total (incomplete)", 16, 17),
-      c("Total (complete)", 18, 19),
-      c("Total (incomplete)", 18, 20)
+      c("TB special nurse visit", 1, 2),
+      c("TST", 2, 3),
+      c("TB special nurse visit", 3, 4),
+      c("Total Cost of positive screening", 4, 5),
+      c("Hep", 7, 8),
+      c("Total (incomplete)", 8, 9),
+      c("Total (complete)", 10, 11),
+      c("Total (incomplete)", 10, 12),
+      c("Hep", 16, 17),
+      c("Total (incomplete)", 17, 18),
+      c("Total (complete)", 19, 20),
+      c("Total (incomplete)", 19, 21)
     ) %>%
     setNames(c("name", "from", "to"))
 
@@ -317,19 +318,19 @@ create_param_values <- function() {
 
   TST_pname_from_to <-
     rbind.data.frame(
-      c("pAccept_TST", 1, 2),
-      c("pTSTread", 2, 3),
-      c("TST_pos", 3, 4),
-      c("PPV_TST", 4, 5),
-      c("pAccept_chemo", 5, 6),
-      c("pHep", 6, 7),
-      c("pComp_chemo", 9, 10),
-      c("pAccept_chemo", 14, 15),
-      c("pHep", 15, 16),
-      c("pComp_chemo", 18, 19),
-      c("NPV_TST", 23, 26),
-      c("pLTBI", 28, 29),
-      c("pLTBI", 31, 32)
+      c("pAccept_TST", 2, 3),
+      c("pTSTread", 3, 4),
+      c("TST_pos", 4, 5),
+      c("PPV_TST", 5, 6),
+      c("pAccept_chemo", 6, 7),
+      c("pHep", 7, 8),
+      c("pComp_chemo", 10, 11),
+      c("pAccept_chemo", 15, 16),
+      c("pHep", 16, 17),
+      c("pComp_chemo", 19, 20),
+      c("NPV_TST", 24, 27),
+      c("pLTBI", 29, 30),
+      c("pLTBI", 32, 33)
     ) %>%
     setNames(c("name", "from", "to"))
 
@@ -457,14 +458,14 @@ create_param_values <- function() {
 
   TST_hname_from_to <-
     rbind.data.frame(
-      c("Hep", 6, 7),
-      c("Hep", 15, 16),
-      c("Total (incomplete)", 7, 8),
-      c("Total (incomplete)", 16, 17),
-      c("Total (incomplete)", 9, 11),
-      c("Total (incomplete)", 18, 20),
-      c("Total (complete)", 9, 10),
-      c("Total (complete)", 18, 19)) %>%
+      c("Hep", 7, 8),
+      c("Hep", 16, 17),
+      c("Total (incomplete)", 8, 9),
+      c("Total (incomplete)", 17, 18),
+      c("Total (incomplete)", 10, 12),
+      c("Total (incomplete)", 19, 21),
+      c("Total (complete)", 10, 11),
+      c("Total (complete)", 19, 20)) %>%
     setNames(c("name", "from", "to"))
 
   QFT_hname_from_to <-

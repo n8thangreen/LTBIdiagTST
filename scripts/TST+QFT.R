@@ -41,7 +41,7 @@ state_list <-
   list(
     no_LTBI  = c(33, 35, 37, 39, 41, 43, 45, 47, 49),
     LTBI_complete_Tx  = 12,
-    LTBI_incomplete_Txs = c(10, 48),
+    LTBI_incomplete_Tx = c(10, 48),
     LTBI_no_Tx = c(14, 16, 18, 20, 22, 24),
     activeTB = c(),
     dead = c())
