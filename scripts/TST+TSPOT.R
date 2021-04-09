@@ -1,6 +1,6 @@
 
 # test strategy:
-# dual tests (TST followed by IGRA QFT)
+# TST -> T.SPOT
 
 
 library(dplyr)
@@ -20,29 +20,20 @@ load(here::here("data", "trees.RData"))  #create_trees()
 
 tree_dat <-
   create_ce_tree_long_df(
-    tree_list = TST_QFT_tree,
+    tree_list = TST_TSPOT_tree,
     label_probs = label_probs,
     label_costs = label_costs,
     label_health = label_health,
-    pname_from_to = TST_QFT_pname_from_to,
-    cname_from_to = TST_QFT_cname_from_to,
-    hname_from_to = TST_QFT_hname_from_to)
+    pname_from_to = TST_TSPOT_pname_from_to,
+    cname_from_to = TST_TSPOT_cname_from_to,
+    hname_from_to = TST_TSPOT_hname_from_to)
 
-write.csv(tree_dat, file = "data/tree_dat_TST+QFT.csv")
-
-
-##TODO: why not include nurse cost in model params?
-
-## group together decision tree terminal states corresponding
-## to initial states in the Markov model
-## make sure names in same order as heemod model
-## TODO: match order automatically
 state_list <-
   list(
-    no_LTBI = c(19, 21, 22, 24, 29, 32, 37, 40),
-    LTBI_complete_Tx = 12,
+    no_LTBI  = c(19, 21, 22, 24, 29, 32, 37, 40, 43),
+    LTBI_complete_Tx  = 12,
     LTBI_incomplete_Tx = c(10, 13),
-    LTBI_no_Tx = c(15, 27, 31,35, 39),
+    LTBI_no_Tx = c(15, 27, 31, 35, 39, 42),
     activeTB = c(),
     dead = c())
 
@@ -53,8 +44,8 @@ dt <-
                 label_health_distns,
                 state_list)
 
-# returns expected values at each node
-# so we're interested in node `1` (root)
+write.csv(tree_dat, file = "data/tree_dat_TST+TSPOT.csv")
+
 
 # Markov model ----
 
@@ -78,5 +69,6 @@ res <-
        health =
          h_mm - dt$health$ev_sa[['1']])
 
-saveRDS(res, file = "data/res_TST+QFT.RDS")
+saveRDS(res, file = "data/res_TST+TSPOT.RDS")
+
 

@@ -1,20 +1,19 @@
 
-# TST model
+# test strategy:
+# TST
 
 
-library(readr)
 library(dplyr)
-library(tibble)
 library(reshape2)
-library(treeSimR)
 library(assertthat)
-library(CEdecisiontree)
 library(purrr)
+library(heemod)
 library(treeSimR)
+library(CEdecisiontree)
 
 
-load(here::here("data", "params.RData"))
-load(here::here("data", "trees.RData"))
+load(here::here("data", "params.RData")) #create_param_values()
+load(here::here("data", "trees.RData"))  #create_trees()
 
 
 # decision tree ----
@@ -31,13 +30,12 @@ tree_dat <-
 
 state_list <-
   list(
-    no_LTBI  = c(17,19,20,22,27,30,33),
-    LTBI_complete_Tx  = 10,
-    LTBI_incomplete_Tx = c(8,11),
-    LTBI_no_Tx = c(13,25,29,32),
+    no_LTBI  = c(18, 20, 21, 23, 28, 31, 34),
+    LTBI_complete_Tx  = 11,
+    LTBI_incomplete_Tx = c(9, 12),
+    LTBI_no_Tx = c(14, 26, 30, 33),
     activeTB = c(),
     dead = c())
-
 dt <-
   run_cedectree(tree_dat,
                 label_probs_distns,
@@ -45,10 +43,31 @@ dt <-
                 label_health_distns,
                 state_list)
 
-save(dt, file = here::here("data", "decision_tree_output_TST.RData"))
+write.csv(tree_dat, file = "data/tree_dat_TST.csv")
 
 
 # Markov model ----
 
+heemod_model <- create_ltbi_heemod()
 
-# save()
+res_mm <-
+  heemod_init_pop_PSA(
+    heemod_model,
+    init_states = dt$cost$term_pop_sa)
+
+# extract the cost and utility values
+c_mm <- map_df(res_mm, "run_model")$cost
+h_mm <- map_df(res_mm, "run_model")$utility
+
+
+## combine decision tree and Markov model output
+
+res <-
+  list(cost =
+         c_mm + dt$cost$ev_sa[['1']],
+       health =
+         h_mm - dt$health$ev_sa[['1']])
+
+saveRDS(res, file = "data/res_TST.RDS")
+
+

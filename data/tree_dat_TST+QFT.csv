@@ -1,0 +1,49 @@
+"","from","to","name.cost","cost","name.prob","prob","name.health","health"
+"1",1,2,NA,NA,"pLTBI",0.326,NA,NA
+"2",1,25,NA,NA,NA,0.674,NA,NA
+"3",2,3,"TST",18.62,"pAccept_TST",0.982,NA,NA
+"4",2,23,NA,NA,NA,0.018,NA,NA
+"5",3,4,"TB special nurse visit",44.31,"pTSTread",0.979,NA,NA
+"6",3,21,NA,NA,NA,0.021,NA,NA
+"7",4,5,NA,NA,"TST_sens",0.8,NA,NA
+"8",4,19,NA,NA,NA,0.2,NA,NA
+"9",5,6,"QFT",23.65,"pAccept_IGRA",0.992,NA,NA
+"10",5,17,NA,NA,NA,0.00800000000000001,NA,NA
+"11",6,7,"Total Cost of positive screening",241.23,"QFT_sens",0.9,NA,NA
+"12",6,15,NA,NA,NA,0.1,NA,NA
+"13",7,8,NA,NA,"pAccept_chemo",0.95,NA,NA
+"14",7,13,NA,NA,NA,0.05,NA,NA
+"15",8,9,"Hep",732.13,"pHep",0.002,"Hep",0.0275
+"16",8,11,NA,NA,NA,0.998,NA,NA
+"17",9,10,"Total (incomplete)",84.84,NA,1,"Total (incomplete)",0.00125
+"18",11,12,"Total (complete)",169.68,"pComp_chemo",0.8,"Total (complete)",0.0025
+"19",11,48,NA,NA,NA,0.2,"Total (incomplete)",0.00125
+"20",13,14,NA,NA,NA,1,NA,NA
+"21",15,16,NA,NA,NA,1,NA,NA
+"22",17,18,NA,NA,NA,1,NA,NA
+"23",19,20,NA,NA,NA,1,NA,NA
+"24",21,22,NA,NA,NA,1,NA,NA
+"25",23,24,NA,NA,NA,1,NA,NA
+"26",25,26,"TST",18.62,"pAccept_TST",0.982,NA,NA
+"27",25,46,NA,NA,NA,0.018,NA,NA
+"28",26,27,"TB special nurse visit",44.31,"pTSTread",0.979,NA,NA
+"29",26,44,NA,NA,NA,0.021,NA,NA
+"30",27,28,NA,NA,NA,0.1,NA,NA
+"31",27,42,NA,NA,"TST_spec",0.9,NA,NA
+"32",28,29,"QFT",23.65,"pAccept_IGRA",0.992,NA,NA
+"33",28,40,NA,NA,NA,0.00800000000000001,NA,NA
+"34",29,30,"Total Cost of positive screening",241.23,NA,0.05,NA,NA
+"35",29,38,NA,NA,"QFT_spec",0.95,NA,NA
+"36",30,31,NA,NA,"pAccept_chemo",0.95,NA,NA
+"37",30,36,NA,NA,NA,0.05,NA,NA
+"38",31,32,"Hep",732.13,"pHep",0.002,"Hep",0.0275
+"39",31,34,NA,NA,NA,0.998,NA,NA
+"40",32,33,"Total (incomplete)",84.84,NA,1,"Total (incomplete)",0.00125
+"41",34,35,"Total (complete)",169.68,"pComp_chemo",0.8,"Total (complete)",0.0025
+"42",34,49,NA,NA,NA,0.2,"Total (incomplete)",0.00125
+"43",36,37,NA,NA,NA,1,NA,NA
+"44",38,39,NA,NA,NA,1,NA,NA
+"45",40,41,NA,NA,NA,1,NA,NA
+"46",42,43,NA,NA,NA,1,NA,NA
+"47",44,45,NA,NA,NA,1,NA,NA
+"48",46,47,NA,NA,NA,1,NA,NA
