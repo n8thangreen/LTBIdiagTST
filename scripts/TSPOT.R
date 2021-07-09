@@ -11,8 +11,10 @@ library(heemod)
 library(treeSimR)
 library(CEdecisiontree)
 
-
+# input data
 load(here::here("data", "params.RData")) #create_param_values()
+
+# tree structures
 load(here::here("data", "trees.RData"))  #create_trees()
 
 
@@ -28,6 +30,7 @@ tree_dat <-
     cname_from_to = TSPOT_cname_from_to,
     hname_from_to = TSPOT_hname_from_to)
 
+# starting states of Markov model
 state_list <-
   list(
     no_LTBI  = c(16, 18, 19, 21, 26, 29),
@@ -46,6 +49,7 @@ dt <-
 
 write.csv(tree_dat, file = "data/tree_dat_TSPOT.csv")
 
+
 # Markov model ----
 
 heemod_model <- create_ltbi_heemod()
@@ -54,6 +58,10 @@ res_mm <-
   heemod_init_pop_PSA(
     heemod_model,
     init_states = dt$cost$term_pop_sa)
+
+#TODO: replace function above?
+# init_pop <- t(dt$cost$term_pop_sa)
+# res_mm <- map(init_pop, heemod_model)
 
 # extract the cost and utility values
 c_mm <- map_df(res_mm, "run_model")$cost

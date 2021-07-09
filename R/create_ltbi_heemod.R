@@ -16,7 +16,7 @@
 #' @param d Discount factor
 #' @param N Number of runs
 #'
-#' @return Returns a function with initial population as input argument.
+#' @return Returns a function with initial sub-populations as input.
 #' @import heemod purrr dplyr
 #'
 #' @export

@@ -36,6 +36,7 @@ state_list <-
     LTBI_no_Tx = c(14, 26, 30, 33),
     activeTB = c(),
     dead = c())
+
 dt <-
   run_cedectree(tree_dat,
                 label_probs_distns,

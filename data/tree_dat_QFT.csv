@@ -1,0 +1,29 @@
+"","from","to","name.cost","cost","name.prob","prob","name.health","health"
+"1",1,2,"QFT",23.65,"pAccept_IGRA",0.992,NA,NA
+"2",1,27,NA,NA,NA,0.00800000000000001,NA,NA
+"3",2,3,"Total Cost of positive screening",241.23,"QFT_pos",0.281,NA,NA
+"4",2,22,NA,NA,NA,0.719,NA,NA
+"5",3,4,NA,NA,"PPV_QFT",0.928,NA,NA
+"6",3,13,NA,NA,NA,0.072,NA,NA
+"7",4,5,NA,NA,"pAccept_chemo",0.95,NA,NA
+"8",4,11,NA,NA,NA,0.05,NA,NA
+"9",5,6,"Hep",732.13,"pHep",0.002,"Hep",0.0275
+"10",5,8,NA,NA,NA,0.998,NA,NA
+"11",6,7,"Total (incomplete)",84.84,NA,1,"Total (incomplete)",0.00125
+"12",8,9,"Total (complete)",169.68,"pComp_chemo",0.8,"Total (complete)",0.0025
+"13",8,10,"Total (incomplete)",84.84,NA,0.2,"Total (incomplete)",0.00125
+"14",11,12,NA,NA,NA,1,NA,NA
+"15",13,14,NA,NA,"pAccept_chemo",0.95,NA,NA
+"16",13,20,NA,NA,NA,0.05,NA,NA
+"17",14,15,"Hep",732.13,"pHep",0.002,"Hep",0.0275
+"18",14,17,NA,NA,NA,0.998,NA,NA
+"19",15,16,"Total (incomplete)",84.84,NA,1,"Total (incomplete)",0.00125
+"20",17,18,"Total (complete)",169.68,"pComp_chemo",0.8,"Total (complete)",0.0025
+"21",17,19,"Total (incomplete)",84.84,NA,0.2,"Total (incomplete)",0.00125
+"22",20,21,NA,NA,NA,1,NA,NA
+"23",22,23,NA,NA,NA,0.091,NA,NA
+"24",22,25,NA,NA,"NPV_QFT",0.909,NA,NA
+"25",23,24,NA,NA,NA,1,NA,NA
+"26",25,26,NA,NA,NA,1,NA,NA
+"27",27,28,NA,NA,"pLTBI",0.326,NA,NA
+"28",27,29,NA,NA,NA,0.674,NA,NA
