@@ -31,18 +31,16 @@ tree_dat <-
 write.csv(tree_dat, file = "data/tree_dat_TST+QFT.csv")
 
 
-##TODO: why not include nurse cost in model params?
-
 ## group together decision tree terminal states corresponding
 ## to initial states in the Markov model
 ## make sure names in same order as heemod model
 ## TODO: match order automatically
 state_list <-
   list(
-    no_LTBI = c(19, 21, 22, 24, 29, 32, 37, 40),
+    no_LTBI = c(19, 21, 22, 24, 29, 32, 37, 40, 43),
     LTBI_complete_Tx = 12,
     LTBI_incomplete_Tx = c(10, 13),
-    LTBI_no_Tx = c(15, 27, 31,35, 39),
+    LTBI_no_Tx = c(15, 27, 31, 35, 39, 42),
     activeTB = c(),
     dead = c())
 
@@ -54,7 +52,9 @@ dt <-
                 state_list)
 
 # returns expected values at each node
-# so we're interested in node `1` (root)
+# we're interested in node `1` (root)
+
+save(dt, file = "data/run_cedectree_TST+QFT.RData")
 
 # Markov model ----
 

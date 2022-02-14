@@ -1,5 +1,5 @@
 "","from","to","name.cost","cost","name.prob","prob","name.health","health"
-"1",1,2,"TB special nurse visit",44.31,NA,1,NA,NA
+"1",1,2,NA,NA,NA,1,NA,NA
 "2",2,3,"TST",18.62,"pAccept_TST",0.982,NA,NA
 "3",2,32,NA,NA,NA,0.018,NA,NA
 "4",3,4,"TB special nurse visit",44.31,"pTSTread",0.979,NA,NA

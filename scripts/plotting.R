@@ -5,6 +5,9 @@
 
 library(BCEA)
 
+
+# load data
+
 dat <- list()
 dat$TST_QFT <- readRDS(file = "data/res_TST+QFT.RDS")
 dat$TSPOT <- readRDS(file = "data/res_TSPOT.RDS")
@@ -13,34 +16,54 @@ dat$QFT <- readRDS(file = "data/res_QFT.RDS")
 dat$TST_TSPOT <- readRDS(file = "data/res_TST+TSPOT.RDS")
 
 
-filenames <- Sys.glob("data/res_*.RDS")
-dat <- map(filenames, readRDS)
+# filenames <- Sys.glob("data/res_*.RDS")
+# dat <- map(filenames, readRDS)
 
-delta_c1 <- dat$TST_QFT$cost - dat$TST$cost
-delta_h1 <- dat$TST_QFT$health - dat$TST$health
+#######################
+# plot direct
 
-delta_c2 <- dat$TSPOT$cost - dat$TST$cost
-delta_h2 <- dat$TSPOT$health - dat$TST$health
+## point values
+heemod_model <- create_ltbi_heemod()
 
-delta_c3 <- dat$QFT$cost - dat$TST$cost
-delta_h3 <- dat$QFT$health - dat$TST$health
+# points values
+##TODO
 
-delta_c4 <- dat$TST_TSPOT$cost - dat$TST$cost
-delta_h4 <- dat$TST_TSPOT$health - dat$TST$health
+# incremental cost, qalys
+# TST as baseline
 
-plot(delta_h2, delta_c2)#, xlim = c(-0.01, 0.17))
-points(mean(delta_h2), mean(delta_c2), col = "black", pch = 16)
+delta_c_tstqft<- dat$TST_QFT$cost - dat$TST$cost
+delta_h_tstqft <- dat$TST_QFT$health - dat$TST$health
 
-points(delta_h1, delta_c1, col = "green")
+delta_c_tspot <- dat$TSPOT$cost - dat$TST$cost
+delta_h_tspot <- dat$TSPOT$health - dat$TST$health
 
-points(delta_h3, delta_c3, col = "blue")
-points(mean(delta_h3), mean(delta_c3), col = "blue", pch = 16)
+delta_c_qft <- dat$QFT$cost - dat$TST$cost
+delta_h_qft <- dat$QFT$health - dat$TST$health
 
-points(delta_h4, delta_c4, col = "red")
-points(mean(delta_h4), mean(delta_c4), col = "red", pch = 16)
+delta_c_tsttspot <- dat$TST_TSPOT$cost - dat$TST$cost
+delta_h_tsttspot <- dat$TST_TSPOT$health - dat$TST$health
+
+plot(delta_h_tspot, delta_c_tspot,
+     xlim = c(-0.005, 0.005),
+     # xlim = c(-0.01, 0.17),
+     xlab = "incremental qalys", ylab = "Incremental cost")
+points(mean(delta_h_tspot), mean(delta_c_tspot), col = "black", pch = 16, cex = 1.5)
+
+points(delta_h_tstqft, delta_c_tstqft, col = "green")
+points(mean(delta_h_tstqft), mean(delta_c_tstqft), col = "green", pch = 16, cex = 1.5)
+
+points(delta_h_qft, delta_c_qft, col = "blue")
+points(mean(delta_h_qft), mean(delta_c_qft), col = "blue", pch = 16, cex = 1.5)
+
+points(delta_h_tsttspot, delta_c_tsttspot, col = "red")
+points(mean(delta_h_tsttspot), mean(delta_c_tsttspot), col = "red", pch = 16, cex = 1.5)
 
 abline(h = 0)
 abline(v = 0)
+
+
+###############
+# with BCEA
 
 eff <- cbind(dat$TST_QFT$health,
              dat$TST_TSPOT$health,
@@ -54,13 +77,21 @@ cost <- cbind(dat$TST_QFT$cost,
               dat$TSPOT$cost,
               dat$QFT$cost)
 
-m <- bcea(eff, cost, Kmax=500,
+m <- bcea(-eff, -cost, Kmax = 500, ref = 3,
           interventions = c("TST QFT", "TST TSPOT", "TST", "TSPOT", "QFT"))
 
-ceplane.plot(m, graph = "base", xlim = c(0.15,0.17), pos = "bottomleft")
-ceplane.plot(m, graph = "ggplot", pos = "bottomleft") + xlim(0.15,0.17)
+ceplane.plot(m, graph = "base")#, xlim = c(0.15,0.17), pos = "bottomleft")
+ceplane.plot(m, graph = "ggplot")#, pos = "bottomleft") + xlim(0.15,0.17)
 
 mypalette <- RColorBrewer::brewer.pal(4, "Set2")
-ceplane.plot(m, graph = "ggplot", pos = TRUE, ICER_sizes = 2, point_colors = mypalette) + xlim(0.16, 0.17)
+ceplane.plot(m, graph = "ggplot", pos = TRUE,
+             ICER_sizes = 2,
+             point_colors = mypalette) #+
+  # xlim(0.16, 0.17)
 
 ceac.plot(m)
+
+# simultaneous comparisons
+m_simul <- multi.ce(m)
+ceac.plot(m_simul)
+

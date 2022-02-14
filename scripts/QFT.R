@@ -1,6 +1,6 @@
 
 # test strategy:
-# QFT
+# QFT only
 
 
 library(dplyr)
@@ -45,11 +45,15 @@ dt <-
                 state_list)
 
 write.csv(tree_dat, file = "data/tree_dat_QFT.csv")
+save(dt, file = "data/run_cedectree_QFT.RData")
 
 
 # Markov model ----
 
 heemod_model <- create_ltbi_heemod()
+
+# points values
+out_heemod <- heemod_model(unname(unlist(dt$cost$term_pop_point)))
 
 res_mm <-
   heemod_init_pop_PSA(
@@ -70,5 +74,12 @@ res <-
          h_mm - dt$health$ev_sa[['1']])
 
 saveRDS(res, file = "data/res_QFT.RDS")
+
+
+# res_point <-
+#   list(cost =
+#          summary(out_heemod)$res_values$cost + dt$cost$ev_point[['1']],
+#        health =
+#          summary(out_heemod)$res_values$utility - dt$health$ev_point[['1']])
 
 

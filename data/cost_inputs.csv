@@ -1,0 +1,45 @@
+"","label_costs"
+"Contact tracing per contact",368.9
+"Mean number of contacts examined per primary case",6.5
+"Total Contact tracing",2397.85
+"Cost of inpatient episode for acute TB",3325.15
+"Proportion of patients with acute TB who are admitted",0.53
+"Total Inpatient care",1762.3295
+"Cost of culture test",8.06
+"Culture tests per case",4
+"CXR per case",2
+"LFT per case",4
+"Total Cost of tests",104.74
+"HRZE tablet (60)",39.5
+"_tablets per month",150
+"HRZE per month",98.75
+"HR tablet 300/150 (56)",25.22
+"tablets per month",60
+"HR per month",27.02142857
+"Duration of initial therapy",2
+"Duration of continious therapy",4
+"Total Cost of chemotherapy",305.5857143
+"Cost of outpatient consultation (first visit)",208
+"Cost of outpatient consultation (follow-up visit)",94
+"Number of outpatient clinical visits per case",4
+"Visits from TB nurse per case",6
+"Total Out patient care",755.86
+"TST",18.62
+"QFT",23.65
+"TB special nurse visit",44.31
+"TSPOT",35.12
+"Out patient consultation (first visit)",208
+"CXR",30.21
+"LFT",3.02
+"Number of outpatient consultation",1
+"Number of CXR",1
+"Number of LFT",1
+"Total Cost of positive screening",241.23
+"Follow-up via nurses",44.31
+"HR tablet (300/150) (56)",25.22
+"drug cost per month",27.02
+"Number of TB nurse appointments",2
+"Duration of HR",3
+"Total (complete)",169.68
+"Total (incomplete)",84.84
+"Hep",732.13

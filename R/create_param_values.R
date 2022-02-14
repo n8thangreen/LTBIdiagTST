@@ -9,6 +9,11 @@
 #' @examples
 #' create_param_values()
 #'
+#' ## save lists as csv
+#' # write.csv(cbind(label_costs), file = "data/cost_inputs.csv")
+#' # write.csv(cbind(label_health), file = "data/health_inputs.csv")
+#' # write.csv(cbind(label_probs), file = "data/probs_inputs.csv")
+#'
 create_param_values <- function() {
 
   # assign values to labels ------------------------------------------
@@ -215,7 +220,7 @@ create_param_values <- function() {
 
   TST_cname_from_to <-
     rbind.data.frame(
-      c("TB special nurse visit", 1, 2),
+      # c("TB special nurse visit", 1, 2), # remove this since all trees start with nurse visit
       c("TST", 2, 3),
       c("TB special nurse visit", 3, 4),
       c("Total Cost of positive screening", 4, 5),

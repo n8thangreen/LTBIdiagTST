@@ -54,6 +54,9 @@ write.csv(tree_dat, file = "data/tree_dat_TSPOT.csv")
 
 heemod_model <- create_ltbi_heemod()
 
+# points values
+heemod_model(unname(unlist(dt$cost$term_pop_point)))
+
 res_mm <-
   heemod_init_pop_PSA(
     heemod_model,

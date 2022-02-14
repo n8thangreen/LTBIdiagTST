@@ -45,7 +45,7 @@ dt <-
                 state_list)
 
 write.csv(tree_dat, file = "data/tree_dat_TST+TSPOT.csv")
-
+save(dt, file = "data/run_cedectree_TST+TSPOT.RData")
 
 # Markov model ----
 

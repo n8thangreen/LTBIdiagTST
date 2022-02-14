@@ -1,6 +1,6 @@
 
 # test strategy:
-# TST
+# TST only
 
 
 library(dplyr)
@@ -28,28 +28,33 @@ tree_dat <-
     cname_from_to = TST_cname_from_to,
     hname_from_to = TST_hname_from_to)
 
+# Markov model starting states
 state_list <-
   list(
     no_LTBI  = c(18, 20, 21, 23, 28, 31, 34),
     LTBI_complete_Tx  = 11,
     LTBI_incomplete_Tx = c(9, 12),
     LTBI_no_Tx = c(14, 26, 30, 33),
-    activeTB = c(),
-    dead = c())
+    activeTB = NULL,
+    dead = NULL)
 
 dt <-
   run_cedectree(tree_dat,
+                # PSA
                 label_probs_distns,
                 label_costs_distns,
                 label_health_distns,
                 state_list)
 
 write.csv(tree_dat, file = "data/tree_dat_TST.csv")
-
+save(dt, file = "data/run_cedectree_TST.RData")
 
 # Markov model ----
 
 heemod_model <- create_ltbi_heemod()
+
+# points values
+heemod_model(unname(unlist(dt$cost$term_pop_point)))
 
 res_mm <-
   heemod_init_pop_PSA(
