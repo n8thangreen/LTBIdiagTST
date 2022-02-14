@@ -1,0 +1,26 @@
+model{
+  # tb decision tree values
+
+  # N : total suspected cases
+
+  n_accept_tst ~ dbin(p_accept_tst, N)
+
+  n_accept_igra ~ dbin(p_accept_igra, N)
+
+  n_igra_pos ~ dbin(p_igra_pos, n_accept_igra)
+
+  n_tst_pos ~ dbin(p_tst_pos, n_accept_tst)
+
+  # two-step test after positive tst
+  n_igra_pos_tst_pos ~ dbin(p_igra_pos_tst_pos, n_tst_pos)
+  n_igra_pos_tst_neg ~ dbin(p_igra_pos_tst_neg, N - n_tst_pos)
+
+  # priors
+
+  p_igra_pos_tst_pos ~ dbeta(0.5, 0.5)
+  p_igra_pos_tst_neg ~ dbeta(0.5, 0.5)
+  p_tst_pos ~ dbeta(0.5, 0.5)
+  p_igra_pos ~ dbeta(0.5, 0.5)
+  p_accept_igra ~ dbeta(0.5, 0.5)
+  p_accept_tst ~ dbeta(0.5, 0.5)
+}
