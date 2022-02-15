@@ -23,4 +23,25 @@ model{
   p_igra_pos ~ dbeta(0.5, 0.5)
   p_accept_igra ~ dbeta(0.5, 0.5)
   p_accept_tst ~ dbeta(0.5, 0.5)
+
+  sens_tst ~ dnorm(0.79, pow(0.03, -2))
+  spec_tst ~ dnorm(0.59, pow(0.05, -2))
+  sens_qft ~ dnorm(0.80, pow(0.015, -2))
+  spec_qft ~ dnorm(0.97, pow(0.005, -2))
+  sens_tspot ~ dnorm(0.90, pow(0.01, -2))
+  spec_tspot ~ dnorm(0.95, pow(0.005, -2))
+
+  #prev ~ dnorm(0.326, pow(0.03, -2))     ##TODO
+  prev_tst = (p_tst_pos + spec_tst - 1)/(sens_tst + spec_tst - 1)
+  prev_igra = (p_igra_pos + spec_qft - 1)/(sens_qft + spec_qft - 1)
+
+  PPV_tst = (sens_tst*prev_tst)/p_tst_pos
+  PPV_igra = (sens_qft*prev_igra)/p_igra_pos
+  #PPV_qft = (sens_qft*prev)/p_qft_pos
+  #PPV_tspot = (sens_tspot*prev)/p_tspot_pos
+
+  NPV_tst = (spec_tst*(1 - prev_tst))/(1 - p_tst_pos)
+  NPV_igra = (spec_qft*(1 - prev_igra))/(1 - p_igra_pos)
+  #NPV_qft = (spec_qft*(1 - prev))/(1 - p_qft_pos)
+  #NPV_tspot = (spec_tspot*(1 - prev))/(1 - p_tspot_pos)
 }

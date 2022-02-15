@@ -22,7 +22,17 @@ params <- c("p_accept_tst",
             "p_igra_pos",
             "p_tst_pos",
             "p_igra_pos_tst_pos",
-            "p_igra_pos_tst_neg")
+            "p_igra_pos_tst_neg",
+            "PPV_tst",
+            "PPV_igra",
+            # "PPV_qft",
+            # "PPV_tspot",
+            "NPV_tst",
+            "NPV_igra",
+            # "NPV_qft",
+            # "NPV_tspot",
+            "prev_tst",
+            "prev_igra")
 
 n.iter <- 1000
 n.burnin <- 500
@@ -43,5 +53,10 @@ R2WinBUGS::attach.bugs(res$BUGSoutput)
 
 save(res, file = "data/jags_output.RData")
 
-par(mfrow = c(3,3))
-densplot(as.mcmc(res))
+par(mfrow = c(3,4))
+dat <- as.mcmc(res)
+dat[[1]] <- dat[[1]][, -1]
+densplot(as.mcmc(dat))
+
+summary(dat)
+
