@@ -1,18 +1,23 @@
 Package: LTBIdiagTST
-Title: What the Package Does (One Line, Title Case)
+Title: Latent TB infection cost-effectiveness analysis
 Version: 0.0.0.9000
 Authors@R: 
-    person(given = "First",
-           family = "Last",
+    person(given = "Nathan",
+           family = "Green",
            role = c("aut", "cre"),
-           email = "first.last@example.com",
-           comment = c(ORCID = "YOUR-ORCID-ID"))
-Description: What the package does (one paragraph).
-License: `use_mit_license()`, `use_gpl3_license()` or friends to
-    pick a license
+           email = "n.green@ucl.ac.uk",
+           comment = c(ORCID = "0000-0003-2745-1736"))
+Description: Using probabilistic decision trees.
+License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.1.1
+RoxygenNote: 7.2.1
+Imports:
+  dplyr,
+  heemod,
+  purrr
+Depends:
+  R (>= 3.5.0)
 Suggests: 
     testthat

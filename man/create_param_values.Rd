@@ -3,11 +3,20 @@
 \name{create_param_values}
 \alias{create_param_values}
 \title{all parameter values required
-for the model}
+for the decision tree model}
 \usage{
 create_param_values()
 }
 \description{
-all parameter values required
-for the model
+Excel model with structure and labelling:
+G:/DIDE-PC_2019/MSc-MPH/projects/2017/LTBI-TST_Manabu/decision tree Excel/all_decision_trees.xls
+}
+\examples{
+create_param_values()
+
+## save lists as csv
+# write.csv(cbind(label_costs), file = "data/cost_inputs.csv")
+# write.csv(cbind(label_health), file = "data/health_inputs.csv")
+# write.csv(cbind(label_probs), file = "data/probs_inputs.csv")
+
 }
