@@ -49,12 +49,16 @@ dt <-
 write.csv(tree_dat, file = "data/tree_dat_TST.csv")
 save(dt, file = "data/run_cedectree_TST.RData")
 
-# Markov model ----
+# summary(dt$cost$ev_sa)
+
+###################
+# Markov model
 
 heemod_model <- create_ltbi_heemod()
 
 # points values
-heemod_model(unname(unlist(dt$cost$term_pop_point)))
+res_mm_pt <- heemod_model(
+  unname(unlist(dt$cost$term_pop_point)))
 
 res_mm <-
   heemod_init_pop_PSA(

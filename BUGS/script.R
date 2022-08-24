@@ -58,5 +58,31 @@ dat <- as.mcmc(res)
 dat[[1]] <- dat[[1]][, -1]
 densplot(as.mcmc(dat))
 
-summary(dat)
+library(dplyr)
+
+
+# posterior summary table for paper
+
+tab <-
+  summary(dat, quantiles = c(0.5, 0.025, 0.975))$quantiles %>%
+  round(2)
+
+tab <-
+  tab[c("p_accept_igra",
+        "p_accept_tst",
+        "p_igra_pos",
+        "p_tst_pos",
+        "p_igra_pos_tst_pos",
+        "p_igra_pos_tst_neg",
+        "PPV_tst",
+        "NPV_tst",
+        "PPV_igra",
+        "NPV_igra",
+        "prev_igra",
+        "prev_tst"), ] %>%
+  as.data.frame
+
+tab$CrI <- paste0(tab$`2.5%`, ", ", tab$`97.5%`)
+
+tab <- tab[, c('50%', 'CrI')]
 

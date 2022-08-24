@@ -31,6 +31,8 @@ model{
   sens_tspot ~ dnorm(0.90, pow(0.01, -2))
   spec_tspot ~ dnorm(0.95, pow(0.005, -2))
 
+  # generated values
+
   #prev ~ dnorm(0.326, pow(0.03, -2))     ##TODO
   prev_tst = (p_tst_pos + spec_tst - 1)/(sens_tst + spec_tst - 1)
   prev_igra = (p_igra_pos + spec_qft - 1)/(sens_qft + spec_qft - 1)

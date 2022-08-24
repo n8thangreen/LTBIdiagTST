@@ -56,7 +56,8 @@ dt <-
 
 save(dt, file = "data/run_cedectree_TST+QFT.RData")
 
-# Markov model ----
+#########################
+# Markov model
 
 heemod_model <- create_ltbi_heemod()
 

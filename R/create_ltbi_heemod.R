@@ -139,7 +139,7 @@ create_ltbi_heemod <- function(age_init = 34,
         method = "end",
         strat,
         parameters = param,
-        cycles = 66,
+        cycles = 65,
         cost = cost,
         effect = utility
       ))

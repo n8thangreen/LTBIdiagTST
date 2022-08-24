@@ -1,14 +1,14 @@
 "","from","to","name.cost","cost","name.prob","prob","name.health","health"
-"1",1,2,"TST",18.62,"pAccept_TST",0.982,NA,NA
-"2",1,41,NA,NA,NA,0.018,NA,NA
+"1",1,2,"TST",18.62,"pAccept_TST",0.96,NA,NA
+"2",1,41,NA,NA,NA,0.04,NA,NA
 "3",2,3,"TB special nurse visit",44.31,"pTSTread",0.979,NA,NA
 "4",2,38,NA,NA,NA,0.021,NA,NA
-"5",3,4,NA,NA,"TST_pos",0.534,NA,NA
-"6",3,33,NA,NA,NA,0.466,NA,NA
-"7",4,5,"TSPOT",35.12,"pAccept_IGRA_TST+",0.995,NA,NA
-"8",4,30,NA,NA,NA,0.005,NA,NA
-"9",5,6,"Total Cost of positive screening",241.23,"TSPOT_pos_TST+",0.46,NA,NA
-"10",5,25,NA,NA,NA,0.54,NA,NA
+"5",3,4,NA,NA,"TST_pos",0.56,NA,NA
+"6",3,33,NA,NA,NA,0.44,NA,NA
+"7",4,5,"TSPOT",35.12,"pAccept_IGRA_TST+",0.99,NA,NA
+"8",4,30,NA,NA,NA,0.01,NA,NA
+"9",5,6,"Total Cost of positive screening",241.23,"TSPOT_pos_TST+",0.38,NA,NA
+"10",5,25,NA,NA,NA,0.62,NA,NA
 "11",6,7,NA,NA,"PPV_TSPOT_TST+",0.944,NA,NA
 "12",6,16,NA,NA,NA,0.056,NA,NA
 "13",7,8,NA,NA,"pAccept_chemo",0.95,NA,NA
@@ -31,10 +31,10 @@
 "30",25,28,NA,NA,"NPV_TSPOT_TST+",0.911,NA,NA
 "31",26,27,NA,NA,NA,1,NA,NA
 "32",28,29,NA,NA,NA,1,NA,NA
-"33",30,31,NA,NA,"PPV_TST",0.482,NA,NA
-"34",30,32,NA,NA,NA,0.518,NA,NA
-"35",33,34,NA,NA,NA,0.147,NA,NA
-"36",33,36,NA,NA,"NPV_TST",0.853,NA,NA
+"33",30,31,NA,NA,"PPV_TST",0.55,NA,NA
+"34",30,32,NA,NA,NA,0.45,NA,NA
+"35",33,34,NA,NA,NA,0.18,NA,NA
+"36",33,36,NA,NA,"NPV_TST",0.82,NA,NA
 "37",34,35,NA,NA,NA,1,NA,NA
 "38",36,37,NA,NA,NA,1,NA,NA
 "39",38,39,NA,NA,"pLTBI",0.326,NA,NA

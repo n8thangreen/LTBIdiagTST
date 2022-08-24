@@ -39,10 +39,10 @@ create_param_values <- function() {
       "HRZE per month" = 98.75,
       "HR tablet 300/150 (56)" = 25.22,
       "tablets per month" = 60,
-      "HR per month" = 27.02142857,
+      "HR per month" = 27.02,
       "Duration of initial therapy" = 2,
       "Duration of continious therapy" = 4,
-      "Total Cost of chemotherapy" = 305.5857143,
+      "Total Cost of chemotherapy" = 305.58,
 
       "Cost of outpatient consultation (first visit)" = 208,
       "Cost of outpatient consultation (follow-up visit)" = 94,
@@ -77,131 +77,141 @@ create_param_values <- function() {
   label_costs_distns <-
     tribble(
       ~name.cost,   ~vals,
-      # "TST",   list(distn = "pert", params = c(mode = 18.62, min = 9.31, max = 37.24)),    # Pooran 2010
-      "TST",   list(distn = "unif", params = c(min=9.31, max=37.24)),
-      # "QFT",   list(distn = "pert", params = c(mode = 23.65, min = 12.33, max = 45.29)),
-      "QFT",   list(distn = "unif", params = c(min=35, max=80)),
-      # "TSPOT", list(distn = "pert", params = c(mode = 35.12, min = 18.06, max = 68.23)),
-      "TSPOT", list(distn = "unif", params = c(min=18.06, max=68.23)),                     # Imperial
-      "CXR",   list(distn = "pert", params = c(mode = 30.21, min = 23.16, max = 35.25)),
-      "LFT",   list(distn = "pert", params = c(mode = 3.02, min = 2.01, max = 4.03)),
-      # "Hep",   list(distn = "pert", params = c(mode = 732.13, min = 366.06, max = 1464.25)),
-      "Hep",   list(distn = "unif", params = c(min=366.06, max=1464.25)),                   # Pooran 2010
+      "TST",   list(distn = "pert", params = c(mode = 18.49, min = 9.25, max = 36.98)),    # Pooran 2010
+      # "TST",   list(distn = "unif", params = c(min=9.31, max=37.24)),
+
+      "QFT",   list(distn = "pert", params = c(mode = 23.65, min = 12.33, max = 45.29)),   # Imperial NHS
+      # "QFT",   list(distn = "unif", params = c(min=35, max=80)),
+
+      "TSPOT", list(distn = "pert", params = c(mode = 35.12, min = 18.06, max = 68.23)),   # Imperial NHS
+
+      "CXR",   list(distn = "pert", params = c(mode = 30.21, min = 23.16, max = 35.25)),   # Reference cost 2016
+      "LFT",   list(distn = "pert", params = c(mode = 3.02, min = 2.01, max = 4.03)),      # Reference cost 2016
+
+      "Hep",   list(distn = "pert", params = c(mode = 732.13, min = 363, max = 1454)),     # Pooran 2010
+
       "TB",    list(distn = "pert", params = c(mode = 4925.76, min = 2462.88, max = 9851.52)),
-      #
+
       "Total (complete)", list(distn = "unif", params = c(min=169.68, max=169.68)),
       "Total (incomplete)", list(distn = "unif", params = c(min=84.84,  max=84.84)),
-      "Total Cost of positive screening",  list(distn = "unif", params = c(min=233.17, max=247.28)),
-      # "TB special nurse visit",    list(distn = "pert", params = c(mode = 44.31, min = 22.15, max = 66.46)),
-      "TB special nurse visit", list(distn = "unif", params = c(min=22.15, max=66.23))
+      "Total Cost of positive screening", list(distn = "pert", params = c(mode=241, min=233.17, max=247.28)),
+      "TB special nurse visit", list(distn = "pert", params = c(mode = 44.31, min = 22.15, max = 66.46)),
     )
 
   label_probs_distns <-
     tribble(
       ~name.prob,         ~prob,
-      # "TST_sens",    list(distn = "pert", params = c(mode = 0.79, min = 0.69, max = 0.89)),
-      # "TST_spec",    list(distn = "pert", params = c(mode = 0.59, min = 0.46, max = 0.73)),
-      "TST_sens",    list(distn = "unif", params = c(min=0.73, max=1.0)),                     # Warwick evidence
-      "TST_spec",    list(distn = "unif", params = c(min=0.12, max=0.53)), # Kik (2010) lower, Harstad (2010) upper from Warwick evidence
-      # "QFT_sens",    list(distn = "pert", params = c(mode = 0.77, min = 0.8, max = 0.84)),
-      # "QFT_spec",    list(distn = "pert", params = c(mode = 0.97, min = 0.94, max = 0.99)),
-      "QFT_sens",    list(distn = "unif", params = c(min=0.81, max=0.87)),                    # Diel (2010)
-      "QFT_spec",    list(distn = "unif", params = c(min=0.98, max=1.0)),
-      # "TSPOT_sens",  list(distn = "pert", params = c(mode = 0.9, min = 0.87, max = 0.93)),
-      # "TSPOT_spec",  list(distn = "pert", params = c(mode = 0.95, min = 0.92, max = 0.98)),
-      "TSPOT_sens",   list(distn = "unif", params = c(min=0.85, max=0.93)),                 # NICE appendix (2010)
-      "TSPOT_spec",   list(distn = "unif", params = c(min=0.86, max=1.0)),
-      # "pAccept_chemo", list(distn = "pert", params = c(mode = 0.95, min = 0.5, max = 1)),
-      "pAccept_chemo",  list(distn = "unif", params = c(min=0.5,   max=1)),                   # Pareek 2013
+      "TST_sens",    list(distn = "pert", params = c(mode = 0.79, min = 0.69, max = 0.89)),  # Kahwati (2016)
+      "TST_spec",    list(distn = "pert", params = c(mode = 0.59, min = 0.46, max = 0.73)),  # Pai (2008)
+      # "TST_sens",    list(distn = "unif", params = c(min=0.73, max=1.0)),                     # Warwick evidence
+      # "TST_spec",    list(distn = "unif", params = c(min=0.12, max=0.53)), # Kik (2010) lower, Harstad (2010) upper from Warwick evidence
+
+      "QFT_sens",    list(distn = "pert", params = c(mode = 0.8, min = 0.77, max = 0.84)),  # Pai (2008)
+      "QFT_spec",    list(distn = "pert", params = c(mode = 0.97, min = 0.94, max = 0.99)), # Pai (2008)
+      # "QFT_sens",    list(distn = "unif", params = c(min=0.81, max=0.87)),                    # Diel (2010)
+      # "QFT_spec",    list(distn = "unif", params = c(min=0.98, max=1.0)),
+
+      "TSPOT_sens",  list(distn = "pert", params = c(mode = 0.9, min = 0.87, max = 0.93)),  # Kahwati (2016)
+      "TSPOT_spec",  list(distn = "pert", params = c(mode = 0.95, min = 0.92, max = 0.98)), # Kahwati (2016)
+      # "TSPOT_sens",   list(distn = "unif", params = c(min=0.85, max=0.93)),                 # NICE appendix (2010)
+      # "TSPOT_spec",   list(distn = "unif", params = c(min=0.86, max=1.0)),
+
+      "pAccept_chemo", list(distn = "pert", params = c(mode = 0.95, min = 0.5, max = 1)),  # August, Pareek 2013
+      # "pAccept_chemo",  list(distn = "unif", params = c(min=0.5,   max=1)),                   # Pareek 2013
       # "pAccept_chemo",list(distn = "unif", params = c(min=0.53, max=0.98)),                 # Alsdurf (2016) table 2
-      # "pComp_chemo", list(distn = "pert", params = c(mode = 0.8, min = 0.5, max =  0.9)),
-      "pComp_chemo",    list(distn = "unif", params = c(min=0.5,   max=0.9)),                 # Kowada 2013
+
+      "pComp_chemo", list(distn = "pert", params = c(mode = 0.8, min = 0.5, max =  0.9)),  # Kowada (2013)
+      # "pComp_chemo",    list(distn = "unif", params = c(min=0.5,   max=0.9)),                 # Kowada 2013
       # "pComp_chemo",  list(distn = "unif", params = c(min=0.28, max=0.97)),                   # Alsdurf (2016) table 1
+
       "pHep",        list(distn = "unif", params = c(min=0.001, max=0.003)),                  # Kunst, Pareek
       # "pHep",        list(distn = "pert", params = c(mode = 0.002, min = 0.001, max = 0.003)),
-      "Eff_comp",    list(distn = "pert", params = c(mode = 0.65, min = 0.5, max = 0.8)),
-      "Eff_incomp",  list(distn = "pert", params = c(mode = 0.21, min = 0.1, max = 0.3)),
+
+      "Eff_comp",    list(distn = "pert", params = c(mode = 0.65, min = 0.5, max = 0.8)),  # Pareek (2013)
+      "Eff_incomp",  list(distn = "pert", params = c(mode = 0.21, min = 0.1, max = 0.3)),  # Pareek (2013)
+
       "pTB",         list(distn = "pert", params = c(mode = 0.12, min = 0.08,	max = 0.19)),
-      #
-      # "pAccept_TST",  list(distn = "pert", params = c(mode = 0.982, min = 0.982, max = 0.982)),
-      "pAccept_TST",  list(distn = "unif", params = c(min=0.5,   max=1)),                      # Campbell (2017)
+
+      "pAccept_TST",  list(distn = "pert", params = c(mode = 0.96, min = 0.93, max = 0.98)),  # posterior
+      # "pAccept_TST",  list(distn = "unif", params = c(min=0.93,   max=0.98)),    # Campbell (2017)
+
       # "pTSTread",     list(distn = "pert", params = c(mode = 0.979, min = 0.979, max = 0.979)),
-      "pTSTread",     list(distn = "unif", params = c(min=0.979, max=0.979)),
+      "pTSTread",     list(distn = "unif", params = c(min = 0.979, max = 0.979)),
       # "pTSTread",     list(distn = "unif", params = c(min=0.90, max=0.99)),                  # Alsdurf (2016) table S3
       "pIGRAread",    list(distn = "pert", params = c(mode = 1, min = 1, max = 1)),
-      "pAccept_IGRA", list(distn = "pert", params = c(mode = 0.992, min = 0.992, max = 0.992)),
+
+      "pAccept_IGRA", list(distn = "pert", params = c(mode = 0.99, min = 0.98, max = 1)),  # posterior
+
       # "pAccept_IGRA_TST+", list(distn = "pert", params = c(mode = 0.995, min = 0.995, max = 0.995)),
       "pAccept_IGRA_TST+", list(distn = "unif", params = c(min=0.995, max=0.995)),
-      "TSTIGRA_pos",  list(distn = "pert", params = c(mode = 0.214, min = 0.214, max = 0.214)),
       "Dual_sens",    list(distn = "pert", params = c(mode = 0.632, min = 0.632, max = 0.632)),
       "Dual_spec",    list(distn = "pert", params = c(mode = 0.988, min = 0.988, max = 0.988)),
-      # "pLTBI",        list(distn = "pert", params = c(mode = 0.326, min = 0.326, max = 0.326)),
       "pLTBI",        list(distn = "unif", params = c(min=0.326, max=0.326)),
       # "pLTBI",        list(distn = "unif", params = c(min=0.10, max=0.40)),                   # Pooran (2010)
-      # "TST_pos",      list(distn = "pert", params = c(mode = 0.534, min = 0.534, max = 0.534)),
-      "TST_pos",      list(distn = "unif", params = c(min=0.534, max=0.534)),
+
+      "TSTIGRA_pos",  list(distn = "pert", params = c(mode = 0.38, min = 0.32, max = 0.45)),  # posterior
+      "TST_pos",      list(distn = "pert", params = c(mode = 0.56, min = 0.51, max = 0.61)),  # posterior
+      "TSPOT_pos",    list(distn = "pert", params = c(mode = 0.23, min = 0.19, max = 0.27)),  # posterior
+      "QFT_pos",      list(distn = "pert", params = c(mode = 0.23, min = 0.19, max = 0.27)),  # posterior
       # "PPV_TST",      list(distn = "pert", params = c(mode = 0.482, min = 0.482, max = 0.482)),
-      "PPV_TST",      list(distn = "unif", params = c(min=0.482, max=0.482)),
       # "NPV_TST",      list(distn = "pert", params = c(mode = 0.853, min = 0.853, max = 0.853)),
-      "NPV_TST",      list(distn = "unif", params = c(min=0.853, max=0.853)),
-      "QFT_pos",      list(distn = "pert", params = c(mode = 0.281, min = 0.281, max = 0.281)),
-      "PPV_QFT",      list(distn = "pert", params = c(mode = 0.928, min = 0.928, max = 0.928)),
-      "NPV_QFT",      list(distn = "pert", params = c(mode = 0.909, min = 0.909, max = 0.909)),
-      "TSPOT_pos",    list(distn = "pert", params = c(mode = 0.327, min = 0.327, max = 0.327)),
-      "PPV_TSPOT",    list(distn = "pert", params = c(mode = 0.897, min = 0.897, max = 0.897)),
-      "NPV_TSPOT",    list(distn = "pert", params = c(mode = 0.952, min = 0.952, max = 0.952)),
-      "QFT_pos_TST+", list(distn = "pert", params = c(mode = 0.401, min = 0.401, max = 0.401)),
+      "PPV_TST",      list(distn = "pert", params = c(mode = 0.55, min = 0.20, max = 0.75)),  # posterior
+      "NPV_TST",      list(distn = "pert", params = c(mode = 0.82, min = 0.68, max = 0.95)),  # posterior
+      "PPV_QFT",      list(distn = "pert", params = c(mode = 0.90, min = 0.86, max = 0.95)),  # posterior
+      "NPV_QFT",      list(distn = "pert", params = c(mode = 0.93, min = 0.91, max = 0.95)),  # posterior
+      "PPV_TSPOT",    list(distn = "pert", params = c(mode = 0.90, min = 0.86, max = 0.95)),  # posterior
+      "NPV_TSPOT",    list(distn = "pert", params = c(mode = 0.93, min = 0.91, max = 0.95)),  # posterior
+      "QFT_pos_TST+", list(distn = "pert", params = c(mode = 0.38, min = 0.32, max = 0.45)),
       "PPV_QFT_TST+", list(distn = "pert", params = c(mode = 0.961, min = 0.961, max = 0.961)),
       "NPV_QFT_TST+", list(distn = "pert", params = c(mode = 0.839, min = 0.839, max = 0.839)),
-      # "TSPOT_pos_TST+", list(distn = "pert", params = c(mode = 0.460, min = 0.460, max = 0.460)),
-      "TSPOT_pos_TST+", list(distn = "unif", params = c(min=0.46,  max=0.46)),
-      # "PPV_TSPOT_TST+", list(distn = "pert", params = c(mode = 0.944, min = 0.944, max = 0.944)),
-      "PPV_TSPOT_TST+", list(distn = "unif", params = c(min=0.944, max=0.944)),
-      # "NPV_TSPOT_TST+", list(distn = "pert", params = c(mode = 0.911, min = 0.911, max = 0.911)),
-      "NPV_TSPOT_TST+", list(distn = "unif", params = c(min=0.911, max=0.911)),
-      "pReact",       list(distn = "pert", params = c(mode = 0.001936869, min = 0.001936869, max = 0.001936869)),
+      "TSPOT_pos_TST+", list(distn = "pert", params = c(mode = 0.460, min = 0.460, max = 0.460)),
+      "PPV_TSPOT_TST+", list(distn = "pert", params = c(mode = 0.944, min = 0.944, max = 0.944)),
+      "NPV_TSPOT_TST+", list(distn = "pert", params = c(mode = 0.911, min = 0.911, max = 0.911)),
+
+      "pReact",       list(distn = "pert", params = c(mode = 0.001936869, min = 0.001936869, max = 0.001936869)),  # Pareek (2013)
       "pReact_comp",  list(distn = "pert", params = c(mode = 0.000677904, min = 0.000677904, max = 0.000677904)),
       "pReact_incomp", list(distn = "pert", params = c(mode = 0.001530127, min = 0.001530127, max = 0.001530127))
     )
 
   label_probs <-
     list(
-      "pAccept_TST" = 0.982,
+      "TST_pos"	= 0.56,            # posterior
+      "QFT_pos"	= 0.23,            # posterior
+      "TSPOT_pos" = 0.23,          # posterior
+      "TSTIGRA_pos" = 0.38,        # posterior
+      "TSPOT_pos_TST+" = 0.38,     # posterior
+      "QFT_pos_TST+" = 0.38,       # posterior
+
       "pTSTread" = 0.979,
       "pIGRAread" = 1,
-      "pAccept_IGRA" = 0.992,
-      "pAccept_IGRA_TST+" = 0.995,
-      "TSTIGRA_pos" = 0.214,
+      "pAccept_TST" = 0.96,        # posterior
+      "pAccept_IGRA" = 0.99,       # posterior
+      "pAccept_IGRA_TST+" = 0.99,
 
       "Dual_sens" = 0.632,
       "Dual_spec" = 0.988,
-      "TST_sens" = 0.8,  ##TODO: better numbers here
-      "TST_spec" = 0.9,
-      "QFT_sens" = 0.9,
-      "QFT_spec" = 0.95,
-      "TSPOT_sens" = 0.91,
-      "TSPOT_spec" = 0.96,
+      "TST_sens" = 0.79,
+      "TST_spec" = 0.59,
+      "QFT_sens" = 0.8,
+      "QFT_spec" = 0.97,
+      "TSPOT_sens" = 0.90,
+      "TSPOT_spec" = 0.95,
 
       "pLTBI"	= 0.326,
-      "TST_pos"	= 0.534,
-      "PPV_TST"	= 0.482,
-      "NPV_TST"	= 0.853,
-      "QFT_pos"	= 0.281,
-      "PPV_QFT"	= 0.928,
-      "NPV_QFT"	= 0.909,
-      "TSPOT_pos" = 0.327,
-      "PPV_TSPOT" = 0.897,
-      "NPV_TSPOT" = 0.952,
-      "QFT_pos_TST+" = 0.401,
+      "PPV_TST"	= 0.55,             # posterior
+      "NPV_TST"	= 0.82,             # posterior
+      "PPV_QFT"	= 0.9,              # posterior
+      "NPV_QFT"	= 0.93,             # posterior
+      "PPV_TSPOT" = 0.9,            # posterior
+      "NPV_TSPOT" = 0.93,           # posterior
       "PPV_QFT_TST+" = 0.961,
       "NPV_QFT_TST+" = 0.839,
-      "TSPOT_pos_TST+" = 0.460,
       "PPV_TSPOT_TST+" = 0.944,
       "NPV_TSPOT_TST+" = 0.911,
       "pAccept_chemo" = 0.95,
       "pComp_chemo" = 0.8,
       "pHep" = 0.002,
-      "pReact" = 0.001936869,
+      "pReact" = 0.001936869,       # Pareek (2013)
       "pReact_comp" = 0.000677904,
       "pReact_incomp" = 0.001530127)
 

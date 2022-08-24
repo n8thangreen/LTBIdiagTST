@@ -4,6 +4,8 @@
 #########
 
 library(BCEA)
+library(heemod)
+library(ggplot2)
 
 
 # load data
@@ -27,6 +29,7 @@ heemod_model <- create_ltbi_heemod()
 
 # points values
 ##TODO
+
 
 # incremental cost, qalys
 # TST as baseline
@@ -77,7 +80,7 @@ cost <- cbind(dat$TST_QFT$cost,
               dat$TSPOT$cost,
               dat$QFT$cost)
 
-m <- bcea(-eff, -cost, Kmax = 500, ref = 3,
+m <- bcea(-eff, -cost, Kmax = 30000, ref = 3,
           interventions = c("TST QFT", "TST TSPOT", "TST", "TSPOT", "QFT"))
 
 ceplane.plot(m, graph = "base")#, xlim = c(0.15,0.17), pos = "bottomleft")
@@ -86,8 +89,8 @@ ceplane.plot(m, graph = "ggplot")#, pos = "bottomleft") + xlim(0.15,0.17)
 mypalette <- RColorBrewer::brewer.pal(4, "Set2")
 ceplane.plot(m, graph = "ggplot", pos = TRUE,
              ICER_sizes = 2,
-             point_colors = mypalette) #+
-  # xlim(0.16, 0.17)
+             point_colors = mypalette,
+             xlim = c(-0.007, 0.007), ylim = c(-220, 20))
 
 ceac.plot(m)
 
@@ -95,3 +98,8 @@ ceac.plot(m)
 m_simul <- multi.ce(m)
 ceac.plot(m_simul)
 
+## tables
+
+BCEA::tabulate_means(m)
+
+ce_table(m)
