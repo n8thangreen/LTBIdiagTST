@@ -47,9 +47,10 @@ delta_c_tsttspot <- dat$TST_TSPOT$cost - dat$TST$cost
 delta_h_tsttspot <- dat$TST_TSPOT$health - dat$TST$health
 
 plot(delta_h_tspot, delta_c_tspot,
-     xlim = c(-0.005, 0.005),
-     # xlim = c(-0.01, 0.17),
-     xlab = "incremental qalys", ylab = "Incremental cost")
+     # xlim = c(-0.005, 0.005),
+     xlim = c(-0.01, 0.01),
+     ylim = c(-200, 0),
+     xlab = "Incremental QALYs", ylab = "Incremental cost")
 points(mean(delta_h_tspot), mean(delta_c_tspot), col = "black", pch = 16, cex = 1.5)
 
 points(delta_h_tstqft, delta_c_tstqft, col = "green")
@@ -61,8 +62,8 @@ points(mean(delta_h_qft), mean(delta_c_qft), col = "blue", pch = 16, cex = 1.5)
 points(delta_h_tsttspot, delta_c_tsttspot, col = "red")
 points(mean(delta_h_tsttspot), mean(delta_c_tsttspot), col = "red", pch = 16, cex = 1.5)
 
-abline(h = 0)
-abline(v = 0)
+abline(h = 0, col = "grey")
+abline(v = 0, col = "grey")
 
 
 ###############
@@ -87,18 +88,24 @@ ceplane.plot(m, graph = "base")#, xlim = c(0.15,0.17), pos = "bottomleft")
 ceplane.plot(m, graph = "ggplot")#, pos = "bottomleft") + xlim(0.15,0.17)
 
 mypalette <- RColorBrewer::brewer.pal(4, "Set2")
-ceplane.plot(m, graph = "ggplot", pos = TRUE,
-             ICER_sizes = 2,
-             point_colors = mypalette,
-             xlim = c(-0.007, 0.007), ylim = c(-220, 20))
+ceplane.plot(m, graph = "ggplot",
+             icer = list(color = "black"),
+             title = "",
+             point = list(color = mypalette, size = 2),
+             xlim = c(-0.007, 0.007), ylim = c(-220, 20),
+             currency = "£",
+             ref_first = FALSE)
 
-ceac.plot(m)
+ceac.plot(m, line = list(color = mypalette),
+          title = "", currency = "£", graph = "ggplot2")
 
 # simultaneous comparisons
 m_simul <- multi.ce(m)
 ceac.plot(m_simul)
 
-## tables
+
+#########
+# tables
 
 BCEA::tabulate_means(m)
 

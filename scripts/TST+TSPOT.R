@@ -8,7 +8,6 @@ library(reshape2)
 library(assertthat)
 library(purrr)
 library(heemod)
-library(treeSimR)
 library(CEdecisiontree)
 
 

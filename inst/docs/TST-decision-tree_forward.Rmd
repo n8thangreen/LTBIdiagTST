@@ -21,11 +21,9 @@ library(readr)
 library(dplyr)
 library(tibble)
 library(reshape2)
-library(treeSimR)
 library(assertthat)
 library(CEdecisiontree)
 library(purrr)
-library(treeSimR)
 ```
 
 Load in the data.
@@ -186,7 +184,7 @@ input_SA
 
 
 We can now loop over this tree and generate samples of values for the given distributions.
-Lets use the `sample_distributions()` function from my `treeSimR` package.
+Lets use the `sample_distributions()` function for this.
 
 ```{r warning=FALSE}
 tree_dat_sa <- list()

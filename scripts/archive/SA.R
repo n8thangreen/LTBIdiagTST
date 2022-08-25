@@ -9,7 +9,6 @@ library(readr)
 library(dplyr)
 library(tibble)
 library(reshape2)
-library(treeSimR)
 library(assertthat)
 
 

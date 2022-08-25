@@ -6,13 +6,13 @@ library(R2jags)
 
 dataJags <-
   list(
-    N = 381,
-    n_accept_tst = 366,
-    n_accept_igra = 378,
-    n_tst_pos = 204,
-    n_igra_pos = 87,
-    n_igra_pos_tst_pos = 78,
-    n_igra_pos_tst_neg = 9)
+    N = 381,             # total screening test results adult close contacts
+    n_accept_tst = 366,      # accept attend TST reading
+    n_accept_igra = 378,     # accept IGRA
+    n_tst_pos = 204,         # TST positive
+    n_igra_pos = 87,         # TST negative
+    n_igra_pos_tst_pos = 78, # IGRA positive & TST positive
+    n_igra_pos_tst_neg = 9)  # IGRA positive & TST negative
 
 filein <- "BUGS/model.txt"
 
@@ -58,8 +58,8 @@ dat <- as.mcmc(res)
 dat[[1]] <- dat[[1]][, -1]
 densplot(as.mcmc(dat))
 
-library(dplyr)
 
+library(dplyr)
 
 # posterior summary table for paper
 
@@ -68,21 +68,39 @@ tab <-
   round(2)
 
 tab <-
-  tab[c("p_accept_igra",
-        "p_accept_tst",
-        "p_igra_pos",
-        "p_tst_pos",
-        "p_igra_pos_tst_pos",
-        "p_igra_pos_tst_neg",
-        "PPV_tst",
-        "NPV_tst",
-        "PPV_igra",
-        "NPV_igra",
-        "prev_igra",
-        "prev_tst"), ] %>%
-  as.data.frame
+  as.data.frame(tab) |>
+  tibble::rownames_to_column("label") |>
+  mutate(label = as.factor(label))
+
+# harmonize names
+levels(tab$label) <-
+  list(pAccept_TST = "p_accept_tst",
+       pAccept_IGRA = "p_accept_igra",
+       TST_pos = "p_tst_pos",
+       IGRA_pos = "p_igra_pos",
+       TSTIGRA_pos = "p_igra_pos_tst_pos",
+       TSTIGRA_neg = "p_igra_pos_tst_neg",
+       PPV_TST = "PPV_tst",
+       NPV_TST = "NPV_tst",
+       # PPV_QFT = "PPV_igra",
+       # NPV_QFT = "NPV_igra",
+       # PPV_TSPOT = "PPV_igra",
+       # NPV_TSPOT = "NPV_igra",
+       NPV_IGRA = "NPV_igra",
+       PPV_IGRA = "PPV_igra",
+       prev_TST = "prev_tst",
+       prev_IGRA = "prev_igra")
+
+tab
+
+# reorder
+tab <- arrange(tab, label)
 
 tab$CrI <- paste0(tab$`2.5%`, ", ", tab$`97.5%`)
 
-tab <- tab[, c('50%', 'CrI')]
+tab <- tab[, c('label', '50%', 'CrI')]
+
+tab
+
+write.csv(tab, file = "data/posterior_summary_table.csv")
 
