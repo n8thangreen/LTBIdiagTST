@@ -14,7 +14,7 @@
 #' # write.csv(cbind(label_health), file = "data/health_inputs.csv")
 #' # write.csv(cbind(label_probs), file = "data/probs_inputs.csv")
 #'
-create_param_values <- function() {
+create_param_values <- function(save = TRUE) {
 
   # assign values to labels ------------------------------------------
 
@@ -61,7 +61,7 @@ create_param_values <- function() {
       "Number of outpatient consultation" = 1,
       "Number of CXR" = 1,
       "Number of LFT" = 1,
-      "Total Cost of positive screening" = 241.23,
+      "Sp_cost" = 241.23,
 
       "Follow-up via nurses" = 44.31, #22.15, 66.46,
       "HR tablet (300/150) (56)" = 25.22,
@@ -69,8 +69,8 @@ create_param_values <- function() {
       "Number of TB nurse appointments"	= 2,
       "Duration of HR" = 3,
 
-      "Total (complete)" = 169.68	,
-      "Total (incomplete)" = 84.84,
+      "LTBIcompl_cost" = 169.68	,
+      "LTBIincompl_cost" = 84.84,
 
       "Hep" = 732.13)
 
@@ -92,9 +92,9 @@ create_param_values <- function() {
 
       "TB",    list(distn = "pert", params = c(mode = 4925.76, min = 2462.88, max = 9851.52)),
 
-      "Total (complete)", list(distn = "unif", params = c(min=169.68, max=169.68)),
-      "Total (incomplete)", list(distn = "unif", params = c(min=84.84,  max=84.84)),
-      "Total Cost of positive screening", list(distn = "pert", params = c(mode=241, min=233.17, max=247.28)),
+      "LTBIcompl_cost", list(distn = "unif", params = c(min=169.68, max=169.68)),
+      "LTBIincompl_cost", list(distn = "unif", params = c(min=84.84,  max=84.84)),
+      "Sp_cost", list(distn = "pert", params = c(mode=241, min=233.17, max=247.28)),
       "TB special nurse visit", list(distn = "pert", params = c(mode = 44.31, min = 22.15, max = 66.46)),
     )
 
@@ -233,45 +233,45 @@ create_param_values <- function() {
       # c("TB special nurse visit", 1, 2), # remove this since all trees start with nurse visit
       c("TST", 2, 3),
       c("TB special nurse visit", 3, 4),
-      c("Total Cost of positive screening", 4, 5),
+      c("Sp_cost", 4, 5),
       c("Hep", 7, 8),
-      c("Total (incomplete)", 8, 9),
-      c("Total (complete)", 10, 11),
-      c("Total (incomplete)", 10, 12),
+      c("LTBIincompl_cost", 8, 9),
+      c("LTBIcompl_cost", 10, 11),
+      c("LTBIincompl_cost", 10, 12),
       c("Hep", 16, 17),
-      c("Total (incomplete)", 17, 18),
-      c("Total (complete)", 19, 20),
-      c("Total (incomplete)", 19, 21)
+      c("LTBIincompl_cost", 17, 18),
+      c("LTBIcompl_cost", 19, 20),
+      c("LTBIincompl_cost", 19, 21)
     ) %>%
     setNames(c("name", "from", "to"))
 
   QFT_cname_from_to <-
     rbind.data.frame(
       c("QFT", 1, 2),
-      c("Total Cost of positive screening", 2, 3),
+      c("Sp_cost", 2, 3),
       c("Hep", 5, 6),
-      c("Total (incomplete)", 6, 7),
-      c("Total (complete)", 8, 9),
-      c("Total (incomplete)", 8, 10),
+      c("LTBIincompl_cost", 6, 7),
+      c("LTBIcompl_cost", 8, 9),
+      c("LTBIincompl_cost", 8, 10),
       c("Hep", 14, 15),
-      c("Total (incomplete)", 15, 16),
-      c("Total (complete)", 17, 18),
-      c("Total (incomplete)", 17, 19)
+      c("LTBIincompl_cost", 15, 16),
+      c("LTBIcompl_cost", 17, 18),
+      c("LTBIincompl_cost", 17, 19)
     ) %>%
     setNames(c("name", "from", "to"))
 
   TSPOT_cname_from_to <-
     rbind.data.frame(
       c("TSPOT", 1, 2),
-      c("Total Cost of positive screening", 2, 3),
+      c("Sp_cost", 2, 3),
       c("Hep", 5, 6),
-      c("Total (incomplete)", 6, 7),
-      c("Total (complete)", 8, 9),
-      c("Total (incomplete)", 8, 10),
+      c("LTBIincompl_cost", 6, 7),
+      c("LTBIcompl_cost", 8, 9),
+      c("LTBIincompl_cost", 8, 10),
       c("Hep", 14, 15),
-      c("Total (incomplete)", 15, 16),
-      c("Total (complete)", 17, 18),
-      c("Total (incomplete)", 17, 19)
+      c("LTBIincompl_cost", 15, 16),
+      c("LTBIcompl_cost", 17, 18),
+      c("LTBIincompl_cost", 17, 19)
     ) %>%
     setNames(c("name", "from", "to"))
 
@@ -280,14 +280,14 @@ create_param_values <- function() {
       c("TST", 1, 2),
       c("TB special nurse visit", 2, 3),
       c("QFT", 4, 5),
-      c("Total Cost of positive screening", 5, 6),
+      c("Sp_cost", 5, 6),
       c("Hep", 8, 9),
-      c("Total (incomplete)", 9, 10),
-      c("Total (complete)", 11, 12),
-      c("Total (incomplete)", 11, 13),
-      c("Total (incomplete)", 18, 19),
-      c("Total (complete)", 20, 21),
-      c("Total (incomplete)", 20, 22)
+      c("LTBIincompl_cost", 9, 10),
+      c("LTBIcompl_cost", 11, 12),
+      c("LTBIincompl_cost", 11, 13),
+      c("LTBIincompl_cost", 18, 19),
+      c("LTBIincompl_cost", 20, 21),
+      c("LTBIincompl_cost", 20, 22)
     ) %>%
     setNames(c("name", "from", "to"))
 
@@ -296,14 +296,14 @@ create_param_values <- function() {
       c("TST", 1, 2),
       c("TB special nurse visit", 2, 3),
       c("TSPOT", 4, 5),
-      c("Total Cost of positive screening", 5, 6),
+      c("Sp_cost", 5, 6),
       c("Hep", 8, 9),
-      c("Total (incomplete)", 9, 10),
-      c("Total (complete)", 11, 12),
-      c("Total (incomplete)", 11, 13),
-      c("Total (incomplete)", 18, 19),
-      c("Total (complete)", 20, 21),
-      c("Total (incomplete)", 20, 22)
+      c("LTBIincompl_cost", 9, 10),
+      c("LTBIcompl_cost", 11, 12),
+      c("LTBIincompl_cost", 11, 13),
+      c("LTBIincompl_cost", 18, 19),
+      c("LTBIcompl_cost", 20, 21),
+      c("LTBIincompl_cost", 20, 22)
     ) %>%
     setNames(c("name", "from", "to"))
 
@@ -315,14 +315,14 @@ create_param_values <- function() {
       c("TB special nurse visit", 26, 27),
       c("QFT", 5, 6),
       c("QFT", 28, 29),
-      c("Total Cost of positive screening", 6, 7),
-      c("Total Cost of positive screening", 29, 30),
+      c("Sp_cost", 6, 7),
+      c("Sp_cost", 29, 30),
       c("Hep", 8, 9),
       c("Hep", 31, 32),
-      c("Total (incomplete)", 9, 10),
-      c("Total (incomplete)", 32, 33),
-      c("Total (complete)", 11, 12),
-      c("Total (complete)", 34, 35)
+      c("LTBIincompl_cost", 9, 10),
+      c("LTBIincompl_cost", 32, 33),
+      c("LTBIcompl_cost", 11, 12),
+      c("LTBIcompl_cost", 34, 35)
     ) %>%
     setNames(c("name", "from", "to"))
 
@@ -465,11 +465,11 @@ create_param_values <- function() {
     tribble(
       ~name.health,   ~vals,
       "Hep",
-        list(distn = "unif", params = c(min=0.22*t_hep, max=0.22*t_hep)),
+      list(distn = "unif", params = c(min=0.22*t_hep, max=0.22*t_hep)),
       "Total (complete)",
-        list(distn = "unif", params = c(min= 0.01*t_chemo, max= 0.01*t_chemo)),
+      list(distn = "unif", params = c(min= 0.01*t_chemo, max= 0.01*t_chemo)),
       "Total (incomplete)",
-        list(distn = "unif", params = c(min= 0.01*t_chemo/2, max= 0.01*t_chemo/2)))
+      list(distn = "unif", params = c(min= 0.01*t_chemo/2, max= 0.01*t_chemo/2)))
 
   TST_hname_from_to <-
     rbind.data.frame(
@@ -543,32 +543,32 @@ create_param_values <- function() {
       c("Total (complete)", 34, 35)) %>%
     setNames(c("name", "from", "to"))
 
-
-  save(label_costs,
-       label_health,
-       label_probs,
-       label_costs_distns,
-       label_health_distns,
-       label_probs_distns,
-       TST_cname_from_to,
-       TST_hname_from_to,
-       TST_pname_from_to,
-       TST_QFT_cname_from_to,
-       TST_QFT_hname_from_to,
-       TST_QFT_pname_from_to,
-       TST_QFT_fwd_cname_from_to,
-       TST_QFT_fwd_pname_from_to,
-       TST_QFT_fwd_hname_from_to,
-       TSPOT_cname_from_to,
-       TSPOT_hname_from_to,
-       TSPOT_pname_from_to,
-       TST_TSPOT_cname_from_to,
-       TST_TSPOT_hname_from_to,
-       TST_TSPOT_pname_from_to,
-       QFT_cname_from_to,
-       QFT_hname_from_to,
-       QFT_pname_from_to,
-       hsuv,
-       file = here::here("data/params.RData"))
+  if (save) {
+    save(label_costs,
+         label_health,
+         label_probs,
+         label_costs_distns,
+         label_health_distns,
+         label_probs_distns,
+         TST_cname_from_to,
+         TST_hname_from_to,
+         TST_pname_from_to,
+         TST_QFT_cname_from_to,
+         TST_QFT_hname_from_to,
+         TST_QFT_pname_from_to,
+         TST_QFT_fwd_cname_from_to,
+         TST_QFT_fwd_pname_from_to,
+         TST_QFT_fwd_hname_from_to,
+         TSPOT_cname_from_to,
+         TSPOT_hname_from_to,
+         TSPOT_pname_from_to,
+         TST_TSPOT_cname_from_to,
+         TST_TSPOT_hname_from_to,
+         TST_TSPOT_pname_from_to,
+         QFT_cname_from_to,
+         QFT_hname_from_to,
+         QFT_pname_from_to,
+         hsuv,
+         file = here::here("data/params.RData"))}
 }
 

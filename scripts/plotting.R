@@ -81,6 +81,7 @@ cost <- cbind(dat$TST_QFT$cost,
               dat$TSPOT$cost,
               dat$QFT$cost)
 
+# TST reference
 m <- bcea(-eff, -cost, Kmax = 30000, ref = 3,
           interventions = c("TST QFT", "TST TSPOT", "TST", "TSPOT", "QFT"))
 
