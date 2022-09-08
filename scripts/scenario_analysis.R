@@ -11,7 +11,7 @@ library(CEdecisiontree)
 load(here::here("data", "params.RData")) #create_param_values()
 load(here::here("data", "trees.RData"))  #create_trees()
 
-scenario_vals <- read_csv("inst/extdata/scenario_input_values.csv")
+scenario_vals <- readr::read_csv("inst/extdata/scenario_input_values.csv")
 
 state_list <-
   list(
@@ -22,10 +22,11 @@ state_list <-
     activeTB = c(),
     dead = c())
 
-#
+ev <- NULL
+
 for (i in 1:nrow(scenario_vals)) {
 
-  new_vals <- as.list(scenario_input_values[i, -1])
+  new_vals <- as.list(scenario_vals[i, -1])
 
   tree_dat <-
     create_ce_tree_long_df(
@@ -37,10 +38,26 @@ for (i in 1:nrow(scenario_vals)) {
       cname_from_to = QFT_cname_from_to,
       hname_from_to = QFT_hname_from_to)
 
-  dt[[i]] <-
-    run_cedectree(tree_dat, state_list)
+  res <- run_cedectree(tree_dat, state_list)
+
+  ev <- rbind(ev, c(res$cost$ev_point[1],
+                    res$health$ev_point[1]))
+
+  heemod_model <-
+    create_ltbi_heemod(pReact_comp = new_vals$pReact_comp,
+                       pReact_incomp = new_vals$pReact_incomp,
+                       pReact = new_vals$pReact,
+                       TB_cost = new_vals$TB_cost)
+
+  res_heemod <-
+    heemod_model(
+      unname(unlist(res$cost$term_pop_point)))
 }
 
+
+ev
+
+netbenefit <- -30000*ev[, 2] - ev[, 1]
 
 write.csv(tree_dat, file = "data/tree_dat_QFT_scenario.csv")
 save(dt, file = "data/run_cedectree_QFT_scenario.RData")

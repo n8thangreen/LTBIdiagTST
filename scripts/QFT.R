@@ -51,20 +51,20 @@ save(dt, file = "data/run_cedectree_QFT.RData")
 
 heemod_model <- create_ltbi_heemod()
 
-# from Excel for testing
-# check same results
-term_pop_point <-
-  list(
-    no_LTBI = 738.45,
-    LTBI_complete_Tx = 155.44,
-    LTBI_incomplete_Tx = 39.25,
-    LTBI_no_Tx = 66.87,
-    activeTB = 0,
-    dead = 0)
-
-# points values
-heemod_model(
-  unname(unlist(term_pop_point)/1000))
+# # from Excel for testing
+# # check same results
+# term_pop_point <-
+#   list(
+#     no_LTBI = 738.45,
+#     LTBI_complete_Tx = 155.44,
+#     LTBI_incomplete_Tx = 39.25,
+#     LTBI_no_Tx = 66.87,
+#     activeTB = 0,
+#     dead = 0)
+#
+# # points values
+# heemod_model(
+#   unname(unlist(term_pop_point)/1000))
 
 res_mm_pt <- heemod_model(
   unname(unlist(dt$cost$term_pop_point)))

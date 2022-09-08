@@ -131,6 +131,7 @@ create_ltbi_heemod <- function(age_init = 34,
        incompleteTx, noTx, activeTB, dead,
        file = here::here("data", "ltbi_heemod.RData"))
 
+  #
   function(init_states) {
 
     suppressMessages(

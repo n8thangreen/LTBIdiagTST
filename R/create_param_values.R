@@ -52,7 +52,7 @@ create_param_values <- function(save = TRUE) {
 
       "TST" = 18.62,
       "QFT" = 23.65,
-      "TB special nurse visit" = 44.31,
+      "Ns_cost" = 44.31,
       "TSPOT" = 35.12,
 
       "Out patient consultation (first visit)" = 208,
@@ -72,7 +72,8 @@ create_param_values <- function(save = TRUE) {
       "LTBIcompl_cost" = 169.68	,
       "LTBIincompl_cost" = 84.84,
 
-      "Hep" = 732.13)
+      "Hep" = 732.13,
+      "TB_cost" = 4925)
 
   label_costs_distns <-
     tribble(
@@ -90,12 +91,12 @@ create_param_values <- function(save = TRUE) {
 
       "Hep",   list(distn = "pert", params = c(mode = 732.13, min = 363, max = 1454)),     # Pooran 2010
 
-      "TB",    list(distn = "pert", params = c(mode = 4925.76, min = 2462.88, max = 9851.52)),
+      "TB_cost",    list(distn = "pert", params = c(mode = 4925.76, min = 2462.88, max = 9851.52)),
 
       "LTBIcompl_cost", list(distn = "unif", params = c(min=169.68, max=169.68)),
       "LTBIincompl_cost", list(distn = "unif", params = c(min=84.84,  max=84.84)),
       "Sp_cost", list(distn = "pert", params = c(mode=241, min=233.17, max=247.28)),
-      "TB special nurse visit", list(distn = "pert", params = c(mode = 44.31, min = 22.15, max = 66.46)),
+      "Ns_cost", list(distn = "pert", params = c(mode = 44.31, min = 22.15, max = 66.46)),
     )
 
   label_probs_distns <-
@@ -230,9 +231,9 @@ create_param_values <- function(save = TRUE) {
 
   TST_cname_from_to <-
     rbind.data.frame(
-      # c("TB special nurse visit", 1, 2), # remove this since all trees start with nurse visit
+      # c("Ns_cost", 1, 2), # remove this since all trees start with nurse visit
       c("TST", 2, 3),
-      c("TB special nurse visit", 3, 4),
+      c("Ns_cost", 3, 4),
       c("Sp_cost", 4, 5),
       c("Hep", 7, 8),
       c("LTBIincompl_cost", 8, 9),
@@ -278,7 +279,7 @@ create_param_values <- function(save = TRUE) {
   TST_QFT_cname_from_to <-
     rbind.data.frame(
       c("TST", 1, 2),
-      c("TB special nurse visit", 2, 3),
+      c("Ns_cost", 2, 3),
       c("QFT", 4, 5),
       c("Sp_cost", 5, 6),
       c("Hep", 8, 9),
@@ -294,7 +295,7 @@ create_param_values <- function(save = TRUE) {
   TST_TSPOT_cname_from_to <-
     rbind.data.frame(
       c("TST", 1, 2),
-      c("TB special nurse visit", 2, 3),
+      c("Ns_cost", 2, 3),
       c("TSPOT", 4, 5),
       c("Sp_cost", 5, 6),
       c("Hep", 8, 9),
@@ -311,8 +312,8 @@ create_param_values <- function(save = TRUE) {
     rbind.data.frame(
       c("TST", 2, 3),
       c("TST", 25, 26),
-      c("TB special nurse visit", 3, 4),
-      c("TB special nurse visit", 26, 27),
+      c("Ns_cost", 3, 4),
+      c("Ns_cost", 26, 27),
       c("QFT", 5, 6),
       c("QFT", 28, 29),
       c("Sp_cost", 6, 7),
