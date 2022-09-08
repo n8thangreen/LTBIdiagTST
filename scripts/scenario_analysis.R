@@ -28,6 +28,7 @@ for (i in 1:nrow(scenario_vals)) {
 
   new_vals <- as.list(scenario_vals[i, -1])
 
+  # decision tree
   tree_dat <-
     create_ce_tree_long_df(
       tree_list = QFT_tree,
@@ -42,7 +43,7 @@ for (i in 1:nrow(scenario_vals)) {
 
   ev <- rbind(ev, c(res$cost$ev_point[1],
                     res$health$ev_point[1]))
-
+  # markov model
   heemod_model <-
     create_ltbi_heemod(pReact_comp = new_vals$pReact_comp,
                        pReact_incomp = new_vals$pReact_incomp,
