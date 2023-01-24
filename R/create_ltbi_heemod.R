@@ -1,12 +1,12 @@
 
-#' create_ltbi_heemod
+#' Create LTBI heemod model
 #'
 #' Create a heemod Markov model for the LTBI test population.
 #' Transitions happen at the beginning of each year (equivalent to transition happening at
-#' the end + ignoring the first year) with method = "beginning".
+#' the end + ignoring the first year) with `method = "beginning"`.
 #' Since with this method the first year is actually the second,
-#' costs should be discounted from the start with the argument first = TRUE in discount().
-#' See: https://cran.r-project.org/web/packages/heemod/vignettes/d_non_homogeneous.html
+#' costs should be discounted from the start with the argument `first = TRUE` in `discount()`.
+#' See: (https://cran.r-project.org/web/packages/heemod/vignettes/d_non_homogeneous.html)
 #'
 #' @param age_init Starting age
 #' @param pReact_comp TB after completed LTBI treatment
@@ -14,7 +14,7 @@
 #' @param pReactB TB after no treatment
 #' @param TB_cost Cost of TB treatment (£)
 #' @param d Discount factor
-#' @param N Number of runs
+#' @param N Number of runs; integer
 #'
 #' @return Returns a function with initial sub-populations as input.
 #' @import heemod purrr dplyr
@@ -69,8 +69,7 @@ create_ltbi_heemod <- function(age_init = 34,
       "incompleteTx",
       "noTx",
       "activeTB",
-      "dead"
-    ),
+      "dead"),
 
     # from-to probability matrix
     # C represent complements

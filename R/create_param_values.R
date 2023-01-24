@@ -1,6 +1,7 @@
 
-#' all parameter values required
-#' for the decision tree model
+#' Create parameter values
+#'
+#' All parameter values required for the decision tree model.
 #'
 #' Excel model with structure and labelling:
 #' G:/DIDE-PC_2019/MSc-MPH/projects/2017/LTBI-TST_Manabu/decision tree Excel/all_decision_trees.xls
@@ -107,13 +108,20 @@ create_param_values <- function(save = TRUE) {
       # "TST_sens",    list(distn = "unif", params = c(min=0.73, max=1.0)),                     # Warwick evidence
       # "TST_spec",    list(distn = "unif", params = c(min=0.12, max=0.53)), # Kik (2010) lower, Harstad (2010) upper from Warwick evidence
 
-      "QFT_sens",    list(distn = "pert", params = c(mode = 0.8, min = 0.77, max = 0.84)),  # Pai (2008)
-      "QFT_spec",    list(distn = "pert", params = c(mode = 0.97, min = 0.94, max = 0.99)), # Pai (2008)
+      "QFT_sens",    list(distn = "pert", params = c(mode = 0.886, min = 0.812, max = 0.944)),  # Zhang et al. BMC Infectious Diseases (2023) 23:40
+      # "QFT_sens",    list(distn = "pert", params = c(mode = 0.8, min = 0.77, max = 0.84)),  # Pai (2008)
+
+
+      "QFT_spec",    list(distn = "pert", params = c(mode = 0.995, min = 0.959, max = 1)),    # Zhang et al. BMC Infectious Diseases (2023) 23:40
+      # "QFT_spec",    list(distn = "pert", params = c(mode = 0.97, min = 0.94, max = 0.99)), # Pai (2008)
       # "QFT_sens",    list(distn = "unif", params = c(min=0.81, max=0.87)),                    # Diel (2010)
       # "QFT_spec",    list(distn = "unif", params = c(min=0.98, max=1.0)),
 
-      "TSPOT_sens",  list(distn = "pert", params = c(mode = 0.9, min = 0.87, max = 0.93)),  # Kahwati (2016)
-      "TSPOT_spec",  list(distn = "pert", params = c(mode = 0.95, min = 0.92, max = 0.98)), # Kahwati (2016)
+      "TSPOT_sens",  list(distn = "pert", params = c(mode = 0.872, min = 0.643, max = 0.991)),  # Zhang et al. BMC Infectious Diseases (2023) 23:40
+      # "TSPOT_sens",  list(distn = "pert", params = c(mode = 0.9, min = 0.87, max = 0.93)),  # Kahwati (2016)
+
+      "TSPOT_spec",  list(distn = "pert", params = c(mode = 1, min = 0.996, max = 1)),        # Zhang et al. BMC Infectious Diseases (2023) 23:40
+      # "TSPOT_spec",  list(distn = "pert", params = c(mode = 0.95, min = 0.92, max = 0.98)), # Kahwati (2016)
       # "TSPOT_sens",   list(distn = "unif", params = c(min=0.85, max=0.93)),                 # NICE appendix (2010)
       # "TSPOT_spec",   list(distn = "unif", params = c(min=0.86, max=1.0)),
 
