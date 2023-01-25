@@ -69,13 +69,16 @@ wtp <- 25000
 
 netbenefit <- wtp*res[, 2] - res[, 1]
 
+# against primary analysis
+inmb <- round(netbenefit - (wtp*res[1, 2] - res[1, 1]), 2)
+
 write.csv(tree_dat, file = "data/tree_dat_QFT_scenario.csv")
 save(dt, file = "data/run_cedectree_QFT_scenario.RData")
 
 
 # tornado plot
 
-dat <- data.frame(scenario_vals, netbenefit)
+dat <- data.frame(scenario_vals, netbenefit, inmb)
 
 
 
