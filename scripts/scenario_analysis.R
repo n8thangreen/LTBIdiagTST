@@ -80,5 +80,55 @@ save(dt, file = "data/run_cedectree_QFT_scenario.RData")
 
 dat <- data.frame(scenario_vals, netbenefit, inmb)
 
+library(ceplot)
+library(magrittr)
+library(reshape2)
+library(plyr)
+library(purrr)
+library(dplyr)
+library(ggplot2)
+
+# psa_dat <-
+#   dat |>
+#   select(pReact, pReact_comp, pReact_incomp, pHep, pComp_chemo, Sp_cost, LTBIcompl_cost,
+#            LTBIincompl_cost, pAccept_chemo, QFT, QFT_pos, Hep, PPV_QFT, NPV_QFT, TB_cost) |>
+#   distinct() %>%
+#   model.frame(
+#   formula = inmb ~ pReact + pReact_comp + pReact_incomp + pHep + pComp_chemo + Sp_cost + LTBIcompl_cost +
+#     LTBIincompl_cost + pAccept_chemo + QFT + QFT_pos + Hep + PPV_QFT + NPV_QFT + TB_cost,
+#   data = .)
+
+psa_dat <-
+  dat |>
+  select(inmb, pReact, pComp_chemo, Sp_cost, LTBIcompl_cost,
+         LTBIincompl_cost,
+         # pAccept_chemo,
+         QFT, PPV_QFT, NPV_QFT, TB_cost) |>
+  distinct(across(pReact:TB_cost), .keep_all = TRUE) %>%
+  model.frame(
+    formula = inmb ~ pReact + pComp_chemo + Sp_cost + LTBIcompl_cost +
+      LTBIincompl_cost +
+      # pAccept_chemo +
+      QFT + PPV_QFT + NPV_QFT + TB_cost,
+    data = .) |>
+  dplyr::rename(
+    "LTBI completion cost" = LTBIcompl_cost,
+    "LTBI incompletion cost" = LTBIincompl_cost,
+    "Negative predictive value" = NPV_QFT,
+    "Probability of completing treatment" = pComp_chemo,
+    "Positive predictive value" = PPV_QFT,
+    "Reactivation probability" = pReact,
+    "Cost of QFT test" = QFT,
+    "Cost of positive screening" = Sp_cost,
+    "Cost active TB treatment" = TB_cost)
+
+psa_dat %>%
+  create_tornado_data %>%
+  ceplot:::ggplot_tornado.tornado(baseline_output = 0) +
+  ylab("Net monetary benefit (NMB)") #+
+# ylim(-500, 500)
+# ggplot_tornado(baseline_output = 460463) +
+# ylim(450000, 465400)
+
 
 
