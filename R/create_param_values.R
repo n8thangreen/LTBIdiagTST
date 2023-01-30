@@ -1,6 +1,7 @@
 
-#' all parameter values required
-#' for the decision tree model
+#' Create parameter values
+#'
+#' All parameter values required for the decision tree model.
 #'
 #' Excel model with structure and labelling:
 #' G:/DIDE-PC_2019/MSc-MPH/projects/2017/LTBI-TST_Manabu/decision tree Excel/all_decision_trees.xls
@@ -79,10 +80,8 @@ create_param_values <- function(save = TRUE) {
     tribble(
       ~name.cost,   ~vals,
       "TST",   list(distn = "pert", params = c(mode = 18.49, min = 9.25, max = 36.98)),    # Pooran 2010
-      # "TST",   list(distn = "unif", params = c(min=9.31, max=37.24)),
 
       "QFT",   list(distn = "pert", params = c(mode = 23.65, min = 12.33, max = 45.29)),   # Imperial NHS
-      # "QFT",   list(distn = "unif", params = c(min=35, max=80)),
 
       "TSPOT", list(distn = "pert", params = c(mode = 35.12, min = 18.06, max = 68.23)),   # Imperial NHS
 
@@ -104,29 +103,16 @@ create_param_values <- function(save = TRUE) {
       ~name.prob,         ~prob,
       "TST_sens",    list(distn = "pert", params = c(mode = 0.79, min = 0.69, max = 0.89)),  # Kahwati (2016)
       "TST_spec",    list(distn = "pert", params = c(mode = 0.59, min = 0.46, max = 0.73)),  # Pai (2008)
-      # "TST_sens",    list(distn = "unif", params = c(min=0.73, max=1.0)),                     # Warwick evidence
-      # "TST_spec",    list(distn = "unif", params = c(min=0.12, max=0.53)), # Kik (2010) lower, Harstad (2010) upper from Warwick evidence
 
-      "QFT_sens",    list(distn = "pert", params = c(mode = 0.8, min = 0.77, max = 0.84)),  # Pai (2008)
-      "QFT_spec",    list(distn = "pert", params = c(mode = 0.97, min = 0.94, max = 0.99)), # Pai (2008)
-      # "QFT_sens",    list(distn = "unif", params = c(min=0.81, max=0.87)),                    # Diel (2010)
-      # "QFT_spec",    list(distn = "unif", params = c(min=0.98, max=1.0)),
-
-      "TSPOT_sens",  list(distn = "pert", params = c(mode = 0.9, min = 0.87, max = 0.93)),  # Kahwati (2016)
-      "TSPOT_spec",  list(distn = "pert", params = c(mode = 0.95, min = 0.92, max = 0.98)), # Kahwati (2016)
-      # "TSPOT_sens",   list(distn = "unif", params = c(min=0.85, max=0.93)),                 # NICE appendix (2010)
-      # "TSPOT_spec",   list(distn = "unif", params = c(min=0.86, max=1.0)),
-
+      "QFT_sens",    list(distn = "pert", params = c(mode = 0.886, min = 0.812, max = 0.944)),  # Zhang et al. BMC Infectious Diseases (2023) 23:40
+      "QFT_spec",    list(distn = "pert", params = c(mode = 0.995, min = 0.959, max = 1)),    # Zhang et al. BMC Infectious Diseases (2023) 23:40
+      "TSPOT_sens",  list(distn = "pert", params = c(mode = 0.872, min = 0.643, max = 0.991)),  # Zhang et al. BMC Infectious Diseases (2023) 23:40
+      "TSPOT_spec",  list(distn = "pert", params = c(mode = 1, min = 0.996, max = 1)),        # Zhang et al. BMC Infectious Diseases (2023) 23:40
       "pAccept_chemo", list(distn = "pert", params = c(mode = 0.95, min = 0.5, max = 1)),  # August, Pareek 2013
-      # "pAccept_chemo",  list(distn = "unif", params = c(min=0.5,   max=1)),                   # Pareek 2013
-      # "pAccept_chemo",list(distn = "unif", params = c(min=0.53, max=0.98)),                 # Alsdurf (2016) table 2
 
       "pComp_chemo", list(distn = "pert", params = c(mode = 0.8, min = 0.5, max =  0.9)),  # Kowada (2013)
-      # "pComp_chemo",    list(distn = "unif", params = c(min=0.5,   max=0.9)),                 # Kowada 2013
-      # "pComp_chemo",  list(distn = "unif", params = c(min=0.28, max=0.97)),                   # Alsdurf (2016) table 1
 
       "pHep",        list(distn = "unif", params = c(min=0.001, max=0.003)),                  # Kunst, Pareek
-      # "pHep",        list(distn = "pert", params = c(mode = 0.002, min = 0.001, max = 0.003)),
 
       "Eff_comp",    list(distn = "pert", params = c(mode = 0.65, min = 0.5, max = 0.8)),  # Pareek (2013)
       "Eff_incomp",  list(distn = "pert", params = c(mode = 0.21, min = 0.1, max = 0.3)),  # Pareek (2013)
@@ -134,28 +120,20 @@ create_param_values <- function(save = TRUE) {
       "pTB",         list(distn = "pert", params = c(mode = 0.12, min = 0.08,	max = 0.19)),
 
       "pAccept_TST",  list(distn = "pert", params = c(mode = 0.96, min = 0.93, max = 0.98)),  # posterior
-      # "pAccept_TST",  list(distn = "unif", params = c(min=0.93,   max=0.98)),    # Campbell (2017)
-
-      # "pTSTread",     list(distn = "pert", params = c(mode = 0.979, min = 0.979, max = 0.979)),
       "pTSTread",     list(distn = "unif", params = c(min = 0.979, max = 0.979)),
-      # "pTSTread",     list(distn = "unif", params = c(min=0.90, max=0.99)),                  # Alsdurf (2016) table S3
       "pIGRAread",    list(distn = "pert", params = c(mode = 1, min = 1, max = 1)),
 
       "pAccept_IGRA", list(distn = "pert", params = c(mode = 0.99, min = 0.98, max = 1)),  # posterior
 
-      # "pAccept_IGRA_TST+", list(distn = "pert", params = c(mode = 0.995, min = 0.995, max = 0.995)),
       "pAccept_IGRA_TST+", list(distn = "unif", params = c(min=0.995, max=0.995)),
       "Dual_sens",    list(distn = "pert", params = c(mode = 0.632, min = 0.632, max = 0.632)),
       "Dual_spec",    list(distn = "pert", params = c(mode = 0.988, min = 0.988, max = 0.988)),
       "pLTBI",        list(distn = "unif", params = c(min=0.326, max=0.326)),
-      # "pLTBI",        list(distn = "unif", params = c(min=0.10, max=0.40)),                   # Pooran (2010)
 
       "TSTIGRA_pos",  list(distn = "pert", params = c(mode = 0.38, min = 0.32, max = 0.45)),  # posterior
       "TST_pos",      list(distn = "pert", params = c(mode = 0.56, min = 0.51, max = 0.61)),  # posterior
       "TSPOT_pos",    list(distn = "pert", params = c(mode = 0.23, min = 0.19, max = 0.27)),  # posterior
       "QFT_pos",      list(distn = "pert", params = c(mode = 0.23, min = 0.19, max = 0.27)),  # posterior
-      # "PPV_TST",      list(distn = "pert", params = c(mode = 0.482, min = 0.482, max = 0.482)),
-      # "NPV_TST",      list(distn = "pert", params = c(mode = 0.853, min = 0.853, max = 0.853)),
       "PPV_TST",      list(distn = "pert", params = c(mode = 0.55, min = 0.20, max = 0.75)),  # posterior
       "NPV_TST",      list(distn = "pert", params = c(mode = 0.82, min = 0.68, max = 0.95)),  # posterior
       "PPV_QFT",      list(distn = "pert", params = c(mode = 0.90, min = 0.86, max = 0.95)),  # posterior

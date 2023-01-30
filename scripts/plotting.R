@@ -97,6 +97,12 @@ ceplane.plot(m, graph = "ggplot",
              currency = "£",
              ref_first = FALSE)
 
+contour(m, graph = "ggplot",
+        point = list(color = c("blue", "plum", "tomato", "springgreen"), size = 2),
+        icer = list(col = rep("red", 4), size = 5))
+
+
+
 ceac.plot(m, line = list(color = mypalette),
           title = "", currency = "£", graph = "ggplot2")
 
