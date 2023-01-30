@@ -1,0 +1,71 @@
+model {
+  # tb decision tree values
+
+  # N : total suspected cases
+
+  n_accept_tst ~ dbin(p_accept_tst, N)
+
+  n_accept_igra ~ dbin(p_accept_igra, N)
+
+  n_igra_pos ~ dbin(p_igra_pos, n_accept_igra)
+
+  n_tst_pos ~ dbin(p_tst_pos, n_accept_tst)
+
+  # two-step test after positive tst
+  n_igra_pos_tst_pos ~ dbin(p_igra_pos_tst_pos, n_tst_pos)
+  n_igra_pos_tst_neg ~ dbin(p_igra_pos_tst_neg, N - n_tst_pos)
+
+  # priors
+
+  p_igra_pos_tst_pos ~ dbeta(0.5, 0.5)
+  p_igra_pos_tst_neg ~ dbeta(0.5, 0.5)
+  p_tst_pos ~ dbeta(0.5, 0.5)
+  p_igra_pos ~ dbeta(0.5, 0.5)
+  p_accept_igra ~ dbeta(0.5, 0.5)
+  p_accept_tst ~ dbeta(0.5, 0.5)
+
+  sens_tst ~ dnorm(mu_sens_tst, pow(sd_sens_tst, -2))T(0,1)
+  spec_tst ~ dnorm(mu_spec_tst, pow(sd_spec_tst, -2))T(0,1)
+  sens_qft ~ dnorm(mu_sens_qft, pow(sd_sens_qft, -2))T(0,1)
+  spec_qft ~ dnorm(mu_spec_qft, pow(sd_spec_qft, -2))T(0,1)
+  sens_tspot ~ dnorm(mu_sens_tspot, pow(sd_sens_tspot, -2))T(0,1)
+  spec_tspot ~ dnorm(mu_spec_tspot, pow(sd_spec_tspot, -2))T(0,1)
+
+  # # hierarchical
+  # prev ~ dnorm(mu_prev, pow(sd_prev, -2))T(0,1)
+  # prev_tst ~ dnorm(prev, pow(sd_prev_test, -2))T(0,1)
+  # prev_qft ~ dnorm(prev, pow(sd_prev_test, -2))T(0,1)
+  # prev_tspot ~ dnorm(prev, pow(sd_prev_test, -2))T(0,1)
+
+  p_qft_pos ~ dnorm(p_igra_pos, pow(0.05, -2))T(0,1)
+  p_tspot_pos ~ dnorm(p_igra_pos, pow(0.05, -2))T(0,1)
+
+  prev_tst = (p_tst_pos + spec_tst - 1)/(sens_tst + spec_tst - 1)
+  prev_qft = (p_qft_pos + spec_qft - 1)/(sens_qft + spec_qft - 1)
+  prev_tspot = (p_tspot_pos + spec_tspot - 1)/(sens_tspot + spec_tspot - 1)
+  prev = (p_igra_pos + spec_tspot - 1)/(sens_tspot + spec_tspot - 1)
+
+  # generated values
+
+  PPV_tst = (sens_tst*prev_tst)/p_tst_pos
+  PPV_qft = (sens_qft*prev_qft)/p_qft_pos
+  PPV_tspot = (sens_tspot*prev_tspot)/p_tspot_pos
+
+  NPV_tst = min(1, (spec_tst*(1 - prev_tst))/(1 - p_tst_pos))
+  NPV_qft = min(1, (spec_qft*(1 - prev_qft))/(1 - p_qft_pos))
+  NPV_tspot = min(1, (spec_tspot*(1 - prev_tspot))/(1 - p_tspot_pos))
+
+
+  # # pooled
+  #prev ~ dnorm(mu_prev, pow(sd_prev, -2))T(0,1)
+  #
+  ## generated values
+  #
+  #PPV_tst = min(1, (sens_tst*prev)/p_tst_pos)
+  #PPV_qft = min(1, (sens_qft*prev)/p_igra_pos)
+  #PPV_tspot = min(1, (sens_tspot*prev)/p_igra_pos)
+  #
+  #NPV_tst = max(0, min(1, (spec_tst*(1 - prev))/(1 - p_tst_pos)))
+  #NPV_qft = max(0, min(1, (spec_qft*(1 - prev))/(1 - p_igra_pos)))
+  #NPV_tspot = max(0, min(1, (spec_tspot*(1 - prev))/(1 - p_igra_pos)))
+}

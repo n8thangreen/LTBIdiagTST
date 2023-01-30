@@ -17,33 +17,42 @@ dataJags <-
     mu_spec_tst = 0.59,
     mu_sens_qft = 0.886,  #0.80,
     mu_spec_qft = 0.995,  #0.97,
+    mu_sens_tspot = 0.886,  #0.80,
+    mu_spec_tspot = 0.995,  #0.97,
     sd_sens_tst = 0.03,
     sd_spec_tst = 0.05,
     sd_sens_qft = 0.029,  #0.015,
-    sd_spec_qft = 0.0025)  #0.005)
+    sd_spec_qft = 0.0025,  #0.005
+    sd_sens_tspot = 0.029,  #0.015,
+    sd_spec_tspot = 0.0025)  #0.005)
+    # mu_prev = 0.12,
+    # sd_prev = 0.05,
+    # sd_prev_test = 0.1)
 
-filein <- "BUGS/model.txt"
+filein <- "BUGS/model_prev.txt"
 
 # probabilities
 params <- c("p_accept_tst",
             "p_accept_igra",
             "p_igra_pos",
+            "p_qft_pos",
+            "p_tspot_pos",
             "p_tst_pos",
             "p_igra_pos_tst_pos",
             "p_igra_pos_tst_neg",
             "PPV_tst",
-            "PPV_igra",
-            # "PPV_qft",
-            # "PPV_tspot",
+            "PPV_qft",
+            "PPV_tspot",
             "NPV_tst",
-            "NPV_igra",
-            # "NPV_qft",
-            # "NPV_tspot",
+            "NPV_qft",
+            "NPV_tspot",
+            "prev",
             "prev_tst",
-            "prev_igra")
+            "prev_qft",
+            "prev_tspot")
 
-n.iter <- 1000
-n.burnin <- 500
+n.iter <- 10000
+n.burnin <- 5000
 n.thin <- floor((n.iter - n.burnin)/500)
 
 res <-
@@ -57,14 +66,14 @@ res <-
        n.thin,
        DIC = TRUE)
 
-R2WinBUGS::attach.bugs(res$BUGSoutput)
+# R2WinBUGS::attach.bugs(res$BUGSoutput)
 
-# save(res, file = "data/jags_output.RData")
+# save(res, file = "data/jags_output_prev.RData")
 
 par(mfrow = c(3,4))
 dat <- as.mcmc(res)
 dat[[1]] <- dat[[1]][, -1]
-densplot(as.mcmc(dat))
+densplot(as.mcmc(dat))#, xlim = c(0,1))
 
 
 library(dplyr)
