@@ -82,7 +82,10 @@ cost <- cbind(dat$TST_QFT$cost,
               dat$QFT$cost)
 
 # TST reference
-m <- bcea(-eff, -cost, Kmax = 30000, ref = 3,
+m <- bcea(-eff, -cost,
+          # Kmax = 30000,
+          k = seq(0, 30000, 50),
+          ref = 3,
           interventions = c("TST QFT", "TST TSPOT", "TST", "TSPOT", "QFT"))
 
 ceplane.plot(m, graph = "base")#, xlim = c(0.15,0.17), pos = "bottomleft")
@@ -97,9 +100,13 @@ ceplane.plot(m, graph = "ggplot",
              currency = "£",
              ref_first = FALSE)
 
-contour(m, graph = "ggplot",
+contour2(m, graph = "ggplot",
         point = list(color = c("blue", "plum", "tomato", "springgreen"), size = 2),
-        icer = list(col = rep("red", 4), size = 5))
+        icer = list(color = c("darkblue", "black", "darkred", "darkgreen"), size = 5),
+        contour = list(breaks = 0.25),
+        title = "", currency = "£")
+
+ggsave(filename = "plots/ceplane_main.png", device = "png", width = 15, height = 15, units = "cm")
 
 
 ceac.plot(m, line = list(color = mypalette),
@@ -116,3 +123,5 @@ ceac.plot(m_simul)
 BCEA::tabulate_means(m)
 
 ce_table(m)
+
+
