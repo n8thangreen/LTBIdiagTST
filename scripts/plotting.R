@@ -102,7 +102,6 @@ contour(m, graph = "ggplot",
         icer = list(col = rep("red", 4), size = 5))
 
 
-
 ceac.plot(m, line = list(color = mypalette),
           title = "", currency = "£", graph = "ggplot2")
 
