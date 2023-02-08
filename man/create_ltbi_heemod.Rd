@@ -2,7 +2,7 @@
 % Please edit documentation in R/create_ltbi_heemod.R
 \name{create_ltbi_heemod}
 \alias{create_ltbi_heemod}
-\title{create_ltbi_heemod}
+\title{Create LTBI heemod model}
 \usage{
 create_ltbi_heemod(
   age_init = 34,
@@ -25,7 +25,7 @@ create_ltbi_heemod(
 
 \item{d}{Discount factor}
 
-\item{N}{Number of runs}
+\item{N}{Number of runs; integer}
 
 \item{pReactB}{TB after no treatment}
 }
@@ -35,10 +35,10 @@ Returns a function with initial sub-populations as input.
 \description{
 Create a heemod Markov model for the LTBI test population.
 Transitions happen at the beginning of each year (equivalent to transition happening at
-the end + ignoring the first year) with method = "beginning".
+the end + ignoring the first year) with \code{method = "beginning"}.
 Since with this method the first year is actually the second,
-costs should be discounted from the start with the argument first = TRUE in discount().
-See: https://cran.r-project.org/web/packages/heemod/vignettes/d_non_homogeneous.html
+costs should be discounted from the start with the argument \code{first = TRUE} in \code{discount()}.
+See: (https://cran.r-project.org/web/packages/heemod/vignettes/d_non_homogeneous.html)
 }
 \examples{
 

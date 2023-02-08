@@ -122,6 +122,8 @@ ceac.plot(m_simul)
 
 BCEA::tabulate_means(m)
 
-ce_table(m)
+ce_table2(m)
+
+write.csv(ce_table2(m), file = "data/ce_table.csv")
 
 

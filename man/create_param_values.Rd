@@ -2,12 +2,14 @@
 % Please edit documentation in R/create_param_values.R
 \name{create_param_values}
 \alias{create_param_values}
-\title{all parameter values required
-for the decision tree model}
+\title{Create parameter values}
 \usage{
-create_param_values()
+create_param_values(save = TRUE)
 }
 \description{
+All parameter values required for the decision tree model.
+}
+\details{
 Excel model with structure and labelling:
 G:/DIDE-PC_2019/MSc-MPH/projects/2017/LTBI-TST_Manabu/decision tree Excel/all_decision_trees.xls
 }
