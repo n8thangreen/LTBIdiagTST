@@ -13,7 +13,7 @@ library(CEdecisiontree)
 
 load(here::here("data", "params.RData")) #create_param_values()
 load(here::here("data", "trees.RData"))  #create_trees()
-
+load("data/state_lists.RData")
 
 # decision tree ----
 
@@ -27,14 +27,7 @@ tree_dat <-
     cname_from_to = QFT_cname_from_to,
     hname_from_to = QFT_hname_from_to)
 
-state_list <-
-  list(
-    no_LTBI  = c(16, 18, 19, 21, 26, 29),
-    LTBI_complete_Tx  = 9,
-    LTBI_incomplete_Tx = c(7, 10),
-    LTBI_no_Tx = c(12, 24, 28),
-    activeTB = c(),
-    dead = c())
+state_list <- state_lists$QFT
 
 dt <-
   run_cedectree(tree_dat,

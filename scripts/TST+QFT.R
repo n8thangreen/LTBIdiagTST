@@ -14,6 +14,7 @@ library(CEdecisiontree)
 load(here::here("data", "params.RData")) #create_param_values()
 load(here::here("data", "trees.RData"))  #create_trees()
 
+load("data/state_lists.RData")
 
 # decision tree ----
 
@@ -34,14 +35,7 @@ write.csv(tree_dat, file = "data/tree_dat_TST+QFT.csv")
 ## to initial states in the Markov model
 ## make sure names in same order as heemod model
 ## TODO: match order automatically
-state_list <-
-  list(
-    no_LTBI = c(19, 21, 22, 24, 29, 32, 37, 40, 43),
-    LTBI_complete_Tx = 12,
-    LTBI_incomplete_Tx = c(10, 13),
-    LTBI_no_Tx = c(15, 27, 31, 35, 39, 42),
-    activeTB = c(),
-    dead = c())
+state_list <- state_lists$`TST+QFT`
 
 dt <-
   run_cedectree(tree_dat,

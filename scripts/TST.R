@@ -14,6 +14,7 @@ library(CEdecisiontree)
 load(here::here("data", "params.RData")) #create_param_values()
 load(here::here("data", "trees.RData"))  #create_trees()
 
+load("data/state_lists.RData")
 
 # decision tree ----
 
@@ -28,14 +29,7 @@ tree_dat <-
     hname_from_to = TST_hname_from_to)
 
 # Markov model starting states
-state_list <-
-  list(
-    no_LTBI  = c(18, 20, 21, 23, 28, 31, 34),
-    LTBI_complete_Tx  = 11,
-    LTBI_incomplete_Tx = c(9, 12),
-    LTBI_no_Tx = c(14, 26, 30, 33),
-    activeTB = NULL,
-    dead = NULL)
+state_list <- state_lists$TST
 
 dt <-
   run_cedectree(tree_dat,

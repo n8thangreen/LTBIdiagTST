@@ -10,17 +10,11 @@ library(CEdecisiontree)
 
 load(here::here("data", "params.RData")) #create_param_values()
 load(here::here("data", "trees.RData"))  #create_trees()
+load("data/state_lists.RData")
 
 scenario_vals <- readr::read_csv(here::here("inst/extdata/scenario_input_values.csv"))
 
-state_list <-
-  list(
-    no_LTBI  = c(16, 18, 19, 21, 26, 29),
-    LTBI_complete_Tx  = 9,
-    LTBI_incomplete_Tx = c(7, 10),
-    LTBI_no_Tx = c(12, 24, 28),
-    activeTB = c(),
-    dead = c())
+state_list <- state_lists$QFT
 
 ev_ce <- NULL
 ev_heemod <- NULL
@@ -63,22 +57,13 @@ for (i in 1:nrow(scenario_vals)) {
                        res_heemod$run_model$utility))
 }
 
-res <- ev_ce + ev_heemod
+ce_scenarios <- (ev_ce + ev_heemod) |> set_colnames(c("cost", "eff"))
 
-wtp <- 25000
-
-netbenefit <- wtp*res[, 2] - res[, 1]
-
-# against primary analysis
-inmb <- round(netbenefit - (wtp*res[1, 2] - res[1, 1]), 2)
-
-write.csv(tree_dat, file = "data/tree_dat_QFT_scenario.csv")
-save(dt, file = "data/run_cedectree_QFT_scenario.RData")
+write.csv(ce_scenarios, file = "data/ce_scenarios_QFT.csv")
 
 
+###############
 # tornado plot
-
-dat <- data.frame(scenario_vals, netbenefit, inmb)
 
 library(ceplot)
 library(magrittr)
@@ -88,15 +73,18 @@ library(purrr)
 library(dplyr)
 library(ggplot2)
 
-# psa_dat <-
-#   dat |>
-#   select(pReact, pReact_comp, pReact_incomp, pHep, pComp_chemo, Sp_cost, LTBIcompl_cost,
-#            LTBIincompl_cost, pAccept_chemo, QFT, QFT_pos, Hep, PPV_QFT, NPV_QFT, TB_cost) |>
-#   distinct() %>%
-#   model.frame(
-#   formula = inmb ~ pReact + pReact_comp + pReact_incomp + pHep + pComp_chemo + Sp_cost + LTBIcompl_cost +
-#     LTBIincompl_cost + pAccept_chemo + QFT + QFT_pos + Hep + PPV_QFT + NPV_QFT + TB_cost,
-#   data = .)
+
+ce_scenarios <- read.csv(file = "data/ce_scenarios_QFT.csv")
+scenario_vals <- readr::read_csv(here::here("inst/extdata/scenario_input_values.csv"))
+
+wtp <- 25000
+
+netbenefit <- wtp*ce_scenarios[, "eff"] - ce_scenarios[, "cost"]
+
+# against primary analysis
+inmb <- round(netbenefit - netbenefit[1], 2)
+
+dat <- data.frame(scenario_vals, netbenefit, inmb)
 
 psa_dat <-
   dat |>
@@ -123,12 +111,14 @@ psa_dat <-
     "Cost active TB treatment" = TB_cost)
 
 psa_dat %>%
-  create_tornado_data %>%
-  ceplot:::ggplot_tornado.tornado(baseline_output = 0) +
-  ylab("Net monetary benefit (NMB)") #+
+  ceplot:::create_tornado_data() %>%
+  ceplot:::ggplot_tornado.tornado(baseline_output = 0, annotate_nudge = 20) +
+  ylab("Incremental net monetary benefit (INMB)") +
+  theme(legend.position="none")#+
 # ylim(-500, 500)
 # ggplot_tornado(baseline_output = 460463) +
 # ylim(450000, 465400)
 
 
-
+ggsave(filename = "plots/tornado_plot.png",
+       device = "png", width = 25, height = 15, units = "cm")
