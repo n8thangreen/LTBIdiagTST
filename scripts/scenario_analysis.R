@@ -1,4 +1,4 @@
-# scenario analysis
+# deterministic scenario analysis
 
 library(dplyr)
 library(reshape2)
@@ -8,13 +8,23 @@ library(heemod)
 library(CEdecisiontree)
 
 
-load(here::here("data", "params.RData")) #create_param_values()
-load(here::here("data", "trees.RData"))  #create_trees()
-load("data/state_lists.RData")
+load(here::here("data", "params.RData"))      #create_param_values()
+load(here::here("data", "trees.RData"))       #create_trees()
+load(here::here("data", "state_lists.RData")) #create_state_lists()
 
-scenario_vals <- readr::read_csv(here::here("inst/extdata/scenario_input_values.csv"))
+# select diagnostic pathway
+test_name <- "QFT"
+# test_name <- "TST_QFT"
 
-state_list <- state_lists$QFT
+scenario_vals <-
+  readr::read_csv(here::here(glue::glue("inst/extdata/scenario_input_values_{test_name}.csv")))
+
+state_list <- state_lists[[test_name]]
+
+tree_varname <- paste0(test_name, "_tree")
+pname_from_to <- paste0(test_name, "_pname_from_to")
+cname_from_to <- paste0(test_name, "_cname_from_to")
+hname_from_to <- paste0(test_name, "_hname_from_to")
 
 ev_ce <- NULL
 ev_heemod <- NULL
@@ -26,13 +36,13 @@ for (i in 1:nrow(scenario_vals)) {
   # decision tree
   tree_dat <-
     create_ce_tree_long_df(
-      tree_list = QFT_tree,
+      tree_list = get(tree_varname),
       label_probs = modifyList(label_probs, new_vals),
       label_costs = modifyList(label_costs, new_vals),
       label_health = modifyList(label_health, new_vals),
-      pname_from_to = QFT_pname_from_to,
-      cname_from_to = QFT_cname_from_to,
-      hname_from_to = QFT_hname_from_to)
+      pname_from_to = get(pname_from_to),
+      cname_from_to = get(cname_from_to),
+      hname_from_to = get(hname_from_to))
 
   res_ce <- run_cedectree(dat_long = tree_dat,
                           state_list = state_list)
@@ -59,7 +69,7 @@ for (i in 1:nrow(scenario_vals)) {
 
 ce_scenarios <- (ev_ce + ev_heemod) |> set_colnames(c("cost", "eff"))
 
-write.csv(ce_scenarios, file = "data/ce_scenarios_QFT.csv")
+write.csv(ce_scenarios, file = glue::glue("data/ce_scenarios_{test_name}.csv"))
 
 
 ###############
@@ -74,8 +84,9 @@ library(dplyr)
 library(ggplot2)
 
 
-ce_scenarios <- read.csv(file = "data/ce_scenarios_QFT.csv")
-scenario_vals <- readr::read_csv(here::here("inst/extdata/scenario_input_values.csv"))
+ce_scenarios <- read.csv(file = glue::glue("data/ce_scenarios_{test_name}.csv"))
+scenario_vals <-
+  readr::read_csv(here::here(glue::glue("inst/extdata/scenario_input_values_{test_name}.csv")))
 
 wtp <- 25000
 
@@ -88,23 +99,31 @@ dat <- data.frame(scenario_vals, netbenefit, inmb)
 
 psa_dat <-
   dat |>
-  select(inmb, pReact, pComp_chemo, Sp_cost, LTBIcompl_cost,
-         LTBIincompl_cost,
-         # pAccept_chemo,
-         QFT, PPV_QFT, NPV_QFT, TB_cost) |>
+  # select(inmb, pReact, pComp_chemo, Sp_cost, LTBIcompl_cost,
+  #        LTBIincompl_cost,
+  #        # pAccept_chemo,
+  #        QFT, PPV_QFT, NPV_QFT, TB_cost) |>
+  select(-scenario, -netbenefit, -Hep, -pHep,
+         # -QFT_pos_TST.,
+         -pAccept_chemo,
+         -pReact_comp, -pReact_incomp) |>
   distinct(across(pReact:TB_cost), .keep_all = TRUE) %>%
   model.frame(
-    formula = inmb ~ pReact + pComp_chemo + Sp_cost + LTBIcompl_cost +
-      LTBIincompl_cost +
-      # pAccept_chemo +
-      QFT + PPV_QFT + NPV_QFT + TB_cost,
-    data = .) |>
+    formula = inmb ~ ., data = .) |>
+  # model.frame(
+  #   formula = inmb ~ pReact + pComp_chemo + Sp_cost + LTBIcompl_cost +
+  #     LTBIincompl_cost +
+  #     # pAccept_chemo +
+  #     QFT + PPV_QFT + NPV_QFT + TB_cost,
+  #   data = .) |>
   dplyr::rename(
     "LTBI completion cost" = LTBIcompl_cost,
     "LTBI incompletion cost" = LTBIincompl_cost,
     "Negative predictive value" = NPV_QFT,
-    "Probability of completing treatment" = pComp_chemo,
     "Positive predictive value" = PPV_QFT,
+    # "Negative predictive value" = NPV_QFT_TST.,
+    # "Positive predictive value" = PPV_QFT_TST.,
+    "Probability of completing treatment" = pComp_chemo,
     "Reactivation probability" = pReact,
     "Cost of QFT test" = QFT,
     "Cost of positive screening" = Sp_cost,
@@ -120,5 +139,5 @@ psa_dat %>%
 # ylim(450000, 465400)
 
 
-ggsave(filename = "plots/tornado_plot.png",
+ggsave(filename = glue::glue("plots/tornado_plot_{test_name}.png"),
        device = "png", width = 25, height = 15, units = "cm")

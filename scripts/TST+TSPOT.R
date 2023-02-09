@@ -28,7 +28,7 @@ tree_dat <-
     cname_from_to = TST_TSPOT_cname_from_to,
     hname_from_to = TST_TSPOT_hname_from_to)
 
-state_list <- state_lists$`TST+TSPOT`
+state_list <- state_lists$`TST_TSPOT`
 
 dt <-
   run_cedectree(tree_dat,

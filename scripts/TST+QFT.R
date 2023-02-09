@@ -35,7 +35,7 @@ write.csv(tree_dat, file = "data/tree_dat_TST+QFT.csv")
 ## to initial states in the Markov model
 ## make sure names in same order as heemod model
 ## TODO: match order automatically
-state_list <- state_lists$`TST+QFT`
+state_list <- state_lists$`TST_QFT`
 
 dt <-
   run_cedectree(tree_dat,

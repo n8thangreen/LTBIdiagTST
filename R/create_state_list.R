@@ -21,7 +21,7 @@ create_state_lists <- function() {
           LTBI_no_Tx = c(12, 24, 28),
           activeTB = c(),
           dead = c()),
-      "TST+QFT" =
+      "TST_QFT" =
         list(
           no_LTBI = c(19, 21, 22, 24, 29, 32, 37, 40, 43),
           LTBI_complete_Tx = 12,
@@ -29,7 +29,7 @@ create_state_lists <- function() {
           LTBI_no_Tx = c(15, 27, 31, 35, 39, 42),
           activeTB = c(),
           dead = c()),
-      "TST+TSPOT" =
+      "TST_TSPOT" =
         list(
           no_LTBI  = c(19, 21, 22, 24, 29, 32, 37, 40, 43),
           LTBI_complete_Tx  = 12,
