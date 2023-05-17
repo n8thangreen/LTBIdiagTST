@@ -105,6 +105,7 @@ psa_dat <-
   #        QFT, PPV_QFT, NPV_QFT, TB_cost) |>
   select(-scenario, -netbenefit, -Hep, -pHep,
          # -QFT_pos_TST.,
+         -QFT_pos,
          -pAccept_chemo,
          -pReact_comp, -pReact_incomp) |>
   distinct(across(pReact:TB_cost), .keep_all = TRUE) %>%

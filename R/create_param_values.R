@@ -105,14 +105,14 @@ create_param_values <- function(save = TRUE) {
       "TST_spec",    list(distn = "pert", params = c(mode = 0.59, min = 0.46, max = 0.73)),  # Pai (2008)
 
       "QFT_sens",    list(distn = "pert", params = c(mode = 0.886, min = 0.812, max = 0.944)),  # Zhang et al. BMC Infectious Diseases (2023) 23:40
-      "QFT_spec",    list(distn = "pert", params = c(mode = 0.995, min = 0.959, max = 1)),    # Zhang et al. BMC Infectious Diseases (2023) 23:40
+      "QFT_spec",    list(distn = "pert", params = c(mode = 0.995, min = 0.959, max = 1)),      # Zhang et al. BMC Infectious Diseases (2023) 23:40
       "TSPOT_sens",  list(distn = "pert", params = c(mode = 0.872, min = 0.643, max = 0.991)),  # Zhang et al. BMC Infectious Diseases (2023) 23:40
-      "TSPOT_spec",  list(distn = "pert", params = c(mode = 1, min = 0.996, max = 1)),        # Zhang et al. BMC Infectious Diseases (2023) 23:40
+      "TSPOT_spec",  list(distn = "pert", params = c(mode = 1, min = 0.996, max = 1)),          # Zhang et al. BMC Infectious Diseases (2023) 23:40
       "pAccept_chemo", list(distn = "pert", params = c(mode = 0.95, min = 0.5, max = 1)),  # August, Pareek 2013
 
       "pComp_chemo", list(distn = "pert", params = c(mode = 0.8, min = 0.5, max =  0.9)),  # Kowada (2013)
 
-      "pHep",        list(distn = "unif", params = c(min=0.001, max=0.003)),                  # Kunst, Pareek
+      "pHep",        list(distn = "unif", params = c(min=0.001, max=0.003)),               # Kunst, Pareek
 
       "Eff_comp",    list(distn = "pert", params = c(mode = 0.65, min = 0.5, max = 0.8)),  # Pareek (2013)
       "Eff_incomp",  list(distn = "pert", params = c(mode = 0.21, min = 0.1, max = 0.3)),  # Pareek (2013)
