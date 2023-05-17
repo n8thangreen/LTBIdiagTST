@@ -111,12 +111,6 @@ psa_dat <-
   distinct(across(pReact:TB_cost), .keep_all = TRUE) %>%
   model.frame(
     formula = inmb ~ ., data = .) |>
-  # model.frame(
-  #   formula = inmb ~ pReact + pComp_chemo + Sp_cost + LTBIcompl_cost +
-  #     LTBIincompl_cost +
-  #     # pAccept_chemo +
-  #     QFT + PPV_QFT + NPV_QFT + TB_cost,
-  #   data = .) |>
   dplyr::rename(
     "LTBI completion cost" = LTBIcompl_cost,
     "LTBI incompletion cost" = LTBIincompl_cost,
