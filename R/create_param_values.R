@@ -197,7 +197,7 @@ create_param_values <- function(save = TRUE) {
   hsuv <-
     list(
       "loss_chemo" = 0.01,
-      "loss_hep" = 0.22,
+      "loss_hep" = 0.14,            # Woo (2012)
       "loss_tb" = 0.15)
 
 
@@ -431,20 +431,20 @@ create_param_values <- function(save = TRUE) {
   # QALY loss #
   #############
 
-  t_chemo <- 3/12  #years
+  t_chemo <- 3/12  # years
   t_hep <- 1.5/12
 
   label_health <-
     list(
-      "Hep" = 0.22*t_hep,
+      "Hep" = hsuv$loss_hep*t_hep,
       "Total (complete)" = 0.01*t_chemo,
-      "Total (incomplete)" = 0.01*t_chemo/2)
+      "Total (incomplete)" = 0.01*t_chemo/2)      # assume drop-out half way through
 
   label_health_distns <-
     tribble(
       ~name.health,   ~vals,
       "Hep",
-      list(distn = "unif", params = c(min=0.22*t_hep, max=0.22*t_hep)),
+      list(distn = "unif", params = c(min=0.13, max=0.15)),             # Woo (2012)
       "Total (complete)",
       list(distn = "unif", params = c(min= 0.01*t_chemo, max= 0.01*t_chemo)),
       "Total (incomplete)",
