@@ -1,10 +1,11 @@
-# deterministic scenario analysis
+# deterministic scenario sensitivity analysis
 
 library(dplyr)
 library(reshape2)
 library(assertthat)
 library(purrr)
 library(heemod)
+library(magrittr)
 library(CEdecisiontree)
 
 
@@ -16,11 +17,16 @@ load(here::here("data", "state_lists.RData")) #create_state_lists()
 test_name <- "QFT"
 # test_name <- "TST_QFT"
 
+##TODO:
+# test_name <- "TST"
+
+
 scenario_vals <-
   readr::read_csv(here::here(glue::glue("inst/extdata/scenario_input_values_{test_name}.csv")))
 
 state_list <- state_lists[[test_name]]
 
+# create variable names
 tree_varname <- paste0(test_name, "_tree")
 pname_from_to <- paste0(test_name, "_pname_from_to")
 cname_from_to <- paste0(test_name, "_cname_from_to")
@@ -71,6 +77,9 @@ ce_scenarios <- (ev_ce + ev_heemod) |> set_colnames(c("cost", "eff"))
 
 write.csv(ce_scenarios, file = glue::glue("data/ce_scenarios_{test_name}.csv"))
 
+##TODO:
+## take difference against basecase TST
+## make ce planes
 
 ###############
 # tornado plot
