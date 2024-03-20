@@ -14,16 +14,17 @@ load(here::here("data", "trees.RData"))       #create_trees()
 load(here::here("data", "state_lists.RData")) #create_state_lists()
 
 # select diagnostic pathway
-test_name <- "QFT"
+# test_name <- "QFT"
 # test_name <- "TST_QFT"
 
 ##TODO:
-# test_name <- "TST"
+test_name <- "TST"
 
-
+# input parameter values
 scenario_vals <-
   readr::read_csv(here::here(glue::glue("inst/extdata/scenario_input_values_{test_name}.csv")))
 
+# decision tree state ids matching Markov model
 state_list <- state_lists[[test_name]]
 
 # create variable names
@@ -32,6 +33,7 @@ pname_from_to <- paste0(test_name, "_pname_from_to")
 cname_from_to <- paste0(test_name, "_cname_from_to")
 hname_from_to <- paste0(test_name, "_hname_from_to")
 
+# expected values from submodels
 ev_ce <- NULL
 ev_heemod <- NULL
 
@@ -73,6 +75,7 @@ for (i in 1:nrow(scenario_vals)) {
                        res_heemod$run_model$utility))
 }
 
+# combine model expected values
 ce_scenarios <- (ev_ce + ev_heemod) |> set_colnames(c("cost", "eff"))
 
 write.csv(ce_scenarios, file = glue::glue("data/ce_scenarios_{test_name}.csv"))
@@ -94,6 +97,7 @@ library(ggplot2)
 
 
 ce_scenarios <- read.csv(file = glue::glue("data/ce_scenarios_{test_name}.csv"))
+
 scenario_vals <-
   readr::read_csv(here::here(glue::glue("inst/extdata/scenario_input_values_{test_name}.csv")))
 
@@ -145,3 +149,69 @@ psa_dat %>%
 
 ggsave(filename = glue::glue("plots/tornado_plot_{test_name}.png"),
        device = "png", width = 25, height = 15, units = "cm")
+
+###########
+# ce plane
+
+library(ggrepel)
+library(BCEA)
+
+# load in all ce_scenarios data
+ce_scenarios_TST <- read.csv(file = "data/ce_scenarios_TST.csv")
+# ce_scenarios_QFT <- read.csv(file = "data/ce_scenarios_TST_QFT.csv")
+ce_scenarios_QFT <- read.csv(file = "data/ce_scenarios_QFT.csv")
+
+TST_eff <- t(ce_scenarios_TST$eff)
+TST_cost <- t(ce_scenarios_TST$cost)
+QFT_eff <- t(ce_scenarios_QFT$eff)
+QFT_cost <- t(ce_scenarios_QFT$cost)
+
+# incremental values vs TST
+incr_eff <- t(c(0, QFT_eff - TST_eff))
+incr_cost <- t(c(0, QFT_cost - TST_cost))
+
+res_bcea <- bcea(eff = as.matrix(incr_eff)[c(1,1),],
+                 cost = as.matrix(incr_cost)[c(1,1),], ref = 1)
+
+# plot
+ceplane.plot(res_bcea, graph = "ggplot", wtp = 25000)
+
+
+# https://ggrepel.slowkow.com/articles/examples.html
+
+labels <- c("dummy", "BASELINE",
+            "pReact_high","pReact_low",
+            "pHep_low","pHep_high",
+            "pComp_chemo_low","pComp_chemo_high",
+            "PPV_QFT_low", "PPV_QFT_high",
+            "Nurse_cost_low", "Nurse_cost_high",
+            "LTBIcompl_cost_low","LTBIcompl_cost_high",
+            "LTBIincompl_cost_low","LTBIincompl_cost_high",
+            "pAccept_chemo_low","pAccept_chemo_high",
+            "QFT_cost_low","QFT_cost_high",
+            "QFT_pos_low","QFT_pos_high",
+            "Hep_low","Hep_high",
+            "NPV_QFT_low","NPV_QFT_high",
+            "TB_cost_low","TB_cost_high")
+
+dat <- data.frame(scenario = 1:28,
+                  param = rep(1:14, each = 2),
+                  labels,
+                  eff = t(incr_eff),
+                  cost = t(incr_cost))
+
+p <- ggplot(dat, aes(eff, cost, label = labels)) +
+  geom_point(color = "red") +
+  # geom_text_repel(max.overlaps = Inf, direction = "x") +
+  geom_label_repel(fill = "white", box.padding = 0.5,
+                   colour = dat$param,
+                   max.overlaps = Inf) + #, direction = "x") +
+  ylim(-190, -70) +
+  xlim(0, 0.95)
+
+p
+
+# ggsave(filename = "plots/cepplane_scenario_analysis_TST_QFT.png",
+ggsave(filename = "plots/cepplane_scenario_analysis_QFT.png",
+       device = "png", width = 30, height = 30, units = "cm")
+
