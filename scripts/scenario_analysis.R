@@ -15,10 +15,9 @@ load(here::here("data", "state_lists.RData")) #create_state_lists()
 
 # select diagnostic pathway
 # test_name <- "QFT"
-# test_name <- "TST_QFT"
+test_name <- "TST_QFT"
+# test_name <- "TST"
 
-##TODO:
-test_name <- "TST"
 
 # input parameter values
 scenario_vals <-
@@ -80,21 +79,13 @@ ce_scenarios <- (ev_ce + ev_heemod) |> set_colnames(c("cost", "eff"))
 
 write.csv(ce_scenarios, file = glue::glue("data/ce_scenarios_{test_name}.csv"))
 
-##TODO:
-## take difference against basecase TST
-## make ce planes
 
-###############
-# tornado plot
+################
+# tornado plots
 
 library(ceplot)
-library(magrittr)
-library(reshape2)
 library(plyr)
-library(purrr)
-library(dplyr)
 library(ggplot2)
-
 
 ce_scenarios <- read.csv(file = glue::glue("data/ce_scenarios_{test_name}.csv"))
 
@@ -102,6 +93,9 @@ scenario_vals <-
   readr::read_csv(here::here(glue::glue("inst/extdata/scenario_input_values_{test_name}.csv")))
 
 wtp <- 25000
+
+
+## against own baseline _within_ pathway
 
 netbenefit <- wtp*ce_scenarios[, "eff"] - ce_scenarios[, "cost"]
 
@@ -112,13 +106,18 @@ dat <- data.frame(scenario_vals, netbenefit, inmb)
 
 psa_dat <-
   dat |>
-  # select(inmb, pReact, pComp_chemo, Sp_cost, LTBIcompl_cost,
-  #        LTBIincompl_cost,
-  #        # pAccept_chemo,
-  #        QFT, PPV_QFT, NPV_QFT, TB_cost) |>
   select(-scenario, -netbenefit, -Hep, -pHep,
-         # -QFT_pos_TST.,
-         -QFT_pos,
+         # -NPV_TST,
+         # -PPV_TST,
+         # -TST,
+         # -TST_pos,
+         -QFT,
+         # -NPV_QFT,   # QFT only pathway
+         # -PPV_QFT,   # QFT only pathway
+         # -QFT_pos,   # QFT only pathway
+         -NPV_QFT_TST.,   # TST only pathway
+         -PPV_QFT_TST.,   # TST only pathway
+         -QFT_pos_TST.,   # TST only pathway
          -pAccept_chemo,
          -pReact_comp, -pReact_incomp) |>
   distinct(across(pReact:TB_cost), .keep_all = TRUE) %>%
@@ -127,15 +126,21 @@ psa_dat <-
   dplyr::rename(
     "LTBI completion cost" = LTBIcompl_cost,
     "LTBI incompletion cost" = LTBIincompl_cost,
-    "Negative predictive value" = NPV_QFT,
-    "Positive predictive value" = PPV_QFT,
-    # "Negative predictive value" = NPV_QFT_TST.,
-    # "Positive predictive value" = PPV_QFT_TST.,
+    # "Negative predictive value" = NPV_QFT,
+    # "Positive predictive value" = PPV_QFT,
+    "Negative predictive value TST" = NPV_TST,
+    "Positive predictive value TST" = PPV_TST,
+    # "Probability positive QFT after TST" = QFT_pos_TST.,    # dual pathway
+    "Probability positive TST" = TST_pos,
+    # "Probability positive QFT" = QFT_pos,
+    # "Negative predictive value QFT" = NPV_QFT_TST.,  # dual pathway
+    # "Positive predictive value QFT" = PPV_QFT_TST.,  # dual pathway
     "Probability of completing treatment" = pComp_chemo,
-    "Reactivation probability" = pReact,
-    "Cost of QFT test" = QFT,
-    "Cost of positive screening" = Sp_cost,
-    "Cost active TB treatment" = TB_cost)
+    "Probability of reactivation" = pReact,
+    # "QFT test cost" = QFT,
+    "TST test cost" = TST,
+    "Positive screening cost" = Sp_cost,
+    "Active TB treatment cost" = TB_cost)
 
 psa_dat %>%
   ceplot:::create_tornado_data() %>%
@@ -146,9 +151,74 @@ psa_dat %>%
 # ggplot_tornado(baseline_output = 460463) +
 # ylim(450000, 465400)
 
-
 ggsave(filename = glue::glue("plots/tornado_plot_{test_name}.png"),
        device = "png", width = 25, height = 15, units = "cm")
+
+## against TST baseline _between_ pathways
+
+ce_scenarios_TST <- read.csv(file = "data/ce_scenarios_TST.csv")
+ce_scenarios_comp <- read.csv(file = glue::glue("data/ce_scenarios_{test_name}.csv"))
+
+netbenefit_TST <- wtp*ce_scenarios_TST[, "eff"] - ce_scenarios_TST[, "cost"]
+netbenefit_comp <- wtp*ce_scenarios_comp[, "eff"] - ce_scenarios_comp[, "cost"]
+
+# against TST equivalent scenario
+inmb <- round(netbenefit_comp - netbenefit_TST, 2)
+
+dat <- data.frame(scenario_vals, netbenefit_TST, netbenefit_comp, inmb)
+
+psa_dat <-
+  dat |>
+  select(-scenario, -netbenefit_TST, -netbenefit_comp, -Hep, -pHep,
+         # -NPV_TST,    # QFT only pathway
+         # -PPV_TST,
+         # -TST,        # QFT only pathway
+         -TST_pos,
+         # -QFT,
+         # -NPV_QFT,
+         # -PPV_QFT,
+         # -QFT_pos,
+         # -NPV_QFT_TST.,
+         # -PPV_QFT_TST.,
+         # -QFT_pos_TST.,
+         -pAccept_chemo,
+         -pReact_comp, -pReact_incomp) |>
+  distinct(across(pReact:TB_cost), .keep_all = TRUE) %>%
+  model.frame(
+    formula = inmb ~ ., data = .) |>
+  dplyr::rename(
+    "LTBI completion cost" = LTBIcompl_cost,
+    "LTBI incompletion cost" = LTBIincompl_cost,
+    # "Negative predictive value QFT" = NPV_QFT,
+    # "Positive predictive value QFT" = PPV_QFT,
+    "Negative predictive value TST" = NPV_TST,      # QFT only pathway
+    "Positive predictive value TST" = PPV_TST,
+    "Negative predictive value combined" = NPV_QFT_TST.,
+    "Positive predictive value combined" = PPV_QFT_TST.,
+    # "Negative predictive value QFT" = NPV_QFT,
+    # "Positive predictive value QFT" = PPV_QFT,
+    "Probability of completing treatment" = pComp_chemo,
+    "Probability of reactivation" = pReact,
+    "QFT test cost" = QFT,
+    "TST test cost" = TST,                        # QFT only pathway
+    # "Probability of positive TST test" = TST_pos,
+    # "Probability of positive QFT test" = QFT_pos,
+    "Probability of positive QFT after TST" = QFT_pos_TST.,
+    "Positive screening cost" = Sp_cost,
+    "Active TB treatment cost" = TB_cost)
+
+psa_dat %>%
+  ceplot:::create_tornado_data() %>%
+  ceplot:::ggplot_tornado.tornado(annotate_nudge = 50) +
+  ylab("Incremental net monetary benefit (INMB)") +
+  theme(legend.position = "none") +
+  # ylim(10200, 11000)       # QFT only pathway
+  ylim(10700, 12500)         # dual pathway
+
+
+ggsave(filename = glue::glue("plots/tornado_plot_TST_vs_{test_name}.png"),
+       device = "png", width = 25, height = 15, units = "cm")
+
 
 ###########
 # ce plane
@@ -184,7 +254,7 @@ labels <- c("dummy", "BASELINE",
             "pHep_low","pHep_high",
             "pComp_chemo_low","pComp_chemo_high",
             "PPV_QFT_low", "PPV_QFT_high",
-            "Nurse_cost_low", "Nurse_cost_high",
+            "pos_screen_cost_low", "pos_screen_cost_high",
             "LTBIcompl_cost_low","LTBIcompl_cost_high",
             "LTBIincompl_cost_low","LTBIincompl_cost_high",
             "pAccept_chemo_low","pAccept_chemo_high",
