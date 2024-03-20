@@ -170,9 +170,9 @@ dat <- data.frame(scenario_vals, netbenefit_TST, netbenefit_comp, inmb)
 psa_dat <-
   dat |>
   select(-scenario, -netbenefit_TST, -netbenefit_comp, -Hep, -pHep,
-         # -NPV_TST,    # QFT only pathway
+         -NPV_TST,    # QFT only pathway
          # -PPV_TST,
-         # -TST,        # QFT only pathway
+         -TST,        # QFT only pathway
          -TST_pos,
          # -QFT,
          # -NPV_QFT,
@@ -191,7 +191,7 @@ psa_dat <-
     "LTBI incompletion cost" = LTBIincompl_cost,
     # "Negative predictive value QFT" = NPV_QFT,
     # "Positive predictive value QFT" = PPV_QFT,
-    "Negative predictive value TST" = NPV_TST,      # QFT only pathway
+    # "Negative predictive value TST" = NPV_TST,      # QFT only pathway
     "Positive predictive value TST" = PPV_TST,
     "Negative predictive value combined" = NPV_QFT_TST.,
     "Positive predictive value combined" = PPV_QFT_TST.,
@@ -200,7 +200,7 @@ psa_dat <-
     "Probability of completing treatment" = pComp_chemo,
     "Probability of reactivation" = pReact,
     "QFT test cost" = QFT,
-    "TST test cost" = TST,                        # QFT only pathway
+    # "TST test cost" = TST,                        # QFT only pathway
     # "Probability of positive TST test" = TST_pos,
     # "Probability of positive QFT test" = QFT_pos,
     "Probability of positive QFT after TST" = QFT_pos_TST.,
@@ -213,7 +213,7 @@ psa_dat %>%
   ylab("Incremental net monetary benefit (INMB)") +
   theme(legend.position = "none") +
   # ylim(10200, 11000)       # QFT only pathway
-  ylim(10700, 12500)         # dual pathway
+  ylim(11300, 11800)         # dual pathway
 
 
 ggsave(filename = glue::glue("plots/tornado_plot_TST_vs_{test_name}.png"),
