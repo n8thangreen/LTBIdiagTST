@@ -139,7 +139,7 @@ strat <- define_strategy(
 )
 ```
 
-```{r}
+```{r eval=FALSE}}
 save(strat, params, cost, utility,
      file = "data/ltbi_heemod.RData")
 ```
@@ -207,7 +207,10 @@ summary(res_mod[[4]])
 hist(c1, breaks = 30, xlab = "cost")
 hist(h1, breaks = 30, xlab = "health")
 
-plot(res_mod[[4]])
+library(ggplot2)
+plot(res_mod[[4]]) +
+   scale_x_continuous(sec.axis = sec_axis(~ . + 35, name = "Age (years)"))
+
 
 # state-edge graph
 plot(mat_trans, arr.type = "simple")

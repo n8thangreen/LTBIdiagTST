@@ -14,8 +14,8 @@ load(here::here("data", "trees.RData"))       #create_trees()
 load(here::here("data", "state_lists.RData")) #create_state_lists()
 
 # select diagnostic pathway
-# test_name <- "QFT"
-test_name <- "TST_QFT"
+test_name <- "QFT"
+# test_name <- "TST_QFT"
 # test_name <- "TST"
 
 
@@ -107,17 +107,17 @@ dat <- data.frame(scenario_vals, netbenefit, inmb)
 psa_dat <-
   dat |>
   select(-scenario, -netbenefit, -Hep, -pHep,
-         # -NPV_TST,
-         # -PPV_TST,
-         # -TST,
-         # -TST_pos,
-         -QFT,
+         -NPV_TST,
+         -PPV_TST,
+         -TST,
+         -TST_pos,
+         # -QFT,
          # -NPV_QFT,   # QFT only pathway
          # -PPV_QFT,   # QFT only pathway
          # -QFT_pos,   # QFT only pathway
-         -NPV_QFT_TST.,   # TST only pathway
-         -PPV_QFT_TST.,   # TST only pathway
-         -QFT_pos_TST.,   # TST only pathway
+         # -NPV_QFT_TST.,   # TST only pathway
+         # -PPV_QFT_TST.,   # TST only pathway
+         # -QFT_pos_TST.,   # TST only pathway
          -pAccept_chemo,
          -pReact_comp, -pReact_incomp) |>
   distinct(across(pReact:TB_cost), .keep_all = TRUE) %>%
@@ -126,25 +126,25 @@ psa_dat <-
   dplyr::rename(
     "LTBI completion cost" = LTBIcompl_cost,
     "LTBI incompletion cost" = LTBIincompl_cost,
-    # "Negative predictive value" = NPV_QFT,
-    # "Positive predictive value" = PPV_QFT,
-    "Negative predictive value TST" = NPV_TST,
-    "Positive predictive value TST" = PPV_TST,
+    "Negative predictive value" = NPV_QFT,
+    "Positive predictive value" = PPV_QFT,
+    # "Negative predictive value TST" = NPV_TST,
+    # "Positive predictive value TST" = PPV_TST,
     # "Probability positive QFT after TST" = QFT_pos_TST.,    # dual pathway
-    "Probability positive TST" = TST_pos,
-    # "Probability positive QFT" = QFT_pos,
+    # "Probability positive TST" = TST_pos,
+    "Probability positive QFT" = QFT_pos,
     # "Negative predictive value QFT" = NPV_QFT_TST.,  # dual pathway
     # "Positive predictive value QFT" = PPV_QFT_TST.,  # dual pathway
     "Probability of completing treatment" = pComp_chemo,
     "Probability of reactivation" = pReact,
-    # "QFT test cost" = QFT,
-    "TST test cost" = TST,
+    "QFT test cost" = QFT,
+    # "TST test cost" = TST,
     "Positive screening cost" = Sp_cost,
     "Active TB treatment cost" = TB_cost)
 
 psa_dat %>%
   ceplot:::create_tornado_data() %>%
-  ceplot:::ggplot_tornado.tornado(baseline_output = 0, annotate_nudge = 20) +
+  ceplot:::ggplot_tornado.tornado(baseline_output = 0, annotate_nudge = 40) +
   ylab("Incremental net monetary benefit (INMB)") +
   theme(legend.position="none")#+
 # ylim(-500, 500)
