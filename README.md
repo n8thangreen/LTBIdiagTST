@@ -11,6 +11,9 @@ The goal of LTBIdiagTST is to perform a cost-effectiveness analysis for
 Latent TB testing for a range of tests and combinations.
 
 The model is formed of a decision tree and Markov model components.
+
+![alt text](/inst/LTBI-screening-model.png)
+
 Probability sensitivity analysis (PSA) is a key part of this analysis.
 The Markov model is implemented using the `heemod` package.
 
