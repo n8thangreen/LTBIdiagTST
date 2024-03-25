@@ -194,6 +194,8 @@ for (i in 1:nrow(init_states)) {
 ## Results
 
 ```{r output}
+library(ggplot2)
+
 res_mod[[1]]
 
 # extract the cost and utility values
@@ -209,11 +211,12 @@ summary(res_mod[[4]])
 hist(c1, breaks = 30, xlab = "cost")
 hist(h1, breaks = 30, xlab = "health")
 
-library(ggplot2)
 plot(res_mod[[4]]) +
    scale_x_continuous(sec.axis = sec_axis(~ . + 35, name = "Age (years)")) +
   theme_bw()
 
+ggsave(filename = "plots/markov-model-counts.png",
+       device = "png", width = 16, height = 15, units = "cm")
 
 # state-edge graph
 plot(mat_trans, arr.type = "simple")
