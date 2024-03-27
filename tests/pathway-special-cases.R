@@ -56,6 +56,7 @@ tree_dat_TST <-
 # TSPOT only as special case of TST/TSPOT
 tree_TSPOT_star <-
   mutate(tree_dat_TST_TSPOT,
+         prob = ifelse(is.na(name.prob), NA, prob),
          prob = case_when(
            name.prob == "pAccept_TST" ~ 1,
            name.prob == "pTSTread" ~ 1,
@@ -76,18 +77,19 @@ tree_TSPOT_star <-
            name.cost == "Ns_cost" ~ 0,
            .default = cost
          )
-  )
+  ) |>
+  fill_complementary_probs()
 
 # starting states of Markov model
-state_list <- state_lists$TSPOT
+state_list <- state_lists$TST_TSPOT
 
 # run TST/QFT decision tree model
 res_TSPOT_star <-
-  run_cedectree(tree_TSPOT_star,
-                label_probs_distns,
-                label_costs_distns,
-                label_health_distns,
-                state_list)
+  run_cedectree(dat_long = tree_TSPOT_star,
+                # label_probs_distns,
+                # label_costs_distns,
+                # label_health_distns,
+                state_list = state_list)
 
 # compare against QFT pathway
 
@@ -100,6 +102,7 @@ write.csv(tree_TSPOT_star, file = "testdata/tree_TSPOT_star.csv")
 
 tree_TST_star <-
   mutate(tree_dat_TST_TSPOT,
+         prob = ifelse(is.na(name.prob), NA, prob),
          prob = case_when(
            name.prob == "pAccept_IGRA_TST+" ~ 1,
            name.prob == "TSPOT_pos_TST+" ~ 1,
@@ -111,18 +114,19 @@ tree_TST_star <-
            name.cost == "TSPOT" ~ 0,
            .default = cost
          )
-  )
+  ) |>
+  fill_complementary_probs()
 
 # starting states of Markov model
-state_list <- state_lists$TSPOT
+state_list <- state_lists$TST_TSPOT
 
 # run model
 res_TST_star <-
-  run_cedectree(tree_TST_star,
-                label_probs_distns,
-                label_costs_distns,
-                label_health_distns,
-                state_list)
+  run_cedectree(dat_long = tree_TST_star,
+                # label_probs_distns,
+                # label_costs_distns,
+                # label_health_distns,
+                state_list = state_list)
 
 # compare against TST pathway
 
