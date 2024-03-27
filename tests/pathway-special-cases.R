@@ -1,5 +1,5 @@
 # test special cases of diagnostic pathways
-# against direectly defined versions
+# against directly defined versions
 
 library(dplyr)
 library(reshape2)
@@ -54,33 +54,34 @@ tree_dat_TST <-
 # TST as TST/QFT with uninformative TST
 
 # TSPOT only as special case of TST/TSPOT
-tree_TSPOT_star <- tree_dat_TST_TSPOT
-
-# set uninformative TST parameter values
-tree_TSPOT_star$prob[tree_TSPOT_star$name.prob == "pAccept_TST"] <- 1
-tree_TSPOT_star$prob[tree_TSPOT_star$name.prob == "pTSTread"] <- 1
-tree_TSPOT_star$prob[tree_TSPOT_star$name.prob == "TST_pos"] <- 1
-tree_TSPOT_star$prob[tree_TSPOT_star$name.prob == "PPV_TST"] <- 1
-tree_TSPOT_star$prob[tree_TSPOT_star$name.prob == "NPV_TST"] <- 0
-
-# match probabilities with TSPOT only decision tree
-tree_TSPOT_star$prob[tree_TSPOT_star$name.prob == "pAccept_IGRA_TST+"] <-
-  tree_dat_TSPOT$prob[tree_dat_TSPOT$name.prob == "pAccept_IGRA"]
-
-tree_TSPOT_star$prob[tree_TSPOT_star$name.prob == "TSPOT_pos_TST+"] <-
-  tree_dat_TSPOT$prob[tree_dat_TSPOT$name.prob == "TSPOT_pos"]
-
-tree_TSPOT_star$prob[tree_TSPOT_star$name.prob == "PPV_TSPOT_TST+"] <-
-  tree_dat_TSPOT$prob[tree_dat_TSPOT$name.prob == "PPV_TSPOT"]
-
-tree_TSPOT_star$prob[tree_TSPOT_star$name.prob == "NPV_TSPOT_TST+"] <-
-  tree_dat_TSPOT$prob[tree_dat_TSPOT$name.prob == "NPV_TSPOT"]
-
-# run TST/QFT decision tree model
+tree_TSPOT_star <-
+  mutate(tree_dat_TST_TSPOT,
+         prob = case_when(
+           name.prob == "pAccept_TST" ~ 1,
+           name.prob == "pTSTread" ~ 1,
+           name.prob == "TST_pos" ~ 1,
+           name.prob == "PPV_TST" ~ 1,
+           name.prob == "NPV_TST" ~ 0,
+           # match probabilities with TSPOT only decision tree
+           name.prob == "pAccept_IGRA_TST+" ~
+             filter(tree_dat_TSPOT, name.prob == "pAccept_IGRA")$prob,
+           name.prob == "PPV_TSPOT_TST+" ~
+             filter(tree_dat_TSPOT, name.prob == "PPV_TSPOT")$prob,
+           name.prob == "NPV_TSPOT_TST+" ~
+             filter(tree_dat_TSPOT, name.prob == "NPV_TSPOT")$prob,
+           .default = prob
+         ),
+         cost = case_when(
+           name.cost == "TST" ~ 0,
+           name.cost == "Ns_cost" ~ 0,
+           .default = cost
+         )
+  )
 
 # starting states of Markov model
 state_list <- state_lists$TSPOT
 
+# run TST/QFT decision tree model
 res_TSPOT_star <-
   run_cedectree(tree_TSPOT_star,
                 label_probs_distns,
@@ -97,18 +98,25 @@ write.csv(tree_TSPOT_star, file = "testdata/tree_TSPOT_star.csv")
 ########################################
 # QFT as TST/QFT with uninformative QFT
 
-# TST only as special case of TST/TSPOT
-tree_TST_star <- tree_dat_TST_TSPOT
-
-# set uninformative IGRA parameters
-tree_TST_star$prob[tree_TST_star$name.prob == "pAccept_IGRA_TST+"] <- 1
-tree_TST_star$prob[tree_TST_star$name.prob == "TSPOT_pos_TST+"] <- 1
-tree_TST_star$prob[tree_TST_star$name.prob == "PPV_TSPOT_TST+"] <- 1
-tree_TST_star$prob[tree_TST_star$name.prob == "NPV_TSPOT_TST+"] <- 0
+tree_TST_star <-
+  mutate(tree_dat_TST_TSPOT,
+         prob = case_when(
+           name.prob == "pAccept_IGRA_TST+" ~ 1,
+           name.prob == "TSPOT_pos_TST+" ~ 1,
+           name.prob == "PPV_TSPOT_TST+" ~ 1,
+           name.prob == "NPV_TSPOT_TST+" ~ 0,
+           .default = prob
+         ),
+         cost = case_when(
+           name.cost == "TSPOT" ~ 0,
+           .default = cost
+         )
+  )
 
 # starting states of Markov model
 state_list <- state_lists$TSPOT
 
+# run model
 res_TST_star <-
   run_cedectree(tree_TST_star,
                 label_probs_distns,
