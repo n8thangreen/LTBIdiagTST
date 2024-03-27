@@ -6,6 +6,7 @@ library(reshape2)
 library(assertthat)
 library(purrr)
 library(heemod)
+library(testthat)
 library(CEdecisiontree)
 
 
@@ -54,6 +55,7 @@ tree_dat_TST <-
 # TST as TST/QFT with uninformative TST
 
 # TSPOT only as special case of TST/TSPOT
+# replace values
 tree_TSPOT_star <-
   mutate(tree_dat_TST_TSPOT,
          prob = ifelse(is.na(name.prob), NA, prob),
@@ -93,6 +95,16 @@ res_TSPOT_star <-
 
 # compare against QFT pathway
 
+res_TSPOT <-
+  run_cedectree(dat_long = tree_TSPOT,
+                # label_probs_distns,
+                # label_costs_distns,
+                # label_health_distns,
+                state_list = state_lists$TSPOT)
+
+expect_equivalent(res_TST_star$cost, res_TST$cost)
+expect_equivalent(res_TST_star$health, res_TST$health)
+
 # save
 write.csv(tree_TSPOT_star, file = "testdata/tree_TSPOT_star.csv")
 
@@ -100,6 +112,7 @@ write.csv(tree_TSPOT_star, file = "testdata/tree_TSPOT_star.csv")
 ########################################
 # QFT as TST/QFT with uninformative QFT
 
+# replace values
 tree_TST_star <-
   mutate(tree_dat_TST_TSPOT,
          prob = ifelse(is.na(name.prob), NA, prob),
@@ -117,18 +130,25 @@ tree_TST_star <-
   ) |>
   fill_complementary_probs()
 
-# starting states of Markov model
-state_list <- state_lists$TST_TSPOT
-
 # run model
 res_TST_star <-
   run_cedectree(dat_long = tree_TST_star,
                 # label_probs_distns,
                 # label_costs_distns,
                 # label_health_distns,
-                state_list = state_list)
+                state_list = state_lists$TST_TSPOT)
 
 # compare against TST pathway
+
+res_TST <-
+  run_cedectree(dat_long = tree_TST,
+                # label_probs_distns,
+                # label_costs_distns,
+                # label_health_distns,
+                state_list = state_lists$TST)
+
+expect_equivalent(res_TST_star$cost, res_TST$cost)
+expect_equivalent(res_TST_star$health, res_TST$health)
 
 # save
 write.csv(tree_TST_star, file = "testdata/tree_TST_star.csv")
