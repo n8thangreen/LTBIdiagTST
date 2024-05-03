@@ -47,7 +47,14 @@ save(dt, file = "data/run_cedectree_TST.RData")
 ###################
 # Markov model
 
-heemod_model <- create_ltbi_heemod()
+heemod_params <-
+  list(pReact = label_probs$pReact,
+       pReact_incomp = label_probs$pReact_incomp,
+       pReact_comp = label_probs$pReact_comp,
+       TB_cost = label_costs$TB_cost)
+
+heemod_model <- do.call(create_ltbi_heemod,
+                        args = heemod_params)
 
 # points values
 res_mm_pt <- heemod_model(

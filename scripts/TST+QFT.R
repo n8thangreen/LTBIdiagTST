@@ -52,6 +52,12 @@ save(dt, file = "data/run_cedectree_TST+QFT.RData")
 #########################
 # Markov model
 
+heemod_params <-
+  list(pReact = label_probs$pReact,
+       pReact_incomp = label_probs$pReact_incomp,
+       pReact_comp = label_probs$pReact_comp,
+       TB_cost = label_costs$TB_cost)
+
 heemod_model <- create_ltbi_heemod()
 
 res_mm <-

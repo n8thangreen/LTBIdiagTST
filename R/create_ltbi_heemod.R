@@ -25,13 +25,13 @@
 #'
 #' create_ltbi_heemod()
 #'
-create_ltbi_heemod <- function(age_init = 34,
-                               pReact_comp = 0.0006779,
-                               pReact_incomp = 0.0015301,
-                               pReact = 0.0019369,
-                               TB_cost = 4925.76,
-                               d = 0.035,
-                               N = 1) {
+create_ltbi_heemod <- function(age_init = 34,  # starting age
+                               pReact_comp,    # = 0.0006779,   ##TODO: no sure where these numbers are from...
+                               pReact_incomp,  # = 0.0015301,
+                               pReact,         # = 0.0019369,
+                               TB_cost,        # = 4925.76,
+                               d = 0.035,      # discount rate
+                               N = 1) {        # number of runs
   # age-dependent probability of death, TB and QoL weighting
   pdeath_QoL <-
     read.csv(here::here("raw data", "pdeath_QoL.csv"))

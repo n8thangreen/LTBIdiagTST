@@ -76,7 +76,7 @@ create_param_values <- function(save = TRUE) {
       "LTBIincompl_cost" = 84.84,
 
       "Hep" = 727.04,
-      "TB_cost" = 4909.12)
+      "TB_cost" = 6055)  # NICE guideline NG33 (2016) inflated to 2023
 
   label_costs_distns <-
     tribble(
@@ -90,9 +90,9 @@ create_param_values <- function(save = TRUE) {
       "CXR",   list(distn = "pert", params = c(mode = 46, min = 40, max = 52)),            # Reference cost 2016
       "LFT",   list(distn = "pert", params = c(mode = 3.95, min = 2.63, max = 5.27)),      # Reference cost 2016
 
-      "Hep",   list(distn = "pert", params = c(mode = 732.04, min = 363.52, max = 1454.07)),     # Pooran 2010
+      "Hep",   list(distn = "pert", params = c(mode = 732.04, min = 363.52, max = 1454.07)),  # Pooran 2010
 
-      "TB_cost",    list(distn = "pert", params = c(mode = 4909.12, min = 2454.56, max = 9818.24)),
+      "TB_cost",    list(distn = "pert", params = c(mode = 6055, min = 3028, max = 12110)),   # NICE guideline NG33 (2016) inflated to 2023
 
       "LTBIcompl_cost", list(distn = "unif", params = c(min = 169.68, max = 169.68)),
       "LTBIincompl_cost", list(distn = "unif", params = c(min = 84.84, max = 84.84)),
@@ -104,14 +104,14 @@ create_param_values <- function(save = TRUE) {
   label_probs_distns <-
     tribble(
       ~name.prob,         ~prob,
-      "TST_sens",    list(distn = "pert", params = c(mode = 0.79, min = 0.69, max = 0.89)),  # Kahwati (2016)
-      "TST_spec",    list(distn = "pert", params = c(mode = 0.59, min = 0.46, max = 0.73)),  # Pai (2008)
+      "TST_sens",    list(distn = "pert", params = c(mode = 0.79, min = 0.69, max = 0.89)),     # Kahwati (2016)
+      "TST_spec",    list(distn = "pert", params = c(mode = 0.59, min = 0.46, max = 0.73)),     # Pai (2008)
       "QFT_sens",    list(distn = "pert", params = c(mode = 0.886, min = 0.812, max = 0.944)),  # Zhang et al. BMC Infectious Diseases (2023) 23:40
       "QFT_spec",    list(distn = "pert", params = c(mode = 0.995, min = 0.959, max = 1)),      # Zhang et al. BMC Infectious Diseases (2023) 23:40
       "TSPOT_sens",  list(distn = "pert", params = c(mode = 0.872, min = 0.643, max = 0.991)),  # Zhang et al. BMC Infectious Diseases (2023) 23:40
-      "TSPOT_spec",  list(distn = "pert", params = c(mode = 0.998, min = 0.996, max = 1)),          # Zhang et al. BMC Infectious Diseases (2023) 23:40
+      "TSPOT_spec",  list(distn = "pert", params = c(mode = 0.998, min = 0.996, max = 1)),      # Zhang et al. BMC Infectious Diseases (2023) 23:40
 
-      "pAccept_chemo", list(distn = "pert", params = c(mode = 0.95, min = 0.5, max = 1)),  # August, Pareek 2013
+      "pAccept_chemo", list(distn = "pert", params = c(mode = 0.95, min = 0.5, max = 1)),  # August, Pareek (2013)
       "pComp_chemo", list(distn = "pert", params = c(mode = 0.8, min = 0.5, max = 0.9)),   # Kowada (2013)
 
       "pHep",        list(distn = "unif", params = c(min = 0.001, max = 0.003)),           # Kunst, Pareek
@@ -125,7 +125,7 @@ create_param_values <- function(save = TRUE) {
       "pTSTread",     list(distn = "unif", params = c(min = 0.979, max = 0.979)),
       "pIGRAread",    list(distn = "pert", params = c(mode = 1, min = 1, max = 1)),
 
-      "pAccept_IGRA", list(distn = "pert", params = c(mode = 0.99, min = 0.98, max = 1)),  # posterior
+      "pAccept_IGRA", list(distn = "pert", params = c(mode = 0.99, min = 0.98, max = 1)),     # posterior
 
       "pAccept_IGRA_TST+", list(distn = "unif", params = c(min = 0.995, max = 0.995)),
       "Dual_sens",    list(distn = "pert", params = c(mode = 0.632, min = 0.632, max = 0.632)),
@@ -448,7 +448,7 @@ create_param_values <- function(save = TRUE) {
     tribble(
       ~name.health,   ~vals,
       "Hep",
-      list(distn = "unif", params = c(min = 0.13, max = 0.15)),             # Woo (2012)
+      list(distn = "unif", params = c(min = 0.13, max = 0.15)),   # Woo (2012)
       "Total (complete)",
       list(distn = "unif", params = c(min = hsuv$loss_chemo*t_chemo, max = hsuv$loss_chemo*t_chemo)),      # Auguste (2016)
       "Total (incomplete)",
