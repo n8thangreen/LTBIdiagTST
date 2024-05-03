@@ -48,8 +48,8 @@ heemod_params <-
        pReact_comp = label_probs$pReact_comp,
        TB_cost = label_costs$TB_cost)
 
-heemod_model <- create_ltbi_heemod()
-
+heemod_model <- do.call(create_ltbi_heemod,
+                        args = heemod_params)
 res_mm <-
   heemod_init_pop_PSA(
     heemod_model,

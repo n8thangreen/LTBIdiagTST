@@ -58,7 +58,8 @@ heemod_model <- do.call(create_ltbi_heemod,
 
 # points values
 res_mm_pt <- heemod_model(
-  unname(unlist(dt$cost$term_pop_point)))
+  init_states =
+    unname(unlist(dt$cost$term_pop_point)))
 
 res_mm <-
   heemod_init_pop_PSA(
@@ -68,7 +69,6 @@ res_mm <-
 # extract the cost and utility values
 c_mm <- map_df(res_mm, "run_model")$cost
 h_mm <- map_df(res_mm, "run_model")$utility
-
 
 ## combine decision tree and Markov model output
 
