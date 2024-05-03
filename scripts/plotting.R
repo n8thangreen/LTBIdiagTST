@@ -1,7 +1,6 @@
 
-#########
-# plots #
-#########
+# plots of model outputs
+# for all scenarios
 
 library(BCEA)
 library(heemod)
@@ -9,6 +8,9 @@ library(ggplot2)
 
 
 # load data
+
+# input data
+load(here::here("data", "params.RData")) #create_param_values()
 
 dat <- list()
 dat$TST_QFT <- readRDS(file = "data/res_TST+QFT.RDS")
@@ -25,7 +27,14 @@ dat$TST_TSPOT <- readRDS(file = "data/res_TST+TSPOT.RDS")
 # plot direct
 
 ## point values
-heemod_model <- create_ltbi_heemod()
+heemod_params <-
+  list(pReact = label_probs$pReact,
+       pReact_incomp = label_probs$pReact_incomp,
+       pReact_comp = label_probs$pReact_comp,
+       TB_cost = label_costs$TB_cost)
+
+heemod_model <- do.call(create_ltbi_heemod,
+                        args = heemod_params)
 
 # points values
 ##TODO
@@ -47,8 +56,9 @@ delta_c_tsttspot <- dat$TST_TSPOT$cost - dat$TST$cost
 delta_h_tsttspot <- dat$TST_TSPOT$health - dat$TST$health
 
 plot(delta_h_tspot, delta_c_tspot,
+     col = "black",
      # xlim = c(-0.005, 0.005),
-     xlim = c(-0.01, 0.01),
+     xlim = c(-0.005, 0.005),
      ylim = c(-200, 0),
      xlab = "Incremental QALYs", ylab = "Incremental cost")
 points(mean(delta_h_tspot), mean(delta_c_tspot), col = "black", pch = 16, cex = 1.5)

@@ -21,35 +21,35 @@ create_param_values <- function(save = TRUE) {
 
   label_costs <-
     list(
-      "Contact tracing per contact" = 368.9,
-      "Mean number of contacts examined per primary case"	= 6.5,
-      "Total Contact tracing" = 2397.85,
-
-      "Cost of inpatient episode for acute TB" = 3325.15,
-      "Proportion of patients with acute TB who are admitted"	= 0.53,
-      "Total Inpatient care" = 1762.3295,
-
-      "Cost of culture test" = 8.06,
-      "Culture tests per case" = 4,
-      "CXR per case" = 2,
-      "LFT per case" = 4,
-      "Total Cost of tests" = 104.74,
-
-      "HRZE tablet (60)" = 39.5,
-      "_tablets per month"	= 150,
-      "HRZE per month" = 98.75,
-      "HR tablet 300/150 (56)" = 25.22,
-      "tablets per month" = 60,
-      "HR per month" = 27.02,
-      "Duration of initial therapy" = 2,
-      "Duration of continious therapy" = 4,
-      "Total Cost of chemotherapy" = 305.58,
-
-      "Cost of outpatient consultation (first visit)" = 208,
-      "Cost of outpatient consultation (follow-up visit)" = 94,
-      "Number of outpatient clinical visits per case" = 4,
-      "Visits from TB nurse per case" = 6,
-      "Total Out patient care" = 755.86,
+      # "Contact tracing per contact" = 368.9,
+      # "Mean number of contacts examined per primary case"	= 6.5,
+      # "Total Contact tracing" = 2397.85,
+      #
+      # "Cost of inpatient episode for acute TB" = 3325.15,
+      # "Proportion of patients with acute TB who are admitted"	= 0.53,
+      # "Total Inpatient care" = 1762.3295,
+      #
+      # "Cost of culture test" = 8.06,
+      # "Culture tests per case" = 4,
+      # "CXR per case" = 2,
+      # "LFT per case" = 4,
+      # "Total Cost of tests" = 104.74,
+      #
+      # "HRZE tablet (60)" = 39.5,
+      # "_tablets per month"	= 150,
+      # "HRZE per month" = 98.75,
+      # "HR tablet 300/150 (56)" = 25.22,
+      # "tablets per month" = 60,
+      # "HR per month" = 27.02,
+      # "Duration of initial therapy" = 2,
+      # "Duration of continious therapy" = 4,
+      # "Total Cost of chemotherapy" = 305.58,
+#
+#       "Cost of outpatient consultation (first visit)" = 208,
+#       "Cost of outpatient consultation (follow-up visit)" = 94,
+#       "Number of outpatient clinical visits per case" = 4,
+#       "Visits from TB nurse per case" = 6,
+#       "Total Out patient care" = 755.86,
 
       "TST" = 25.02,
       "QFT" = 29.11,
@@ -67,16 +67,18 @@ create_param_values <- function(save = TRUE) {
 
       "HR tablet (300/150) (56)" = 25.22,
       "drug cost per month" = 27.02,
-      "Duration of HR" = 3,
+      "dur_hr" = 3,          # duration of HR
+      "drug_cost" = 33.22,   # per month, inflate to 2023
 
       "Number of outpatient consultation" = 1,
-      "Number of TB nurse appointments"	= 2,
+      "n_appts"	= 2,    # Number of TB nurse appointments
 
-      "LTBIcompl_cost" = 169.68	,
-      "LTBIincompl_cost" = 84.84,
-
-      "Hep" = 727.04,
+      "Hep" = 984,       # Pooran 2010 inflated to 2023
       "TB_cost" = 6055)  # NICE guideline NG33 (2016) inflated to 2023
+
+
+  label_costs$LTBIcompl_cost <- with(label_costs, Ns_cost*n_appts + drug_cost*dur_hr)
+  label_costs$LTBIincompl_cost <- with(label_costs, Ns_cost*floor(n_appts/2) + drug_cost*dur_hr/2)
 
   label_costs_distns <-
     tribble(
@@ -90,7 +92,7 @@ create_param_values <- function(save = TRUE) {
       "CXR",   list(distn = "pert", params = c(mode = 46, min = 40, max = 52)),            # Reference cost 2016
       "LFT",   list(distn = "pert", params = c(mode = 3.95, min = 2.63, max = 5.27)),      # Reference cost 2016
 
-      "Hep",   list(distn = "pert", params = c(mode = 732.04, min = 363.52, max = 1454.07)),  # Pooran 2010
+      "Hep",   list(distn = "pert", params = c(mode = 984, min = 492, max = 1968)),  # Pooran 2010 inflated to 2023
 
       "TB_cost",    list(distn = "pert", params = c(mode = 6055, min = 3028, max = 12110)),   # NICE guideline NG33 (2016) inflated to 2023
 
