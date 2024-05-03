@@ -1,7 +1,7 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-# LTBIdiagTST
+# Cost-effectiveness analysis of LTBI testing combinations using decision trees
 
 <!-- badges: start -->
 
