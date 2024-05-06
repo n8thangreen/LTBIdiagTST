@@ -92,17 +92,22 @@ create_param_values <- function(save = TRUE) {
       "CXR",   list(distn = "pert", params = c(mode = 46, min = 40, max = 52)),            # Reference cost 2016
       "LFT",   list(distn = "pert", params = c(mode = 3.95, min = 2.63, max = 5.27)),      # Reference cost 2016
 
-      "Hep",   list(distn = "pert", params = c(mode = 984, min = 492, max = 1968)),  # Pooran 2010 inflated to 2023
+      "Hep",   list(distn = "pert", params = c(mode = 984, min = 492, max = 1968)),        # Pooran 2010 inflated to 2023
 
       "TB_cost",    list(distn = "pert", params = c(mode = 6055, min = 3028, max = 12110)),   # NICE guideline NG33 (2016) inflated to 2023
-
-      "LTBIcompl_cost", list(distn = "unif", params = c(min = 169.68, max = 169.68)),
-      "LTBIincompl_cost", list(distn = "unif", params = c(min = 84.84, max = 84.84)),
 
       "Sp_cost", list(distn = "pert", params = c(mode = 241, min = 233.17, max = 247.28)),
       "Ns_cost", list(distn = "pert", params = c(mode = 53, min = 43, max = 63)),
     )
 
+  label_costs_distns$LTBIcompl_cost <- with(label_costs_distns,
+                                            list(distn = "unif",
+                                                 params = c(min = Ns_cost*n_appts + drug_cost*dur_hr,
+                                                            max = Ns_cost*n_appts + drug_cost*dur_hr)))
+  label_costs_distns$LTBIincompl_cost <- with(label_costs_distns,
+                                              list(distn = "unif",
+                                                   params = c(min = Ns_cost*floor(n_appts/2) + drug_cost*dur_hr/2,
+                                                              max = Ns_cost*floor(n_appts/2) + drug_cost*dur_hr/2)))
   label_probs_distns <-
     tribble(
       ~name.prob,         ~prob,
