@@ -97,26 +97,33 @@ create_param_values <- function(save = TRUE) {
       "TB_cost",    list(distn = "pert", params = c(mode = 6055, min = 3028, max = 12110)),   # NICE guideline NG33 (2016) inflated to 2023
 
       "Sp_cost", list(distn = "pert", params = c(mode = 241, min = 233.17, max = 247.28)),
-      "Ns_cost", list(distn = "pert", params = c(mode = 53, min = 43, max = 63)),
+      "Ns_cost", list(distn = "pert", params = c(mode = 53, min = 43, max = 63)),          # TB nurse visit
     )
 
-  label_costs_distns$LTBIcompl_cost <- with(label_costs_distns,
-                                            list(distn = "unif",
-                                                 params = c(min = Ns_cost*n_appts + drug_cost*dur_hr,
-                                                            max = Ns_cost*n_appts + drug_cost*dur_hr)))
-  label_costs_distns$LTBIincompl_cost <- with(label_costs_distns,
-                                              list(distn = "unif",
-                                                   params = c(min = Ns_cost*floor(n_appts/2) + drug_cost*dur_hr/2,
-                                                              max = Ns_cost*floor(n_appts/2) + drug_cost*dur_hr/2)))
+  ##TODO: problem with this because the sampling should be dependent on previous sampling so its really a function
+  ##      how an we incorporate this in to the sampling function? this isnt actually needed in the sampling step
+  ##      so could define as function and run afterwards e.g. label_costs_distns_fns
+  label_costs_distns <- bind_rows(
+    label_costs_distns,
+    tribble(~name.cost,   ~vals,
+            "LTBIincompl_cost", with(label_costs,
+                                     list(distn = "unif",
+                                          params = c(min = Ns_cost*floor(n_appts/2) + drug_cost*dur_hr/2,
+                                                     max = Ns_cost*floor(n_appts/2) + drug_cost*dur_hr/2))),
+            "LTBIcompl_cost", with(label_costs,
+                                   list(distn = "unif",
+                                        params = c(min = Ns_cost*n_appts + drug_cost*dur_hr,
+                                                   max = Ns_cost*n_appts + drug_cost*dur_hr)))))
+
   label_probs_distns <-
     tribble(
       ~name.prob,         ~prob,
       "TST_sens",    list(distn = "pert", params = c(mode = 0.79, min = 0.69, max = 0.89)),     # Kahwati (2016)
       "TST_spec",    list(distn = "pert", params = c(mode = 0.59, min = 0.46, max = 0.73)),     # Pai (2008)
       "QFT_sens",    list(distn = "pert", params = c(mode = 0.886, min = 0.812, max = 0.944)),  # Zhang et al. BMC Infectious Diseases (2023) 23:40
-      "QFT_spec",    list(distn = "pert", params = c(mode = 0.995, min = 0.959, max = 1)),      # Zhang et al. BMC Infectious Diseases (2023) 23:40
-      "TSPOT_sens",  list(distn = "pert", params = c(mode = 0.872, min = 0.643, max = 0.991)),  # Zhang et al. BMC Infectious Diseases (2023) 23:40
-      "TSPOT_spec",  list(distn = "pert", params = c(mode = 0.998, min = 0.996, max = 1)),      # Zhang et al. BMC Infectious Diseases (2023) 23:40
+      "QFT_spec",    list(distn = "pert", params = c(mode = 0.995, min = 0.959, max = 1)),      # see above
+      "TSPOT_sens",  list(distn = "pert", params = c(mode = 0.872, min = 0.643, max = 0.991)),  # see above
+      "TSPOT_spec",  list(distn = "pert", params = c(mode = 0.998, min = 0.996, max = 1)),      # see above
 
       "pAccept_chemo", list(distn = "pert", params = c(mode = 0.95, min = 0.5, max = 1)),  # August, Pareek (2013)
       "pComp_chemo", list(distn = "pert", params = c(mode = 0.8, min = 0.5, max = 0.9)),   # Kowada (2013)
