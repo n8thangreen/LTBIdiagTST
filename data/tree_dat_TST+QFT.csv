@@ -7,25 +7,25 @@
 "6",3,33,NA,NA,NA,0.44,NA,NA
 "7",4,5,"QFT",29.11,"pAccept_IGRA_TST+",0.99,NA,NA
 "8",4,30,NA,NA,NA,0.01,NA,NA
-"9",5,6,"Sp_cost",241.23,"QFT_pos_TST+",0.38,NA,NA
+"9",5,6,"Sp_cost",274,"QFT_pos_TST+",0.38,NA,NA
 "10",5,25,NA,NA,NA,0.62,NA,NA
 "11",6,7,NA,NA,"PPV_QFT_TST+",0.961,NA,NA
 "12",6,16,NA,NA,NA,0.039,NA,NA
 "13",7,8,NA,NA,"pAccept_chemo",0.95,NA,NA
 "14",7,14,NA,NA,NA,0.05,NA,NA
-"15",8,9,"Hep",727.04,"pHep",0.002,"Hep",0.0175
+"15",8,9,"Hep",984,"pHep",0.002,"Hep",0.0175
 "16",8,11,NA,NA,NA,0.998,NA,NA
-"17",9,10,"LTBIincompl_cost",84.84,NA,1,"Total (incomplete)",0.000125
-"18",11,12,"LTBIcompl_cost",169.68,"pComp_chemo",0.8,"Total (complete)",0.00025
-"19",11,13,"LTBIincompl_cost",84.84,NA,0.2,"Total (incomplete)",0.000125
+"17",9,10,"LTBIincompl_cost",102.83,NA,1,"Total (incomplete)",5e-04
+"18",11,12,"LTBIcompl_cost",205.66,"pComp_chemo",0.8,"Total (complete)",0.001
+"19",11,13,"LTBIincompl_cost",102.83,NA,0.2,"Total (incomplete)",5e-04
 "20",14,15,NA,NA,NA,1,NA,NA
 "21",16,17,NA,NA,"pAccept_chemo",0.95,NA,NA
 "22",16,23,NA,NA,NA,0.05,NA,NA
-"23",17,18,"Hep",727.04,"pHep",0.002,"Hep",0.0175
+"23",17,18,"Hep",984,"pHep",0.002,"Hep",0.0175
 "24",17,20,NA,NA,NA,0.998,NA,NA
-"25",18,19,"LTBIincompl_cost",84.84,NA,1,"Total (incomplete)",0.000125
-"26",20,21,"LTBIincompl_cost",84.84,"pComp_chemo",0.8,"Total (complete)",0.00025
-"27",20,22,"LTBIincompl_cost",84.84,NA,0.2,"Total (incomplete)",0.000125
+"25",18,19,"LTBIincompl_cost",102.83,NA,1,"Total (incomplete)",5e-04
+"26",20,21,"LTBIincompl_cost",102.83,"pComp_chemo",0.8,"Total (complete)",0.001
+"27",20,22,"LTBIincompl_cost",102.83,NA,0.2,"Total (incomplete)",5e-04
 "28",23,24,NA,NA,NA,1,NA,NA
 "29",25,26,NA,NA,NA,0.161,NA,NA
 "30",25,28,NA,NA,"NPV_QFT_TST+",0.839,NA,NA

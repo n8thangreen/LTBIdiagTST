@@ -1,6 +1,6 @@
 
 # test strategy:
-# T.SPOT
+# T-SPOT
 
 
 library(dplyr)

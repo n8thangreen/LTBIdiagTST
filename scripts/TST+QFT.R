@@ -60,6 +60,10 @@ heemod_params <-
 
 heemod_model <- do.call(create_ltbi_heemod,
                         args = heemod_params)
+
+starting_state_props <- unname(unlist(dt$cost$term_pop_point))
+res_mm_pt <- heemod_model(starting_state_props)
+
 res_mm <-
   heemod_init_pop_PSA(
     heemod_model,

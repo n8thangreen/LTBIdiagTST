@@ -55,27 +55,26 @@ create_param_values <- function(save = TRUE) {
       "QFT" = 29.11,
       "TSPOT" = 43.17,
 
-      "Ns_cost" = 53,
-      "Out patient consultation (first visit)" = 224,
-      "Follow-up via nurses" = 166,
+      "Ns_cost" = 53,   # TB nurse visit
+      "Out patient consultation (first visit)" = 224,  # c_out
+      "Follow-up via nurses" = 166,                    # c_fuout
 
       "CXR" = 46,
       "LFT" = 3.95,
-      "Number of CXR" = 1,
-      "Number of LFT" = 1,
-      "Sp_cost" = 241.23,
+      "Number of CXR" = 1,  # Pareek (2013) 2
+      "Number of LFT" = 1,  # Pareek (2013) 4
+      "Sp_cost" = 274,
 
-      "HR tablet (300/150) (56)" = 25.22,
+      "HR tablet (300/150) (56)" = 25.22,  # BNF
       "drug cost per month" = 27.02,
-      "dur_hr" = 3,          # duration of HR
       "drug_cost" = 33.22,   # per month, inflate to 2023
+      "dur_hr" = 3,          # duration of chemo HR
 
       "Number of outpatient consultation" = 1,
       "n_appts"	= 2,    # Number of TB nurse appointments
 
-      "Hep" = 984,       # Pooran 2010 inflated to 2023
+      "Hep" = 984,       # Pooran (2010) inflated to 2023
       "TB_cost" = 6055)  # NICE guideline NG33 (2016) inflated to 2023
-
 
   label_costs$LTBIcompl_cost <- with(label_costs, Ns_cost*n_appts + drug_cost*dur_hr)
   label_costs$LTBIincompl_cost <- with(label_costs, Ns_cost*floor(n_appts/2) + drug_cost*dur_hr/2)
@@ -94,10 +93,10 @@ create_param_values <- function(save = TRUE) {
 
       "Hep",   list(distn = "pert", params = c(mode = 984, min = 492, max = 1968)),        # Pooran 2010 inflated to 2023
 
-      "TB_cost",    list(distn = "pert", params = c(mode = 6055, min = 3028, max = 12110)),   # NICE guideline NG33 (2016) inflated to 2023
+      "TB_cost",    list(distn = "pert", params = c(mode = 6055, min = 3028, max = 12110)),  # NICE guideline NG33 (2016) inflated to 2023
 
-      "Sp_cost", list(distn = "pert", params = c(mode = 241, min = 233.17, max = 247.28)),
-      "Ns_cost", list(distn = "pert", params = c(mode = 53, min = 43, max = 63)),          # TB nurse visit
+      "Sp_cost", list(distn = "pert", params = c(mode = 274, min = 274, max = 274)),         # positive screening cost
+      "Ns_cost", list(distn = "pert", params = c(mode = 53, min = 43, max = 63)),            # TB nurse visit
     )
 
   ##TODO: problem with this because the sampling should be dependent on previous sampling so its really a function
@@ -164,6 +163,9 @@ create_param_values <- function(save = TRUE) {
       "NPV_TSPOT_TST+", list(distn = "pert", params = c(mode = 0.911, min = 0.911, max = 0.911)),
 
       "pReact",       list(distn = "pert", params = c(mode = 0.0012, min = 0.0012, max = 0.0012)),  # Pareek (2013)
+
+      ##TODO: this should really be function of random Eff_comp/Eff_incomp above
+      ##      so outside of sampling step
       "pReact_comp",  list(distn = "pert", params = c(mode = 0.0004, min = 0.0004, max = 0.0004)),  # Horsburgh
       "pReact_incomp", list(distn = "pert", params = c(mode = 0.0009, min = 0.0009, max = 0.0009))
     )
@@ -449,24 +451,32 @@ create_param_values <- function(save = TRUE) {
   # QALY loss #
   #############
 
-  t_chemo <- 3/12  # years
+  t_chemo <- 3/12  # LTBI treatment, years
   t_hep <- 1.5/12
+
+  # assume that Auguste (2016) detriment is for whole treatment duration
 
   label_health <-
     list(
       "Hep" = hsuv$loss_hep*t_hep,
-      "Total (complete)" = hsuv$loss_chemo*t_chemo,
-      "Total (incomplete)" = hsuv$loss_chemo*t_chemo/2)      # assume drop-out half way through
+      "Total (complete)" = hsuv$loss_chemo,
+      "Total (incomplete)" = hsuv$loss_chemo/2)            # assume drop-out half way through
+      # "Total (complete)" = hsuv$loss_chemo*t_chemo,
+      # "Total (incomplete)" = hsuv$loss_chemo*t_chemo/2)
 
   label_health_distns <-
     tribble(
       ~name.health,   ~vals,
       "Hep",
-      list(distn = "unif", params = c(min = 0.13, max = 0.15)),   # Woo (2012)
+      list(distn = "unif", params = c(min = 0.13, max = 0.15)),    # Woo (2012)
       "Total (complete)",
-      list(distn = "unif", params = c(min = hsuv$loss_chemo*t_chemo, max = hsuv$loss_chemo*t_chemo)),      # Auguste (2016)
+      list(distn = "unif", params = c(min = 0, max = 0.002)),      # Auguste (2016)
       "Total (incomplete)",
-      list(distn = "unif", params = c(min = hsuv$loss_chemo*t_chemo/2, max = hsuv$loss_chemo*t_chemo/2)))  # Auguste (2016)
+      list(distn = "unif", params = c(min = 0, max = 0.002/2)))    # Auguste (2016)
+      # "Total (complete)",
+      # list(distn = "unif", params = c(min = hsuv$loss_chemo*t_chemo, max = hsuv$loss_chemo*t_chemo)),      # Auguste (2016)
+      # "Total (incomplete)",
+      # list(distn = "unif", params = c(min = hsuv$loss_chemo*t_chemo/2, max = hsuv$loss_chemo*t_chemo/2)))  # Auguste (2016)
 
   TST_hname_from_to <-
     rbind.data.frame(

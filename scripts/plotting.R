@@ -56,21 +56,21 @@ delta_c_tsttspot <- dat$TST_TSPOT$cost - dat$TST$cost
 delta_h_tsttspot <- dat$TST_TSPOT$health - dat$TST$health
 
 plot(delta_h_tspot, delta_c_tspot,
-     col = "black",
+     col = "orange",
      # xlim = c(-0.005, 0.005),
      xlim = c(-0.005, 0.005),
      ylim = c(-200, 0),
      xlab = "Incremental QALYs", ylab = "Incremental cost")
-points(mean(delta_h_tspot), mean(delta_c_tspot), col = "black", pch = 16, cex = 1.5)
+points(mean(delta_h_tspot), mean(delta_c_tspot), col = "orange", pch = 16, cex = 1.5)
 
-points(delta_h_tstqft, delta_c_tstqft, col = "green")
-points(mean(delta_h_tstqft), mean(delta_c_tstqft), col = "green", pch = 16, cex = 1.5)
+points(delta_h_tstqft, delta_c_tstqft, col = "blue")
+points(mean(delta_h_tstqft), mean(delta_c_tstqft), col = "blue", pch = 16, cex = 1.5)
 
-points(delta_h_qft, delta_c_qft, col = "blue")
-points(mean(delta_h_qft), mean(delta_c_qft), col = "blue", pch = 16, cex = 1.5)
+points(delta_h_qft, delta_c_qft, col = "grey")
+points(mean(delta_h_qft), mean(delta_c_qft), col = "grey", pch = 16, cex = 1.5)
 
-points(delta_h_tsttspot, delta_c_tsttspot, col = "red")
-points(mean(delta_h_tsttspot), mean(delta_c_tsttspot), col = "red", pch = 16, cex = 1.5)
+points(delta_h_tsttspot, delta_c_tsttspot, col = "darkgreen")
+points(mean(delta_h_tsttspot), mean(delta_c_tsttspot), col = "darkgreen", pch = 16, cex = 1.5)
 
 abline(h = 0, col = "grey")
 abline(v = 0, col = "grey")
