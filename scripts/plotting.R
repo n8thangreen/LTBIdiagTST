@@ -58,8 +58,8 @@ delta_h_tsttspot <- dat$TST_TSPOT$health - dat$TST$health
 plot(delta_h_tspot, delta_c_tspot,
      col = "orange",
      # xlim = c(-0.005, 0.005),
-     xlim = c(-0.005, 0.005),
-     ylim = c(-200, 0),
+     xlim = c(-0.01, 0.02),
+     ylim = c(-400, 0),
      xlab = "Incremental QALYs", ylab = "Incremental cost")
 points(mean(delta_h_tspot), mean(delta_c_tspot), col = "orange", pch = 16, cex = 1.5)
 

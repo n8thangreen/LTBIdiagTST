@@ -52,6 +52,8 @@ save(dt, file = "data/run_cedectree_TST+QFT.RData")
 #########################
 # Markov model
 
+dt <- readRDS(file = "data/run_cedectree_TST_QFT.RDS")
+
 heemod_params <-
   list(pReact = label_probs$pReact,
        pReact_incomp = label_probs$pReact_incomp,
@@ -61,8 +63,9 @@ heemod_params <-
 heemod_model <- do.call(create_ltbi_heemod,
                         args = heemod_params)
 
-starting_state_props <- unname(unlist(dt$cost$term_pop_point))
-res_mm_pt <- heemod_model(starting_state_props)
+# # point values
+# starting_state_props <- unname(unlist(dt$cost$term_pop_point))
+# res_mm_pt <- heemod_model(starting_state_props)
 
 res_mm <-
   heemod_init_pop_PSA(
@@ -78,9 +81,9 @@ h_mm <- map_df(res_mm, "run_model")$utility
 
 res <-
   list(cost =
-         c_mm + dt$cost$ev_sa[['1']],
+         c_mm + dt$cost$ev_sa[, 1],
        health =
-         h_mm - dt$health$ev_sa[['1']])
+         h_mm - dt$health$ev_sa[, 1])
 
 saveRDS(res, file = "data/res_TST+QFT.RDS")
 

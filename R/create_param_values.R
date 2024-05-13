@@ -162,12 +162,12 @@ create_param_values <- function(save = TRUE) {
       "PPV_TSPOT_TST+", list(distn = "pert", params = c(mode = 0.944, min = 0.944, max = 0.944)),
       "NPV_TSPOT_TST+", list(distn = "pert", params = c(mode = 0.911, min = 0.911, max = 0.911)),
 
-      "pReact",       list(distn = "pert", params = c(mode = 0.0012, min = 0.0012, max = 0.0012)),  # Pareek (2013)
+      "pReact",       list(distn = "pert", params = c(mode = 0.0075, min = 0.005, max = 0.01)),  # CDC
 
       ##TODO: this should really be function of random Eff_comp/Eff_incomp above
       ##      so outside of sampling step
-      "pReact_comp",  list(distn = "pert", params = c(mode = 0.0004, min = 0.0004, max = 0.0004)),  # Horsburgh
-      "pReact_incomp", list(distn = "pert", params = c(mode = 0.0009, min = 0.0009, max = 0.0009))
+      "pReact_comp",  list(distn = "pert", params = c(mode = 0.0026, min = 0.0018, max = 0.0035)),
+      "pReact_incomp", list(distn = "pert", params = c(mode = 0.0059, min = 0.0040, max = 0.0079))
     )
 
   label_probs <-
@@ -208,9 +208,9 @@ create_param_values <- function(save = TRUE) {
       "pAccept_chemo" = 0.95,
       "pComp_chemo" = 0.8,
       "pHep" = 0.002,
-      "pReact" = 0.0012,            # Pareek (2013)
-      "pReact_comp" = 0.0004,       # Horsburg
-      "pReact_incomp" = 0.0009)
+      "pReact" = 0.0075,            # CDC
+      "pReact_comp" = 0.0026,
+      "pReact_incomp" = 0.0059)
 
   hsuv <-
     list(
