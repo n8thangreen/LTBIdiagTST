@@ -1,0 +1,84 @@
+model {
+  # ltbi decision tree values
+
+  # N: total suspected cases
+
+  n_accept_tst ~ dbin(p_accept_tst, N)
+
+  n_accept_igra ~ dbin(p_accept_igra, N)
+
+  n_qft_pos ~ dbin(p_qft_pos, n_accept_igra)
+  n_tspot_pos ~ dbin(p_tspot_pos, n_accept_igra)
+
+  n_tst_pos ~ dbin(p_tst_pos, n_accept_tst)
+
+  # priors
+
+  ##TODO: include this parameter
+  #p_read_tst ~ dnorm(0.98, 1000)
+
+  # # replace with function of sens, spec, prev
+  #p_tst_pos ~ dbeta(0.5, 0.5)
+  #p_qft_pos ~ dbeta(0.5, 0.5)
+  #p_tspot_pos ~ dbeta(0.5, 0.5)
+
+  p_accept_igra ~ dbeta(0.5, 0.5)
+  p_accept_tst ~ dbeta(0.5, 0.5)
+
+  prev ~ dbeta(5, 10)
+
+  sens_tst ~ dnorm(mu_sens_tst, pow(sd_sens_tst, -2))T(0,1)
+  spec_tst ~ dnorm(mu_spec_tst, pow(sd_spec_tst, -2))T(0,1)
+
+  sens_qft ~ dnorm(mu_sens_qft, pow(sd_sens_qft, -2))T(0,1)
+  spec_qft ~ dnorm(mu_spec_qft, pow(sd_spec_qft, -2))T(0,1)
+
+  sens_tspot ~ dnorm(mu_sens_tspot, pow(sd_sens_tspot, -2))T(0,1)
+  spec_tspot ~ dnorm(mu_spec_tspot, pow(sd_spec_tspot, -2))T(0,1)
+
+  # generated values
+
+  p_tst_pos = sens_tst*prev + (1 - spec_tst)*(1 - prev)
+  p_qft_pos = sens_qft*prev + (1 - spec_qft)*(1 - prev)
+  p_tspot_pos = sens_tspot*prev + (1 - spec_tspot)*(1 - prev)
+
+  p_qft_pos_tst_pos = sens_qft*PPV_tst + (1 - spec_qft)*(1 - PPV_tst)
+  p_tspot_pos_tst_pos = sens_tspot*PPV_tst + (1 - spec_tspot)*(1 - PPV_tst)
+
+  PPV_tst ~ dnorm((sens_tst*prev)/p_tst_pos, pow(0.001, -2))T(0,1)
+  PPV_qft ~ dnorm((sens_qft*prev)/p_qft_pos, pow(0.001, -2))T(0,1)
+  PPV_tspot ~ dnorm((sens_tspot*prev)/p_tspot_pos, pow(0.001, -2))T(0,1)
+
+  NPV_tst ~ dnorm((spec_tst*(1 - prev))/(1 - p_tst_pos), pow(0.001, -2))T(0,1)
+  NPV_qft ~ dnorm((spec_qft*(1 - prev))/(1 - p_qft_pos), pow(0.001, -2))T(0,1)
+  NPV_tspot ~ dnorm((spec_tspot*(1 - prev))/(1 - p_tspot_pos), pow(0.001, -2))T(0,1)
+
+  spec_qft_tst = 1 - (1 - spec_qft) * (1 - spec_tst)
+  sens_qft_tst = 1 - (1 - sens_qft) * (1 - sens_tst)
+
+  spec_tspot_tst = 1 - (1 - spec_qft) * (1 - spec_tst)
+  sens_tspot_tst = 1 - (1 - sens_tspot) * (1 - sens_tst)
+
+  PPV_qft_TST_pos = (sens_qft*PPV_tst)/p_qft_pos_tst_pos
+  NPV_qft_TST_pos = (spec_qft*(1 - PPV_tst))/(spec_qft*(1-PPV_tst) + (1 - sens_qft)*PPV_tst)
+
+  PPV_tspot_TST_pos = (sens_tspot*PPV_tst)/p_tspot_pos_tst_pos
+  NPV_tspot_TST_pos = (spec_tspot*(1 - PPV_tst))/(spec_tspot*(1-PPV_tst) + (1 - sens_tspot)*PPV_tst)
+
+  # constraints
+
+  # no LTBI ie 1 - prev
+  # in TST decision tree
+  no_ltbi_tst = (1 - p_accept_tst) * (1 - prev) +
+                p_accept_tst * (1 - p_tst_pos) * NPV_tst +
+                p_accept_tst * p_tst_pos * (1 - PPV_tst)
+
+  # in QFT decision tree
+  no_ltbi_qft = (1 - p_accept_igra) * (1 - prev) +
+                p_accept_igra * (1 - p_qft_pos) * NPV_qft +
+                p_accept_igra * p_qft_pos * (1 - PPV_qft)
+
+  #z = 1
+  #z ~ dbern(constr)
+  #constr <- step(no_ltbi_tst + prev)
+}

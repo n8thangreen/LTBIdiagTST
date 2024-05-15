@@ -146,21 +146,21 @@ create_param_values <- function(save = TRUE) {
       "pLTBI",        list(distn = "unif", params = c(min = 0.326, max = 0.326)),
 
       "TSTIGRA_pos",  list(distn = "pert", params = c(mode = 0.38, min = 0.32, max = 0.45)),  # posterior
-      "TST_pos",      list(distn = "pert", params = c(mode = 0.56, min = 0.51, max = 0.61)),  # posterior
-      "TSPOT_pos",    list(distn = "pert", params = c(mode = 0.23, min = 0.19, max = 0.27)),  # posterior
-      "QFT_pos",      list(distn = "pert", params = c(mode = 0.23, min = 0.19, max = 0.27)),  # posterior
-      "PPV_TST",      list(distn = "pert", params = c(mode = 0.55, min = 0.20, max = 0.75)),  # posterior
-      "NPV_TST",      list(distn = "pert", params = c(mode = 0.82, min = 0.68, max = 0.95)),  # posterior
-      "PPV_QFT",      list(distn = "pert", params = c(mode = 0.90, min = 0.86, max = 0.95)),  # posterior
-      "NPV_QFT",      list(distn = "pert", params = c(mode = 0.93, min = 0.91, max = 0.95)),  # posterior
-      "PPV_TSPOT",    list(distn = "pert", params = c(mode = 0.90, min = 0.86, max = 0.95)),  # posterior
-      "NPV_TSPOT",    list(distn = "pert", params = c(mode = 0.93, min = 0.91, max = 0.95)),  # posterior
-      "QFT_pos_TST+", list(distn = "pert", params = c(mode = 0.38, min = 0.32, max = 0.45)),
-      "PPV_QFT_TST+", list(distn = "pert", params = c(mode = 0.961, min = 0.961, max = 0.961)),
-      "NPV_QFT_TST+", list(distn = "pert", params = c(mode = 0.839, min = 0.839, max = 0.839)),
-      "TSPOT_pos_TST+", list(distn = "pert", params = c(mode = 0.460, min = 0.460, max = 0.460)),
-      "PPV_TSPOT_TST+", list(distn = "pert", params = c(mode = 0.944, min = 0.944, max = 0.944)),
-      "NPV_TSPOT_TST+", list(distn = "pert", params = c(mode = 0.911, min = 0.911, max = 0.911)),
+      "TST_pos",      list(distn = "pert", params = c(mode = 0.56, min = 0.51, max = 0.61)),
+      "TSPOT_pos",    list(distn = "pert", params = c(mode = 0.23, min = 0.19, max = 0.27)),
+      "QFT_pos",      list(distn = "pert", params = c(mode = 0.23, min = 0.19, max = 0.27)),
+      "PPV_TST",      list(distn = "pert", params = c(mode = 0.46, min = 0.12, max = 0.85)),
+      "NPV_TST",      list(distn = "pert", params = c(mode = 0.87, min = 0.49, max = 0.99)),
+      "PPV_QFT",      list(distn = "pert", params = c(mode = 0.97, min = 0.46, max = 0.99)),
+      "NPV_QFT",      list(distn = "pert", params = c(mode = 0.85, min = 0.49, max = 0.99)),
+      "PPV_TSPOT",    list(distn = "pert", params = c(mode = 0.97, min = 0.45, max = 0.99)),
+      "NPV_TSPOT",    list(distn = "pert", params = c(mode = 0.85, min = 0.47, max = 0.99)),
+      "QFT_pos_TST+", list(distn = "pert", params = c(mode = 0.41, min = 0.11, max = 0.77)),
+      "PPV_QFT_TST+", list(distn = "pert", params = c(mode = 0.99, min = 0.96, max = 0.999)),
+      "NPV_QFT_TST+", list(distn = "pert", params = c(mode = 0.91, min = 0.52, max = 0.99)),
+      "TSPOT_pos_TST+", list(distn = "pert", params = c(mode = 0.40, min = 0.11, max = 0.76)),
+      "PPV_TSPOT_TST+", list(distn = "pert", params = c(mode = 0.99, min = 0.97, max = 0.99)),
+      "NPV_TSPOT_TST+", list(distn = "pert", params = c(mode = 0.91, min = 0.55, max = 0.99)),
 
       "pReact",       list(distn = "pert", params = c(mode = 0.0075, min = 0.005, max = 0.01)),  # CDC
 

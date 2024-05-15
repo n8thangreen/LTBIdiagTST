@@ -32,6 +32,6 @@
 "pAccept_chemo",0.95
 "pComp_chemo",0.8
 "pHep",0.002
-"pReact",0.0012
-"pReact_comp",4e-04
-"pReact_incomp",9e-04
+"pReact",0.0075
+"pReact_comp",0.0026
+"pReact_incomp",0.0059

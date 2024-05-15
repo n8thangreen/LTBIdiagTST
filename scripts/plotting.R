@@ -110,10 +110,11 @@ ceplane.plot(m, graph = "ggplot",
              currency = "£",
              ref_first = FALSE)
 
+
 contour2(m, graph = "ggplot",
         point = list(color = c("blue", "plum", "tomato", "springgreen"), size = 2),
         icer = list(color = c("darkblue", "black", "darkred", "darkgreen"), size = 5),
-        contour = list(breaks = 0.25),
+        contour = list(breaks = 0.8),
         title = "", currency = "£", pos = c(1,1))
 
 ggsave(filename = "plots/ceplane_main.png", device = "png", width = 15, height = 15, units = "cm")

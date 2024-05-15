@@ -12,9 +12,9 @@ dataJags <-
     n_accept_tst = 366,      # accept attend TST reading
     n_accept_igra = 378,     # accept IGRA
     n_tst_pos = 204,         # TST positive
-    n_igra_pos = 87,         # TST negative
-    n_igra_pos_tst_pos = 78, # IGRA positive & TST positive
-    n_igra_pos_tst_neg = 9,  # IGRA positive & TST negative
+    n_igra_pos = 87,         # IGRA positive
+    #n_igra_pos_tst_pos = 78, # IGRA positive & TST positive
+    # n_igra_pos_tst_neg = 9,  # IGRA positive & TST negative
     mu_sens_tst = 0.79,      # hyper-parameters
     mu_spec_tst = 0.59,
     mu_sens_qft = 0.886,  #0.80,
@@ -32,7 +32,6 @@ params <- c("p_accept_tst",
             "p_igra_pos",
             "p_tst_pos",
             "p_igra_pos_tst_pos",
-            "p_igra_pos_tst_neg",
             "PPV_tst",
             "PPV_igra",
             "NPV_tst",
@@ -41,6 +40,8 @@ params <- c("p_accept_tst",
             "sens_qft",
             "spec_tst",
             "spec_qft",
+            "PPV_igra_TST_pos",
+            "NPV_igra_TST_pos",
             "prev")
 
 n.iter <- 30000
@@ -61,13 +62,13 @@ res <-
 R2WinBUGS::attach.bugs(res$BUGSoutput)
 
 # save(res, file = "data/jags_output.RData")
-# x11()
-png("plots/posterior-densities.png", width = 800, height = 800)
-par(mfrow = c(4,4))
+x11()
+# png("plots/posterior-densities.png", width = 800, height = 800)
+par(mfrow = c(4,5))
 dat <- as.mcmc(res)
 dat[[1]] <- dat[[1]][, -1]
 densplot(as.mcmc(dat), xlim = c(0,1))
-dev.off()
+# dev.off()
 
 library(dplyr)
 
@@ -98,8 +99,7 @@ levels(tab$label) <-
        # NPV_TSPOT = "NPV_igra",
        NPV_IGRA = "NPV_igra",
        PPV_IGRA = "PPV_igra",
-       prev_TST = "prev_tst",
-       prev_IGRA = "prev_igra")
+       prev_TST = "prev")
 
 tab
 

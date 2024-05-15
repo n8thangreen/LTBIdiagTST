@@ -2,6 +2,7 @@
 
 library(dplyr)
 library(ggplot2)
+library(reshape2)
 
 dt_tst <- readRDS(file = "data/run_cedectree_TST.RDS")
 dt_qft <- readRDS(file = "data/run_cedectree_QFT.RDS")
@@ -19,17 +20,20 @@ dat_raw <-
       colMeans(dt_tst_tspot$cost$term_pop_sa),
       colMeans(dt_tspot$cost$term_pop_sa),
       colMeans(dt_qft$cost$term_pop_sa)))
+
 dat <-
   dat_raw |>
   melt() |>
-  mutate(variable = ifelse(variable == "no_LTBI", "No LTBI",
-                           ifelse(variable == "LTBI_complete_Tx", "LTBI complete treatment",
-                                  ifelse(variable == "LTBI_incomplete_Tx", "LTBI incomplete treatment",
-                                         ifelse(variable == "LTBI_no_Tx", "LTBI no treatment",
-                                                "Active TB"))))) |>
+  mutate(variable =
+           ifelse(variable == "no_LTBI", "No LTBI",
+                  ifelse(variable == "LTBI_complete_Tx", "LTBI complete treatment",
+                         ifelse(variable == "LTBI_incomplete_Tx", "LTBI incomplete treatment",
+                                ifelse(variable == "LTBI_no_Tx", "LTBI no treatment",
+                                       "Active TB"))))) |>
   rename(State = variable,
          Probability = value,
-         Scenario = scenario)
+         Scenario = scenario) |>
+  filter(State != "No LTBI")
 
 # grouped barchart of starting states using all data for all scenarios
 
@@ -43,6 +47,7 @@ ggsave("plots/state_barchart.png", width = 25, height = 15, units = "cm", dpi = 
 # radar plot
 
 library(scales)
+library(ggradar)
 
 ggradar(dat_raw, grid.max = 0.1, group.line.width = 1, group.point.size = 3) +
   scale_color_brewer(palette = "Set2")
