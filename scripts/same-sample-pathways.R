@@ -1,5 +1,9 @@
 # use sample samples across scenarios/diagnostic pathways
 
+# this is just the decision tree part so still need to
+# run the Markov model parts for each scenario
+##TODO: add the Markov model parts
+
 
 library(dplyr)
 library(reshape2)

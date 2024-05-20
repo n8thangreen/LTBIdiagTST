@@ -10,7 +10,6 @@ dt_tspot <- readRDS(file = "data/run_cedectree_TSPOT.RDS")
 dt_tst_qft <- readRDS(file = "data/run_cedectree_TST_QFT.RDS")
 dt_tst_tspot <- readRDS(file = "data/run_cedectree_TST_TSPOT.RDS")
 
-
 dat_raw <-
   data.frame(
     scenario = c("TST", "TST_QFT", "TST_TSPOT", "TSPOT", "QFT"),
@@ -33,7 +32,7 @@ dat <-
   rename(State = variable,
          Probability = value,
          Scenario = scenario) |>
-  filter(State != "No LTBI")
+  filter(State != "No LTBI")   # should be the same across scenarios
 
 # grouped barchart of starting states using all data for all scenarios
 
