@@ -1,0 +1,48 @@
+model {
+  # tb decision tree values
+
+  # N : total suspected cases
+
+  n_accept_tst ~ dbin(p_accept_tst, N)
+
+  n_accept_igra ~ dbin(p_accept_igra, N)
+
+  n_igra_pos ~ dbin(p_igra_pos, n_accept_igra)
+
+  n_tst_pos ~ dbin(p_tst_pos, n_accept_tst)
+
+  # two-step test after positive tst
+  #n_igra_pos_tst_pos ~ dbin(p_igra_pos_tst_pos, n_tst_pos)
+  # not using this data because of error to fix
+
+  # priors
+
+  #p_igra_pos_tst_pos ~ dbeta(0.5, 0.5)  # probability of being positive in the second step
+  p_igra_pos_tst_pos = sens_qft*PPV_tst + (1 - spec_qft)*(1 - PPV_tst)
+
+  p_tst_pos ~ dbeta(0.5, 0.5)
+  p_igra_pos ~ dbeta(0.5, 0.5)
+  p_accept_igra ~ dbeta(0.5, 0.5)
+  p_accept_tst ~ dbeta(0.5, 0.5)
+
+  prev ~ dbeta(5, 10)
+
+  sens_tst ~ dnorm(mu_sens_tst, pow(sd_sens_tst, -2))T(0,1)
+  spec_tst ~ dnorm(mu_spec_tst, pow(sd_spec_tst, -2))T(0,1)
+  sens_qft ~ dnorm(mu_sens_qft, pow(sd_sens_qft, -2))T(0,1)
+  spec_qft ~ dnorm(mu_spec_qft, pow(sd_spec_qft, -2))T(0,1)
+
+  # generated values
+
+  PPV_tst ~ dnorm((sens_tst*prev)/p_tst_pos, pow(0.1, -2))T(0,1)
+  PPV_igra ~ dnorm((sens_qft*prev)/p_igra_pos, pow(0.1, -2))T(0,1)
+
+  NPV_tst ~ dnorm((spec_tst*(1 - prev))/(1 - p_tst_pos), pow(0.1, -2))T(0,1)
+  NPV_igra ~ dnorm((spec_qft*(1 - prev))/(1 - p_igra_pos), pow(0.1, -2))T(0,1)
+
+  spec_qft_tst = 1 - (1 - spec_qft) * (1 - spec_tst)
+  sens_qft_tst = 1 - (1 - sens_qft) * (1 - sens_tst)
+
+  PPV_igra_TST_pos = (sens_qft*PPV_tst)/p_igra_pos_tst_pos
+  NPV_igra_TST_pos = (spec_qft*(1 - PPV_tst))/(spec_qft*(1-PPV_tst) + (1 - sens_qft)*PPV_tst)
+}

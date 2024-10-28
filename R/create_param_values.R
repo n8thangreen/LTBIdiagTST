@@ -21,145 +21,164 @@ create_param_values <- function(save = TRUE) {
 
   label_costs <-
     list(
-      "Contact tracing per contact" = 368.9,
-      "Mean number of contacts examined per primary case"	= 6.5,
-      "Total Contact tracing" = 2397.85,
+      # "Contact tracing per contact" = 368.9,
+      # "Mean number of contacts examined per primary case"	= 6.5,
+      # "Total Contact tracing" = 2397.85,
+      #
+      # "Cost of inpatient episode for acute TB" = 3325.15,
+      # "Proportion of patients with acute TB who are admitted"	= 0.53,
+      # "Total Inpatient care" = 1762.3295,
+      #
+      # "Cost of culture test" = 8.06,
+      # "Culture tests per case" = 4,
+      # "CXR per case" = 2,
+      # "LFT per case" = 4,
+      # "Total Cost of tests" = 104.74,
+      #
+      # "HRZE tablet (60)" = 39.5,
+      # "_tablets per month"	= 150,
+      # "HRZE per month" = 98.75,
+      # "HR tablet 300/150 (56)" = 25.22,
+      # "tablets per month" = 60,
+      # "HR per month" = 27.02,
+      # "Duration of initial therapy" = 2,
+      # "Duration of continious therapy" = 4,
+      # "Total Cost of chemotherapy" = 305.58,
+#
+#       "Cost of outpatient consultation (first visit)" = 208,
+#       "Cost of outpatient consultation (follow-up visit)" = 94,
+#       "Number of outpatient clinical visits per case" = 4,
+#       "Visits from TB nurse per case" = 6,
+#       "Total Out patient care" = 755.86,
 
-      "Cost of inpatient episode for acute TB" = 3325.15,
-      "Proportion of patients with acute TB who are admitted"	= 0.53,
-      "Total Inpatient care" = 1762.3295,
+      "TST" = 25.02,
+      "QFT" = 29.11,
+      "TSPOT" = 43.17,
 
-      "Cost of culture test" = 8.06,
-      "Culture tests per case" = 4,
-      "CXR per case" = 2,
-      "LFT per case" = 4,
-      "Total Cost of tests" = 104.74,
+      "Ns_cost" = 53,   # TB nurse visit
+      "Out patient consultation (first visit)" = 224,  # c_out
+      "Follow-up via nurses" = 166,                    # c_fuout
 
-      "HRZE tablet (60)" = 39.5,
-      "_tablets per month"	= 150,
-      "HRZE per month" = 98.75,
-      "HR tablet 300/150 (56)" = 25.22,
-      "tablets per month" = 60,
-      "HR per month" = 27.02,
-      "Duration of initial therapy" = 2,
-      "Duration of continious therapy" = 4,
-      "Total Cost of chemotherapy" = 305.58,
+      "CXR" = 46,
+      "LFT" = 3.95,
+      "Number of CXR" = 1,  # Pareek (2013) 2
+      "Number of LFT" = 1,  # Pareek (2013) 4
+      "Sp_cost" = 274,
 
-      "Cost of outpatient consultation (first visit)" = 208,
-      "Cost of outpatient consultation (follow-up visit)" = 94,
-      "Number of outpatient clinical visits per case" = 4,
-      "Visits from TB nurse per case" = 6,
-      "Total Out patient care" = 755.86,
-
-      "TST" = 18.62,
-      "QFT" = 23.65,
-      "Ns_cost" = 44.31,
-      "TSPOT" = 35.12,
-
-      "Out patient consultation (first visit)" = 208,
-      "CXR" = 30.21,
-      "LFT" = 3.02,
-      "Number of outpatient consultation" = 1,
-      "Number of CXR" = 1,
-      "Number of LFT" = 1,
-      "Sp_cost" = 241.23,
-
-      "Follow-up via nurses" = 44.31, #22.15, 66.46,
-      "HR tablet (300/150) (56)" = 25.22,
+      "HR tablet (300/150) (56)" = 25.22,  # BNF
       "drug cost per month" = 27.02,
-      "Number of TB nurse appointments"	= 2,
-      "Duration of HR" = 3,
+      "drug_cost" = 33.22,   # per month, inflate to 2023
+      "dur_hr" = 3,          # duration of chemo HR
 
-      "LTBIcompl_cost" = 169.68	,
-      "LTBIincompl_cost" = 84.84,
+      "Number of outpatient consultation" = 1,
+      "n_appts"	= 2,    # Number of TB nurse appointments
 
-      "Hep" = 732.13,
-      "TB_cost" = 4925)
+      "Hep" = 984,       # Pooran (2010) inflated to 2023
+      "TB_cost" = 6055)  # NICE guideline NG33 (2016) inflated to 2023
+
+  label_costs$LTBIcompl_cost <- with(label_costs, Ns_cost*n_appts + drug_cost*dur_hr)
+  label_costs$LTBIincompl_cost <- with(label_costs, Ns_cost*floor(n_appts/2) + drug_cost*dur_hr/2)
 
   label_costs_distns <-
     tribble(
       ~name.cost,   ~vals,
-      "TST",   list(distn = "pert", params = c(mode = 18.49, min = 9.25, max = 36.98)),    # Pooran 2010
+      "TST",   list(distn = "pert", params = c(mode = 25.02, min = 12.51, max = 50.05)),   # Pooran 2010
 
-      "QFT",   list(distn = "pert", params = c(mode = 23.65, min = 12.33, max = 45.29)),   # Imperial NHS
+      "QFT",   list(distn = "pert", params = c(mode = 29.11, min = 15.16, max = 55.67)),   # Imperial NHS
 
-      "TSPOT", list(distn = "pert", params = c(mode = 35.12, min = 18.06, max = 68.23)),   # Imperial NHS
+      "TSPOT", list(distn = "pert", params = c(mode = 43.17, min = 22.21, max = 83.87)),   # Imperial NHS
 
-      "CXR",   list(distn = "pert", params = c(mode = 30.21, min = 23.16, max = 35.25)),   # Reference cost 2016
-      "LFT",   list(distn = "pert", params = c(mode = 3.02, min = 2.01, max = 4.03)),      # Reference cost 2016
+      "CXR",   list(distn = "pert", params = c(mode = 46, min = 40, max = 52)),            # Reference cost 2016
+      "LFT",   list(distn = "pert", params = c(mode = 3.95, min = 2.63, max = 5.27)),      # Reference cost 2016
 
-      "Hep",   list(distn = "pert", params = c(mode = 732.13, min = 363, max = 1454)),     # Pooran 2010
+      "Hep",   list(distn = "pert", params = c(mode = 984, min = 492, max = 1968)),        # Pooran 2010 inflated to 2023
 
-      "TB_cost",    list(distn = "pert", params = c(mode = 4925.76, min = 2462.88, max = 9851.52)),
+      "TB_cost",    list(distn = "pert", params = c(mode = 6055, min = 3028, max = 12110)),  # NICE guideline NG33 (2016) inflated to 2023
 
-      "LTBIcompl_cost", list(distn = "unif", params = c(min=169.68, max=169.68)),
-      "LTBIincompl_cost", list(distn = "unif", params = c(min=84.84,  max=84.84)),
-      "Sp_cost", list(distn = "pert", params = c(mode=241, min=233.17, max=247.28)),
-      "Ns_cost", list(distn = "pert", params = c(mode = 44.31, min = 22.15, max = 66.46)),
+      "Sp_cost", list(distn = "pert", params = c(mode = 274, min = 274, max = 274)),         # positive screening cost
+      "Ns_cost", list(distn = "pert", params = c(mode = 53, min = 43, max = 63)),            # TB nurse visit
     )
+
+  ##TODO: problem with this because the sampling should be dependent on previous sampling so its really a function
+  ##      how an we incorporate this in to the sampling function? this isnt actually needed in the sampling step
+  ##      so could define as function and run afterwards e.g. label_costs_distns_fns
+  label_costs_distns <- bind_rows(
+    label_costs_distns,
+    tribble(~name.cost,   ~vals,
+            "LTBIincompl_cost", with(label_costs,
+                                     list(distn = "unif",
+                                          params = c(min = Ns_cost*floor(n_appts/2) + drug_cost*dur_hr/2,
+                                                     max = Ns_cost*floor(n_appts/2) + drug_cost*dur_hr/2))),
+            "LTBIcompl_cost", with(label_costs,
+                                   list(distn = "unif",
+                                        params = c(min = Ns_cost*n_appts + drug_cost*dur_hr,
+                                                   max = Ns_cost*n_appts + drug_cost*dur_hr)))))
 
   label_probs_distns <-
     tribble(
       ~name.prob,         ~prob,
-      "TST_sens",    list(distn = "pert", params = c(mode = 0.79, min = 0.69, max = 0.89)),  # Kahwati (2016)
-      "TST_spec",    list(distn = "pert", params = c(mode = 0.59, min = 0.46, max = 0.73)),  # Pai (2008)
-
+      "TST_sens",    list(distn = "pert", params = c(mode = 0.79, min = 0.69, max = 0.89)),     # Kahwati (2016)
+      "TST_spec",    list(distn = "pert", params = c(mode = 0.59, min = 0.46, max = 0.73)),     # Pai (2008)
       "QFT_sens",    list(distn = "pert", params = c(mode = 0.886, min = 0.812, max = 0.944)),  # Zhang et al. BMC Infectious Diseases (2023) 23:40
-      "QFT_spec",    list(distn = "pert", params = c(mode = 0.995, min = 0.959, max = 1)),      # Zhang et al. BMC Infectious Diseases (2023) 23:40
-      "TSPOT_sens",  list(distn = "pert", params = c(mode = 0.872, min = 0.643, max = 0.991)),  # Zhang et al. BMC Infectious Diseases (2023) 23:40
-      "TSPOT_spec",  list(distn = "pert", params = c(mode = 1, min = 0.996, max = 1)),          # Zhang et al. BMC Infectious Diseases (2023) 23:40
-      "pAccept_chemo", list(distn = "pert", params = c(mode = 0.95, min = 0.5, max = 1)),  # August, Pareek 2013
+      "QFT_spec",    list(distn = "pert", params = c(mode = 0.995, min = 0.959, max = 1)),      # see above
+      "TSPOT_sens",  list(distn = "pert", params = c(mode = 0.872, min = 0.643, max = 0.991)),  # see above
+      "TSPOT_spec",  list(distn = "pert", params = c(mode = 0.998, min = 0.996, max = 1)),      # see above
 
-      "pComp_chemo", list(distn = "pert", params = c(mode = 0.8, min = 0.5, max =  0.9)),  # Kowada (2013)
+      "pAccept_chemo", list(distn = "pert", params = c(mode = 0.95, min = 0.5, max = 1)),  # August, Pareek (2013)
+      "pComp_chemo", list(distn = "pert", params = c(mode = 0.8, min = 0.5, max = 0.9)),   # Kowada (2013)
 
-      "pHep",        list(distn = "unif", params = c(min=0.001, max=0.003)),               # Kunst, Pareek
+      "pHep",        list(distn = "unif", params = c(min = 0.001, max = 0.003)),           # Kunst, Pareek
 
       "Eff_comp",    list(distn = "pert", params = c(mode = 0.65, min = 0.5, max = 0.8)),  # Pareek (2013)
       "Eff_incomp",  list(distn = "pert", params = c(mode = 0.21, min = 0.1, max = 0.3)),  # Pareek (2013)
 
       "pTB",         list(distn = "pert", params = c(mode = 0.12, min = 0.08,	max = 0.19)),
 
-      "pAccept_TST",  list(distn = "pert", params = c(mode = 0.96, min = 0.93, max = 0.98)),  # posterior
+      "pAccept_TST",  list(distn = "pert", params = c(mode = 0.96, min = 0.94, max = 0.98)),  # posterior
       "pTSTread",     list(distn = "unif", params = c(min = 0.979, max = 0.979)),
       "pIGRAread",    list(distn = "pert", params = c(mode = 1, min = 1, max = 1)),
 
-      "pAccept_IGRA", list(distn = "pert", params = c(mode = 0.99, min = 0.98, max = 1)),  # posterior
+      "pAccept_IGRA", list(distn = "pert", params = c(mode = 0.99, min = 0.98, max = 1)),     # posterior
+      "pAccept_IGRA_TST+", list(distn = "unif", params = c(min = 0.995, max = 0.995)),
 
-      "pAccept_IGRA_TST+", list(distn = "unif", params = c(min=0.995, max=0.995)),
       "Dual_sens",    list(distn = "pert", params = c(mode = 0.632, min = 0.632, max = 0.632)),
       "Dual_spec",    list(distn = "pert", params = c(mode = 0.988, min = 0.988, max = 0.988)),
-      "pLTBI",        list(distn = "unif", params = c(min=0.326, max=0.326)),
+
+      "pLTBI",        list(distn = "pert", params = c(mode = 0.26, min = 0.23, max = 0.30)),  # posterior, prev
 
       "TSTIGRA_pos",  list(distn = "pert", params = c(mode = 0.38, min = 0.32, max = 0.45)),  # posterior
-      "TST_pos",      list(distn = "pert", params = c(mode = 0.56, min = 0.51, max = 0.61)),  # posterior
-      "TSPOT_pos",    list(distn = "pert", params = c(mode = 0.23, min = 0.19, max = 0.27)),  # posterior
-      "QFT_pos",      list(distn = "pert", params = c(mode = 0.23, min = 0.19, max = 0.27)),  # posterior
-      "PPV_TST",      list(distn = "pert", params = c(mode = 0.55, min = 0.20, max = 0.75)),  # posterior
-      "NPV_TST",      list(distn = "pert", params = c(mode = 0.82, min = 0.68, max = 0.95)),  # posterior
-      "PPV_QFT",      list(distn = "pert", params = c(mode = 0.90, min = 0.86, max = 0.95)),  # posterior
-      "NPV_QFT",      list(distn = "pert", params = c(mode = 0.93, min = 0.91, max = 0.95)),  # posterior
-      "PPV_TSPOT",    list(distn = "pert", params = c(mode = 0.90, min = 0.86, max = 0.95)),  # posterior
-      "NPV_TSPOT",    list(distn = "pert", params = c(mode = 0.93, min = 0.91, max = 0.95)),  # posterior
-      "QFT_pos_TST+", list(distn = "pert", params = c(mode = 0.38, min = 0.32, max = 0.45)),
-      "PPV_QFT_TST+", list(distn = "pert", params = c(mode = 0.961, min = 0.961, max = 0.961)),
-      "NPV_QFT_TST+", list(distn = "pert", params = c(mode = 0.839, min = 0.839, max = 0.839)),
-      "TSPOT_pos_TST+", list(distn = "pert", params = c(mode = 0.460, min = 0.460, max = 0.460)),
-      "PPV_TSPOT_TST+", list(distn = "pert", params = c(mode = 0.944, min = 0.944, max = 0.944)),
-      "NPV_TSPOT_TST+", list(distn = "pert", params = c(mode = 0.911, min = 0.911, max = 0.911)),
+      "TST_pos",      list(distn = "pert", params = c(mode = 0.54, min = 0.50, max = 0.58)),
+      "TSPOT_pos",    list(distn = "pert", params = c(mode = 0.23, min = 0.20, max = 0.26)),
+      "QFT_pos",      list(distn = "pert", params = c(mode = 0.24, min = 0.20, max = 0.27)),
+      "PPV_TST",      list(distn = "pert", params = c(mode = 0.39, min = 0.33, max = 0.45)),
+      "NPV_TST",      list(distn = "pert", params = c(mode = 0.88, min = 0.84, max = 0.92)),
+      "PPV_QFT",      list(distn = "pert", params = c(mode = 0.99, min = 0.97, max = 0.999)),
+      "NPV_QFT",      list(distn = "pert", params = c(mode = 0.96, min = 0.94, max = 0.98)),
+      "PPV_TSPOT",    list(distn = "pert", params = c(mode = 0.99, min = 0.97, max = 0.999)),
+      "NPV_TSPOT",    list(distn = "pert", params = c(mode = 0.95, min = 0.93, max = 0.98)),
+      "QFT_pos_TST+", list(distn = "pert", params = c(mode = 0.34, min = 0.29, max = 0.41)),
+      "TSPOT_pos_TST+", list(distn = "pert", params = c(mode = 0.34, min = 0.29, max = 0.40)),
+      "PPV_QFT_TST+", list(distn = "pert", params = c(mode = 0.99, min = 0.98, max = 0.999)),
+      "NPV_QFT_TST+", list(distn = "pert", params = c(mode = 0.93, min = 0.89, max = 0.96)),
+      "PPV_TSPOT_TST+", list(distn = "pert", params = c(mode = 0.99, min = 0.99, max = 0.999)),
+      "NPV_TSPOT_TST+", list(distn = "pert", params = c(mode = 0.92, min = 0.89, max = 0.96)),
 
-      "pReact",       list(distn = "pert", params = c(mode = 0.0012, min = 0.0012, max = 0.0012)),  # Pareek (2013)
-      "pReact_comp",  list(distn = "pert", params = c(mode = 0.0004, min = 0.0004, max = 0.0004)),  # Horsburgh
-      "pReact_incomp", list(distn = "pert", params = c(mode = 0.0009, min = 0.0009, max = 0.0009))
+      "pReact",       list(distn = "pert", params = c(mode = 0.0075, min = 0.005, max = 0.01)),  # CDC
+
+      ##TODO: this should really be function of random Eff_comp/Eff_incomp above
+      ##      so outside of sampling step
+      "pReact_comp",  list(distn = "pert", params = c(mode = 0.0026, min = 0.0018, max = 0.0035)),
+      "pReact_incomp", list(distn = "pert", params = c(mode = 0.0059, min = 0.0040, max = 0.0079))
     )
 
   label_probs <-
     list(
-      "TST_pos"	= 0.56,            # posterior
-      "QFT_pos"	= 0.23,            # posterior
+      "TST_pos"	= 0.54,            # posterior
+      "QFT_pos"	= 0.24,            # posterior
       "TSPOT_pos" = 0.23,          # posterior
-      "TSTIGRA_pos" = 0.38,        # posterior
-      "TSPOT_pos_TST+" = 0.38,     # posterior
-      "QFT_pos_TST+" = 0.38,       # posterior
+      # "TSTIGRA_pos" = 0.38,        # posterior
+      "TSPOT_pos_TST+" = 0.34,     # posterior
+      "QFT_pos_TST+" = 0.34,       # posterior
 
       "pTSTread" = 0.979,
       "pIGRAread" = 1,
@@ -176,29 +195,29 @@ create_param_values <- function(save = TRUE) {
       "TSPOT_sens" = 0.90,
       "TSPOT_spec" = 0.95,
 
-      "pLTBI"	= 0.326,
-      "PPV_TST"	= 0.55,             # posterior
-      "NPV_TST"	= 0.82,             # posterior
-      "PPV_QFT"	= 0.9,              # posterior
-      "NPV_QFT"	= 0.93,             # posterior
-      "PPV_TSPOT" = 0.9,            # posterior
-      "NPV_TSPOT" = 0.93,           # posterior
-      "PPV_QFT_TST+" = 0.961,
-      "NPV_QFT_TST+" = 0.839,
-      "PPV_TSPOT_TST+" = 0.944,
-      "NPV_TSPOT_TST+" = 0.911,
+      "pLTBI"	= 0.26,
+      "PPV_TST"	= 0.39,             # posterior
+      "NPV_TST"	= 0.88,             # posterior
+      "PPV_QFT"	= 0.99,              # posterior
+      "NPV_QFT"	= 0.96,             # posterior
+      "PPV_TSPOT" = 0.99,            # posterior
+      "NPV_TSPOT" = 0.95,           # posterior
+      "PPV_QFT_TST+" = 0.99,
+      "NPV_QFT_TST+" = 0.93,
+      "PPV_TSPOT_TST+" = 0.99,
+      "NPV_TSPOT_TST+" = 0.92,
       "pAccept_chemo" = 0.95,
       "pComp_chemo" = 0.8,
       "pHep" = 0.002,
-      "pReact" = 0.0012,            # Pareek (2013)
-      "pReact_comp" = 0.0004,       # Horsburg
-      "pReact_incomp" = 0.0009)
+      "pReact" = 0.0075,            # CDC
+      "pReact_comp" = 0.0026,
+      "pReact_incomp" = 0.0059)
 
   hsuv <-
     list(
-      "loss_chemo" = 0.01,
+      "loss_chemo" = 0.001,         # Auguste (2016)
       "loss_hep" = 0.14,            # Woo (2012)
-      "loss_tb" = 0.15)
+      "loss_tb" = 0.15)             # Auguste (2016)
 
 
   # assign labels to branches -----------------------------------------------
@@ -261,6 +280,7 @@ create_param_values <- function(save = TRUE) {
       c("QFT", 4, 5),
       c("Sp_cost", 5, 6),
       c("Hep", 8, 9),
+      c("Hep", 17, 18),
       c("LTBIincompl_cost", 9, 10),
       c("LTBIcompl_cost", 11, 12),
       c("LTBIincompl_cost", 11, 13),
@@ -277,6 +297,7 @@ create_param_values <- function(save = TRUE) {
       c("TSPOT", 4, 5),
       c("Sp_cost", 5, 6),
       c("Hep", 8, 9),
+      c("Hep", 17, 18),
       c("LTBIincompl_cost", 9, 10),
       c("LTBIcompl_cost", 11, 12),
       c("LTBIincompl_cost", 11, 13),
@@ -431,24 +452,32 @@ create_param_values <- function(save = TRUE) {
   # QALY loss #
   #############
 
-  t_chemo <- 3/12  # years
+  t_chemo <- 3/12  # LTBI treatment, years
   t_hep <- 1.5/12
+
+  # assume that Auguste (2016) detriment is for whole treatment duration
 
   label_health <-
     list(
       "Hep" = hsuv$loss_hep*t_hep,
-      "Total (complete)" = 0.01*t_chemo,
-      "Total (incomplete)" = 0.01*t_chemo/2)      # assume drop-out half way through
+      "Total (complete)" = hsuv$loss_chemo,
+      "Total (incomplete)" = hsuv$loss_chemo/2)            # assume drop-out half way through
+      # "Total (complete)" = hsuv$loss_chemo*t_chemo,
+      # "Total (incomplete)" = hsuv$loss_chemo*t_chemo/2)
 
   label_health_distns <-
     tribble(
       ~name.health,   ~vals,
       "Hep",
-      list(distn = "unif", params = c(min=0.13, max=0.15)),             # Woo (2012)
+      list(distn = "unif", params = c(min = 0.13, max = 0.15)),    # Woo (2012)
       "Total (complete)",
-      list(distn = "unif", params = c(min= 0.01*t_chemo, max= 0.01*t_chemo)),
+      list(distn = "unif", params = c(min = 0, max = 0.002)),      # Auguste (2016)
       "Total (incomplete)",
-      list(distn = "unif", params = c(min= 0.01*t_chemo/2, max= 0.01*t_chemo/2)))
+      list(distn = "unif", params = c(min = 0, max = 0.002/2)))    # Auguste (2016)
+      # "Total (complete)",
+      # list(distn = "unif", params = c(min = hsuv$loss_chemo*t_chemo, max = hsuv$loss_chemo*t_chemo)),      # Auguste (2016)
+      # "Total (incomplete)",
+      # list(distn = "unif", params = c(min = hsuv$loss_chemo*t_chemo/2, max = hsuv$loss_chemo*t_chemo/2)))  # Auguste (2016)
 
   TST_hname_from_to <-
     rbind.data.frame(

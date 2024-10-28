@@ -24,7 +24,7 @@ library(purrr)
 library(dplyr)
 ```
 
-```{r}
+```{r load-data}
 # age-dependent probability of death, TB and QoL weighting
 pdeath_QoL <-
   read.csv(here::here("raw data", "pdeath_QoL.csv"))
@@ -33,7 +33,9 @@ pdeath_QoL <-
 # generated from decision tree
 load(file = here::here("data", "init_states.RData"))
 head(init_states)
+```
 
+```{r heemod-objects}
 # define the model heemod parameters
 param <- define_parameters(
   age_init = 34,                   # starting age
@@ -139,12 +141,12 @@ strat <- define_strategy(
 )
 ```
 
-```{r}
+```{r save, eval=FALSE}
 save(strat, params, cost, utility,
      file = "data/ltbi_heemod.RData")
 ```
 
-```{r}
+```{r run-model-once}
 # run a single simulation
 res_mod <-
   run_model(
@@ -163,7 +165,7 @@ res_mod <-
 
 Using the sample of starting state probabilities
 
-```{r}
+```{run-model-multiple}
 res_mod <- list()
 
 for (i in 1:nrow(init_states)) {
@@ -191,7 +193,9 @@ for (i in 1:nrow(init_states)) {
 
 ## Results
 
-```{r}
+```{r output}
+library(ggplot2)
+
 res_mod[[1]]
 
 # extract the cost and utility values
@@ -207,7 +211,12 @@ summary(res_mod[[4]])
 hist(c1, breaks = 30, xlab = "cost")
 hist(h1, breaks = 30, xlab = "health")
 
-plot(res_mod[[4]])
+plot(res_mod[[4]]) +
+   scale_x_continuous(sec.axis = sec_axis(~ . + 35, name = "Age (years)")) +
+  theme_bw()
+
+ggsave(filename = "plots/markov-model-counts.png",
+       device = "png", width = 16, height = 15, units = "cm")
 
 # state-edge graph
 plot(mat_trans, arr.type = "simple")

@@ -1,7 +1,6 @@
 
-#########
-# plots #
-#########
+# plots of model outputs
+# for all scenarios
 
 library(BCEA)
 library(heemod)
@@ -9,6 +8,9 @@ library(ggplot2)
 
 
 # load data
+
+# input data
+load(here::here("data", "params.RData")) #create_param_values()
 
 dat <- list()
 dat$TST_QFT <- readRDS(file = "data/res_TST+QFT.RDS")
@@ -25,7 +27,14 @@ dat$TST_TSPOT <- readRDS(file = "data/res_TST+TSPOT.RDS")
 # plot direct
 
 ## point values
-heemod_model <- create_ltbi_heemod()
+heemod_params <-
+  list(pReact = label_probs$pReact,
+       pReact_incomp = label_probs$pReact_incomp,
+       pReact_comp = label_probs$pReact_comp,
+       TB_cost = label_costs$TB_cost)
+
+heemod_model <- do.call(create_ltbi_heemod,
+                        args = heemod_params)
 
 # points values
 ##TODO
@@ -47,20 +56,21 @@ delta_c_tsttspot <- dat$TST_TSPOT$cost - dat$TST$cost
 delta_h_tsttspot <- dat$TST_TSPOT$health - dat$TST$health
 
 plot(delta_h_tspot, delta_c_tspot,
+     col = "orange",
      # xlim = c(-0.005, 0.005),
-     xlim = c(-0.01, 0.01),
-     ylim = c(-200, 0),
+     xlim = c(-0.01, 0.02),
+     ylim = c(-400, 0),
      xlab = "Incremental QALYs", ylab = "Incremental cost")
-points(mean(delta_h_tspot), mean(delta_c_tspot), col = "black", pch = 16, cex = 1.5)
+points(mean(delta_h_tspot), mean(delta_c_tspot), col = "orange", pch = 16, cex = 1.5)
 
-points(delta_h_tstqft, delta_c_tstqft, col = "green")
-points(mean(delta_h_tstqft), mean(delta_c_tstqft), col = "green", pch = 16, cex = 1.5)
+points(delta_h_tstqft, delta_c_tstqft, col = "blue")
+points(mean(delta_h_tstqft), mean(delta_c_tstqft), col = "blue", pch = 16, cex = 1.5)
 
-points(delta_h_qft, delta_c_qft, col = "blue")
-points(mean(delta_h_qft), mean(delta_c_qft), col = "blue", pch = 16, cex = 1.5)
+points(delta_h_qft, delta_c_qft, col = "grey")
+points(mean(delta_h_qft), mean(delta_c_qft), col = "grey", pch = 16, cex = 1.5)
 
-points(delta_h_tsttspot, delta_c_tsttspot, col = "red")
-points(mean(delta_h_tsttspot), mean(delta_c_tsttspot), col = "red", pch = 16, cex = 1.5)
+points(delta_h_tsttspot, delta_c_tsttspot, col = "darkgreen")
+points(mean(delta_h_tsttspot), mean(delta_c_tsttspot), col = "darkgreen", pch = 16, cex = 1.5)
 
 abline(h = 0, col = "grey")
 abline(v = 0, col = "grey")
@@ -100,11 +110,12 @@ ceplane.plot(m, graph = "ggplot",
              currency = "£",
              ref_first = FALSE)
 
+
 contour2(m, graph = "ggplot",
         point = list(color = c("blue", "plum", "tomato", "springgreen"), size = 2),
         icer = list(color = c("darkblue", "black", "darkred", "darkgreen"), size = 5),
-        contour = list(breaks = 0.25),
-        title = "", currency = "£")
+        contour = list(breaks = 0.8),
+        title = "", currency = "£", pos = c(1,1))
 
 ggsave(filename = "plots/ceplane_main.png", device = "png", width = 15, height = 15, units = "cm")
 

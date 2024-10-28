@@ -42,7 +42,16 @@ save(dt, file = "data/run_cedectree_QFT.RData")
 ###############################
 # Markov model
 
-heemod_model <- create_ltbi_heemod()
+dt <- readRDS(file = "data/run_cedectree_QFT.RDS")
+
+heemod_params <-
+  list(pReact = label_probs$pReact,
+       pReact_incomp = label_probs$pReact_incomp,
+       pReact_comp = label_probs$pReact_comp,
+       TB_cost = label_costs$TB_cost)
+
+heemod_model <- do.call(create_ltbi_heemod,
+                        args = heemod_params)
 
 # # from Excel for testing
 # # check same results
@@ -59,8 +68,9 @@ heemod_model <- create_ltbi_heemod()
 # heemod_model(
 #   unname(unlist(term_pop_point)/1000))
 
-res_mm_pt <- heemod_model(
-  unname(unlist(dt$cost$term_pop_point)))
+# # point values
+# starting_state_props <- unname(unlist(dt$cost$term_pop_point))
+# res_mm_pt <- heemod_model(starting_state_props)
 
 res_mm <-
   heemod_init_pop_PSA(
@@ -71,20 +81,19 @@ res_mm <-
 c_mm <- map_df(res_mm, "run_model")$cost
 h_mm <- map_df(res_mm, "run_model")$utility
 
-
 ## combine decision tree and Markov model output
 
-summary_mm <- summary(res_mm_pt)$res_values
-
-res_pt <-
-  list(cost = summary_mm$cost + dt$cost$ev_point[[1]],
-       health = summary_mm$utility + dt$health$ev_point[[1]])
+# summary_mm <- summary(res_mm_pt)$res_values
+#
+# res_pt <-
+#   list(cost = summary_mm$cost + dt$cost$ev_point[[1]],
+#        health = summary_mm$utility + dt$health$ev_point[[1]])
 
 res <-
   list(cost =
-         c_mm + dt$cost$ev_sa[['1']],
+         c_mm + dt$cost$ev_sa[, 1],
        health =
-         h_mm - dt$health$ev_sa[['1']])
+         h_mm - dt$health$ev_sa[, 1])
 
 # map(res, median)
 # summary(dt$cost$ev_sa[[1]])

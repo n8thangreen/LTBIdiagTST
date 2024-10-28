@@ -1,6 +1,6 @@
 
 # test strategy:
-# TST -> T.SPOT
+# TST -> T-SPOT
 
 
 library(dplyr)
@@ -40,10 +40,18 @@ dt <-
 write.csv(tree_dat, file = "data/tree_dat_TST+TSPOT.csv")
 save(dt, file = "data/run_cedectree_TST+TSPOT.RData")
 
-# Markov model ----
+# Markov model
 
-heemod_model <- create_ltbi_heemod()
+dt <- readRDS(file = "data/run_cedectree_TST_TSPOT.RDS")
 
+heemod_params <-
+  list(pReact = label_probs$pReact,
+       pReact_incomp = label_probs$pReact_incomp,
+       pReact_comp = label_probs$pReact_comp,
+       TB_cost = label_costs$TB_cost)
+
+heemod_model <- do.call(create_ltbi_heemod,
+                        args = heemod_params)
 res_mm <-
   heemod_init_pop_PSA(
     heemod_model,
@@ -58,9 +66,9 @@ h_mm <- map_df(res_mm, "run_model")$utility
 
 res <-
   list(cost =
-         c_mm + dt$cost$ev_sa[['1']],
+         c_mm + dt$cost$ev_sa[, 1],
        health =
-         h_mm - dt$health$ev_sa[['1']])
+         h_mm - dt$health$ev_sa[, 1])
 
 saveRDS(res, file = "data/res_TST+TSPOT.RDS")
 
