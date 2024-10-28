@@ -43,8 +43,20 @@ create_state_lists <- function() {
           LTBI_complete_Tx  = 11,
           LTBI_incomplete_Tx = c(9, 12),
           LTBI_no_Tx = c(14, 26, 30, 33),
-          activeTB = NULL,
-          dead = NULL))
+          # activeTB = NULL,  ##TODO: whats the difference with c()?
+          # dead = NULL,
+          activeTB = c(),
+          dead = c()),
+      "TST_fwd" =
+        list(
+          no_LTBI  = c(18, 20, 21, 23, 28, 31, 34),
+          LTBI_complete_Tx  = 11,
+          LTBI_incomplete_Tx = c(9, 12),
+          LTBI_no_Tx = c(14, 26, 30, 33),
+          # activeTB = NULL,  ##TODO: whats the difference with c()?
+          # dead = NULL,
+          activeTB = c(),
+          dead = c()))
 
   save(state_lists,
        file = here::here("data", "state_lists.RData"))

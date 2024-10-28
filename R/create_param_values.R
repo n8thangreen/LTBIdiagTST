@@ -119,6 +119,8 @@ create_param_values <- function(save = TRUE) {
       ~name.prob,         ~prob,
       "TST_sens",    list(distn = "pert", params = c(mode = 0.79, min = 0.69, max = 0.89)),     # Kahwati (2016)
       "TST_spec",    list(distn = "pert", params = c(mode = 0.59, min = 0.46, max = 0.73)),     # Pai (2008)
+      # "TST_sens",    list(distn = "norm", params = c(mean = 0.69, sd = 0.89)),     # posterior
+      # "TST_spec",    list(distn = "norm", params = c(mean = 0.46, sd = 0.73)),     # posterior
       "QFT_sens",    list(distn = "pert", params = c(mode = 0.886, min = 0.812, max = 0.944)),  # Zhang et al. BMC Infectious Diseases (2023) 23:40
       "QFT_spec",    list(distn = "pert", params = c(mode = 0.995, min = 0.959, max = 1)),      # see above
       "TSPOT_sens",  list(distn = "pert", params = c(mode = 0.872, min = 0.643, max = 0.991)),  # see above
@@ -188,14 +190,17 @@ create_param_values <- function(save = TRUE) {
 
       "Dual_sens" = 0.632,
       "Dual_spec" = 0.988,
-      "TST_sens" = 0.79,
-      "TST_spec" = 0.59,
+      "TST_sens" = 0.79,           # prior
+      "TST_spec" = 0.59,           # prior
+      # "TST_sens" = 0.79,         # posterior
+      # "TST_spec" = 0.59,         # posterior
       "QFT_sens" = 0.8,
       "QFT_spec" = 0.97,
       "TSPOT_sens" = 0.90,
       "TSPOT_spec" = 0.95,
 
-      "pLTBI"	= 0.26,
+      "pLTBI"	= 0.26,               # prior
+      # "pLTBI"	= 0.26,             # posterior
       "PPV_TST"	= 0.39,             # posterior
       "NPV_TST"	= 0.88,             # posterior
       "PPV_QFT"	= 0.99,              # posterior

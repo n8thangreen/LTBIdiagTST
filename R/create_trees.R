@@ -56,7 +56,6 @@ create_trees <- function() {
       '49' = NULL
     )
 
-
   IGRA_tree <-
     list(
       '1' = c(2,27),
@@ -94,6 +93,44 @@ create_trees <- function() {
   TSPOT_tree <- IGRA_tree
 
   TST_tree <-
+    list(
+      '1' = 2,
+      '2' = c(3,32),
+      '3' = c(4,29),
+      '4' = c(5,24),
+      '5' = c(6,15),
+      '6' = c(7,13),
+      '7' = c(8,10),
+      '8' = c(9),
+      '9' = NULL,
+      '10' = c(11,12),
+      '11' = NULL,
+      '12' = NULL,
+      '13' = c(14),
+      '14' = NULL,
+      '15' = c(16,22),
+      '16' = c(17,19),
+      '17' = c(18),
+      '18' = NULL,
+      '19' = c(20,21),
+      '20' = NULL,
+      '21' = NULL,
+      '22' = c(23),
+      '23' = NULL,
+      '24' = c(25,27),
+      '25' = c(26),
+      '26' = NULL,
+      '27' = c(28),
+      '28' = NULL,
+      '29' = c(30,31),
+      '30' = NULL,
+      '31' = NULL,
+      '32' = c(33,34),
+      '33' = NULL,
+      '34' = NULL
+    )
+
+  TST_fwd_tree <-
     list(
       '1' = 2,
       '2' = c(3,32),
@@ -186,6 +223,7 @@ create_trees <- function() {
        TST_tree,
        TST_QFT_tree,
        TST_TSPOT_tree,
+       TST_fwd_tree,
        TST_IGRA_fwd_tree,
        file = here::here("data", "trees.RData"))
 }
